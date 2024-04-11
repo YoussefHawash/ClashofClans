@@ -2,5 +2,9 @@
     <qresource prefix="/Imgs">
         <file>Resources/icon.png</file>
         <file>Resources/background.jpg</file>
+        <file>Resources/settings.jpg</file>
+    </qresource>
+    <qresource prefix="/sounds">
+        <file>Resources/Backgroundmusic.mp3</file>
     </qresource>
 </RCC>

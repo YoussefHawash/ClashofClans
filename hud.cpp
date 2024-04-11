@@ -1,10 +1,13 @@
 #include "hud.h"
+#include <QAudioOutput>
 #include <QBoxLayout>
 #include <QDebug>
 #include <QGraphicsTextItem>
 #include <QLabel>
+#include <QMediaPlayer>
 #include <QPushButton>
 #include <QSizePolicy>
+
 HUD::HUD(QApplication *a)
     : window(a)
 {
@@ -15,7 +18,14 @@ HUD::HUD(QApplication *a)
 }
 void HUD::DisplayMainMenu()
 {
-    mainmenu = new MainMenu();
+    QMediaPlayer *sound = new QMediaPlayer;
+    QAudioOutput *audioOutput = new QAudioOutput();
+    sound->setLoops(QMediaPlayer::Infinite);
+    sound->setSource(QUrl("qrc:/sounds/Resources/Backgroundmusic.mp3"));
+    sound->setAudioOutput(audioOutput);
+    audioOutput->setVolume(1);
+    sound->play();
+    mainmenu = new MainMenu(audioOutput);
     connect(mainmenu, SIGNAL(play()), this, SLOT(start()));
     connect(mainmenu, SIGNAL(exit()), this, SLOT(exit()));
     mainmenu->show();

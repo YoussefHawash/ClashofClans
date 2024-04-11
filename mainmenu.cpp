@@ -2,18 +2,12 @@
 #include <QSignalMapper>
 #include <QSize>
 
-MainMenu::MainMenu(QWidget *parent)
-    : QMainWindow{parent}
+MainMenu::MainMenu(QAudioOutput *audioOutput)
+    : Output(audioOutput)
+
 {
-    this->setWindowTitle("Main Menu");
     this->setWindowIcon(QIcon(":/Imgs/Resources/icon.png"));
     this->setFixedSize(1280, 720);
-    this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    QPixmap bkgnd(":/Imgs/Resources/background.jpg");
-    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Window, bkgnd);
-    this->setPalette(palette);
     this->SetSettings();
     this->SetMainMenu();
     this->ShowMainMenu();
@@ -32,9 +26,9 @@ void MainMenu::SetMainMenu()
     QPushButton *exit_btn = new QPushButton(QString("Exit"));
     //Customizitation to all the layers
     //Window
-    mainwindow->setGeometry(400, 200, 480, 320);
+    mainwindow->setGeometry(100, 150, 480, 420);
     mainwindow->setObjectName("window");
-    mainwindow->setStyleSheet("#window{background: rgba(0, 39, 70, 0.82);border-radius: 16px;}");
+    mainwindow->setStyleSheet("#window{background: rgba(34,32,40,0.72);border-radius: 20px;}");
     //Layout
     layout->setContentsMargins(50, 0, 50, 0);
     layout->addWidget(welcome, 0, Qt::AlignHCenter);
@@ -43,6 +37,7 @@ void MainMenu::SetMainMenu()
     layout->addLayout(hLayout3);
     //Welcome Label
     QFont font("Arial", 42, QFont::Bold);
+    welcome->setStyleSheet("color: gray;");
     welcome->setFont(font);
     welcome->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     //hlayout1
@@ -50,29 +45,32 @@ void MainMenu::SetMainMenu()
     hLayout1->addWidget(play_btn);
     hLayout1->addStretch();
     //Playbtn
-    play_btn->setFixedSize(150, 30);
+    play_btn->setFixedSize(250, 50);
     connect(play_btn, &QPushButton::clicked, this, &MainMenu::play);
     //hlayout2
     hLayout2->addStretch();
     hLayout2->addWidget(settings_btn);
     hLayout2->addStretch();
     //Settingsbtn
-    settings_btn->setFixedSize(150, 30);
+    settings_btn->setFixedSize(250, 50);
     connect(settings_btn, &QPushButton::clicked, this, &MainMenu::ShowSettings);
     //hlayout3
     hLayout3->addStretch();
     hLayout3->addWidget(exit_btn);
     hLayout3->addStretch();
     //exitbtn
-    exit_btn->setFixedSize(150, 30);
+    exit_btn->setFixedSize(250, 50);
     connect(exit_btn, &QPushButton::clicked, this, &MainMenu::exit);
 }
 
 void MainMenu::ShowMainMenu()
 {
-    IsFullscreen = fullscreen_check->isChecked();
-    volumelevel = volume->value();
-    level = levels->currentIndex() + 1;
+    this->setWindowTitle("Main Menu");
+    QPixmap bkgnd(":/Imgs/Resources/background.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
     settingswindow->hide();
     mainwindow->show();
 }
@@ -91,16 +89,16 @@ void MainMenu::SetSettings()
     QVBoxLayout *layout = new QVBoxLayout(settingswindow);
     QLabel *settings = new QLabel("Settings");
     QHBoxLayout *hLayout1 = new QHBoxLayout;
-    fullscreen_check = new QCheckBox("Full Screen");
+    QCheckBox *fullscreen_check = new QCheckBox("Full Screen");
     QHBoxLayout *hLayout2 = new QHBoxLayout;
     QLabel *level_label = new QLabel("Level");
-    levels = new QComboBox();
+    QComboBox *levels = new QComboBox();
     levels->addItem("Level 1");
     levels->addItem("Level 2");
     levels->addItem("Level 3");
     QHBoxLayout *hLayout3 = new QHBoxLayout;
-    QLabel *volume_label = new QLabel("Volume");
-    volume = new QSlider(Qt::Horizontal);
+    volume_label = new QLabel("Volume: 100%");
+    QSlider *volume = new QSlider(Qt::Horizontal);
     volume->setMinimum(0);
     volume->setMaximum(100);
     volume->setValue(100);
@@ -108,10 +106,9 @@ void MainMenu::SetSettings()
     QPushButton *mainmenu_btn = new QPushButton(QString("Return To Main Menu"));
     //Customizitation to all the layers
     //Window
-    settingswindow->setGeometry(400, 200, 480, 320);
+    settingswindow->setGeometry(100, 150, 480, 420);
     settingswindow->setObjectName("window");
-    settingswindow->setStyleSheet(
-        "#window{background: rgba(0, 39, 70, 0.82);border-radius: 16px;}");
+    settingswindow->setStyleSheet("#window{background: rgba(34,32,40,0.72);border-radius: 20px;}");
     //Layout
     layout->setContentsMargins(50, 0, 50, 0);
     layout->addWidget(settings, 0, Qt::AlignHCenter);
@@ -124,9 +121,9 @@ void MainMenu::SetSettings()
     settings->setFont(font);
     settings->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     //hlayout1
-    hLayout1->addStretch();
+
     hLayout1->addWidget(fullscreen_check);
-    hLayout1->addStretch();
+
     //fullscreen_check
     //hlayout2
     hLayout2->addWidget(level_label);
@@ -135,18 +132,28 @@ void MainMenu::SetSettings()
     //hlayout3
 
     hLayout3->addWidget(volume_label);
+    hLayout3->addStretch();
     hLayout3->addWidget(volume);
     //volume
     //hlayout4
     hLayout4->addStretch();
     hLayout4->addWidget(mainmenu_btn);
     hLayout4->addStretch();
-    mainmenu_btn->setFixedSize(150, 30);
+    mainmenu_btn->setFixedSize(250, 50);
+    connect(fullscreen_check, &QCheckBox::stateChanged, this, &MainMenu::checkBoxStateChanged);
     connect(mainmenu_btn, &QPushButton::clicked, this, &MainMenu::ShowMainMenu);
+    connect(volume, &QSlider::valueChanged, this, &MainMenu::sliderValueChanged);
+    connect(levels, QOverload<int>::of(&QComboBox::activated), this, &MainMenu::comboBoxActivated);
 }
 
 void MainMenu::ShowSettings()
 {
+    this->setWindowTitle("Settings");
+    QPixmap bkgnd(":/Imgs/Resources/settings.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
     mainwindow->hide();
     settingswindow->show();
 }
