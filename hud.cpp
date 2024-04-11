@@ -2,13 +2,15 @@
 #include <QBoxLayout>
 #include <QDebug>
 #include <QGraphicsTextItem>
-
+#include <QLabel>
+#include <QPushButton>
 #include <QSizePolicy>
 HUD::HUD(QApplication *a)
     : window(a)
 {
-    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setFixedSize(800, 600);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     DisplayMainMenu();
 }
 void HUD::DisplayMainMenu()
@@ -21,15 +23,15 @@ void HUD::DisplayMainMenu()
 void HUD::start()
 {
     mainmenu->hide();
-    game = new GameScene;
-    this->setScene(game);
     if (mainmenu->fullscreen()) {
-        this->showFullScreen();
+        showFullScreen();
     } else {
-        this->setFixedSize(1280, 720);
+        setFixedSize(1280, 720);
     }
-    game->setSceneRect(0, 0, this->width(), this->height());
-    this->show();
+    game = new GameScene;
+    setScene(game);
+    game->setSceneRect(0, 0, width(), height());
+    show();
 }
 void HUD::exit()
 {
