@@ -9,15 +9,19 @@ QT += multimedia
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    enemy.cpp \
     gamescene.cpp \
     main.cpp \
     hud.cpp \
-    mainmenu.cpp
+    mainmenu.cpp \
+    player.cpp
 
 HEADERS += \
+    enemy.h \
     gamescene.h \
     hud.h \
-    mainmenu.h
+    mainmenu.h \
+    player.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

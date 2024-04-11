@@ -3,7 +3,6 @@
 #include <QAudioOutput>
 #include <QCheckBox>
 #include <QComboBox>
-#include <QFrame>
 #include <QIcon>
 #include <QLabel>
 #include <QMainWindow>
@@ -16,35 +15,33 @@ class MainMenu : public QMainWindow
 {
     Q_OBJECT
 private:
+    bool IsFullscreen;
+    int volumelevel;
+    int level;
     QAudioOutput *Output;
     QLabel *volume_label;
-    bool IsFullscreen = 0;
-    int volumelevel = 100;
-    int level = 1;
     QWidget *mainwindow;
+    QWidget *gameswindow;
     QWidget *settingswindow;
-private slots:
-    void checkBoxStateChanged(bool state) { IsFullscreen = state; }
-    void sliderValueChanged(int value)
-    {
-        volume_label->setText(QString("Volume: %1%").arg(value));
-        Output->setVolume(double(value) / 100);
-        volumelevel = value;
-    }
-    void comboBoxActivated(int index) { level = index + 1; }
 
 public:
     explicit MainMenu(QAudioOutput *);
-
-    void ClearScene();
+    void SetMainWindow();
+    void SetGamesWindow();
+    void SetSettingsWindow();
+    void ShowMainWindow();
+    void ShowGamesWindow();
+    void ShowSettingsWindow();
     bool fullscreen();
-    void SetSettings();
-    void ShowSettings();
-    void SetMainMenu();
-    void ShowMainMenu();
 signals:
     void exit();
-    void play();
+    void newgame();
+    void randomgame();
+    void storymode();
+private slots:
+    void checkBoxStateChanged(bool);
+    void sliderValueChanged(int);
+    void comboBoxActivated(int);
 };
 
 #endif // MAINMENU_H

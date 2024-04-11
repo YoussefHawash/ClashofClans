@@ -21,7 +21,9 @@ public:
     ~HUD();
 
 public slots:
-    void start();
+    void newgame();
+    void randomgame();
+    void storymode();
     void exit();
 };
 #endif // HUD_H

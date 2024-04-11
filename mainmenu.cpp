@@ -1,19 +1,20 @@
 #include "mainmenu.h"
-#include <QSignalMapper>
-#include <QSize>
 
 MainMenu::MainMenu(QAudioOutput *audioOutput)
-    : Output(audioOutput)
-
+    : IsFullscreen(0)
+    , volumelevel(100)
+    , level(1)
+    , Output(audioOutput)
 {
-    this->setWindowIcon(QIcon(":/Imgs/Resources/icon.png"));
-    this->setFixedSize(1280, 720);
-    this->SetSettings();
-    this->SetMainMenu();
-    this->ShowMainMenu();
+    setWindowIcon(QIcon(":/Imgs/Resources/icon.png"));
+    setFixedSize(1280, 720);
+    SetSettingsWindow();
+    SetMainWindow();
+    SetGamesWindow();
+    ShowMainWindow();
 }
 
-void MainMenu::SetMainMenu()
+void MainMenu::SetMainWindow()
 {
     mainwindow = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(mainwindow);
@@ -46,14 +47,14 @@ void MainMenu::SetMainMenu()
     hLayout1->addStretch();
     //Playbtn
     play_btn->setFixedSize(250, 50);
-    connect(play_btn, &QPushButton::clicked, this, &MainMenu::play);
+    connect(play_btn, &QPushButton::clicked, this, &MainMenu::ShowGamesWindow);
     //hlayout2
     hLayout2->addStretch();
     hLayout2->addWidget(settings_btn);
     hLayout2->addStretch();
     //Settingsbtn
     settings_btn->setFixedSize(250, 50);
-    connect(settings_btn, &QPushButton::clicked, this, &MainMenu::ShowSettings);
+    connect(settings_btn, &QPushButton::clicked, this, &MainMenu::ShowSettingsWindow);
     //hlayout3
     hLayout3->addStretch();
     hLayout3->addWidget(exit_btn);
@@ -63,27 +64,66 @@ void MainMenu::SetMainMenu()
     connect(exit_btn, &QPushButton::clicked, this, &MainMenu::exit);
 }
 
-void MainMenu::ShowMainMenu()
+void MainMenu::SetGamesWindow()
 {
-    this->setWindowTitle("Main Menu");
-    QPixmap bkgnd(":/Imgs/Resources/background.jpg");
-    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Window, bkgnd);
-    this->setPalette(palette);
-    settingswindow->hide();
-    mainwindow->show();
+    gameswindow = new QWidget(this);
+    QVBoxLayout *layout = new QVBoxLayout(gameswindow);
+    QLabel *Games = new QLabel("Games");
+    QHBoxLayout *hLayout1 = new QHBoxLayout;
+    QPushButton *newgame_btn = new QPushButton("New Game");
+    QHBoxLayout *hLayout2 = new QHBoxLayout;
+    QPushButton *randommap_btn = new QPushButton(QString("Random Map"));
+    QHBoxLayout *hLayout3 = new QHBoxLayout;
+    QPushButton *storymode_btn = new QPushButton(QString("Story Mode"));
+    QHBoxLayout *hLayout4 = new QHBoxLayout;
+    QPushButton *mainmenu_btn = new QPushButton(QString("Main Menu"));
+    //Customizitation to all the layers
+    //Window
+    gameswindow->setGeometry(100, 150, 480, 420);
+    gameswindow->setObjectName("window");
+    gameswindow->setStyleSheet("#window{background: rgba(34,32,40,0.72);border-radius: 20px;}");
+    //Layout
+    layout->setContentsMargins(50, 0, 50, 0);
+    layout->addWidget(Games, 0, Qt::AlignHCenter);
+    layout->addLayout(hLayout1);
+    layout->addLayout(hLayout2);
+    layout->addLayout(hLayout3);
+    layout->addLayout(hLayout4);
+    //Games Label
+    QFont font("Arial", 42, QFont::Bold);
+    Games->setFont(font);
+    Games->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    //hlayout1
+    hLayout1->addStretch();
+    hLayout1->addWidget(newgame_btn);
+    hLayout1->addStretch();
+    //Playbtn
+    newgame_btn->setFixedSize(250, 50);
+    connect(newgame_btn, &QPushButton::clicked, this, &MainMenu::newgame);
+    //hlayout2
+    hLayout2->addStretch();
+    hLayout2->addWidget(randommap_btn);
+    hLayout2->addStretch();
+    //Settingsbtn
+    randommap_btn->setFixedSize(250, 50);
+    connect(randommap_btn, &QPushButton::clicked, this, &MainMenu::randomgame);
+    //hlayout3
+    hLayout3->addStretch();
+    hLayout3->addWidget(storymode_btn);
+    hLayout3->addStretch();
+    //storymode_btn
+    storymode_btn->setFixedSize(250, 50);
+    connect(storymode_btn, &QPushButton::clicked, this, &MainMenu::storymode);
+    //hlayout4
+    hLayout4->addStretch();
+    hLayout4->addWidget(mainmenu_btn);
+    hLayout4->addStretch();
+    //mainmenubtn
+    mainmenu_btn->setFixedSize(250, 50);
+    connect(mainmenu_btn, &QPushButton::clicked, this, &MainMenu::ShowMainWindow);
 }
 
-bool MainMenu::fullscreen()
-{
-    if (IsFullscreen) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
-void MainMenu::SetSettings()
+void MainMenu::SetSettingsWindow()
 {
     settingswindow = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(settingswindow);
@@ -93,9 +133,11 @@ void MainMenu::SetSettings()
     QHBoxLayout *hLayout2 = new QHBoxLayout;
     QLabel *level_label = new QLabel("Level");
     QComboBox *levels = new QComboBox();
-    levels->addItem("Level 1");
-    levels->addItem("Level 2");
-    levels->addItem("Level 3");
+    levels->addItem("Peacful");
+    levels->addItem("Easy");
+    levels->addItem("Normal");
+    levels->addItem("Difficult");
+    levels->addItem("Extreme");
     QHBoxLayout *hLayout3 = new QHBoxLayout;
     volume_label = new QLabel("Volume: 100%");
     QSlider *volume = new QSlider(Qt::Horizontal);
@@ -141,12 +183,37 @@ void MainMenu::SetSettings()
     hLayout4->addStretch();
     mainmenu_btn->setFixedSize(250, 50);
     connect(fullscreen_check, &QCheckBox::stateChanged, this, &MainMenu::checkBoxStateChanged);
-    connect(mainmenu_btn, &QPushButton::clicked, this, &MainMenu::ShowMainMenu);
+    connect(mainmenu_btn, &QPushButton::clicked, this, &MainMenu::ShowMainWindow);
     connect(volume, &QSlider::valueChanged, this, &MainMenu::sliderValueChanged);
     connect(levels, QOverload<int>::of(&QComboBox::activated), this, &MainMenu::comboBoxActivated);
 }
 
-void MainMenu::ShowSettings()
+void MainMenu::ShowMainWindow()
+{
+    this->setWindowTitle("Main Menu");
+    QPixmap bkgnd(":/Imgs/Resources/background.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+    settingswindow->hide();
+    gameswindow->hide();
+    mainwindow->show();
+}
+
+void MainMenu::ShowGamesWindow()
+{
+    this->setWindowTitle("Games");
+    QPixmap bkgnd(":/Imgs/Resources/games.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+    mainwindow->hide();
+    gameswindow->show();
+}
+
+void MainMenu::ShowSettingsWindow()
 {
     this->setWindowTitle("Settings");
     QPixmap bkgnd(":/Imgs/Resources/settings.jpg");
@@ -156,4 +223,28 @@ void MainMenu::ShowSettings()
     this->setPalette(palette);
     mainwindow->hide();
     settingswindow->show();
+}
+
+bool MainMenu::fullscreen()
+{
+    if (IsFullscreen) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void MainMenu::checkBoxStateChanged(bool state)
+{
+    IsFullscreen = state;
+}
+void MainMenu::sliderValueChanged(int value)
+{
+    volume_label->setText(QString("Volume: %1%").arg(value));
+    Output->setVolume(double(value) / 100);
+    volumelevel = value;
+}
+void MainMenu::comboBoxActivated(int index)
+{
+    level = index + 1;
 }

@@ -3,6 +3,7 @@
         <file>Resources/icon.png</file>
         <file>Resources/background.jpg</file>
         <file>Resources/settings.jpg</file>
+        <file>Resources/games.jpg</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Resources/Backgroundmusic.mp3</file>
