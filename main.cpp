@@ -5,7 +5,6 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    HUD w;
-    w.show();
+    HUD w(&a);
     return a.exec();
 }

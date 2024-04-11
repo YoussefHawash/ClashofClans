@@ -1,14 +1,27 @@
 #ifndef HUD_H
 #define HUD_H
 
+#include <QApplication>
+#include <QGraphicsView>
 #include <QMainWindow>
-
-class HUD : public QMainWindow
+#include "gamescene.h"
+#include "mainmenu.h"
+class HUD :  public QGraphicsView
 {
     Q_OBJECT
+private:
+    QApplication *window;
+    MainMenu *mainmenu;
+    GameScene *game;
 
 public:
-    HUD(QWidget *parent = nullptr);
+    HUD(QApplication * = nullptr);
+    void DisplayMainMenu();
+
     ~HUD();
+
+public slots:
+    void start();
+    void exit();
 };
 #endif // HUD_H
