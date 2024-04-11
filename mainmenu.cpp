@@ -79,7 +79,7 @@ void MainMenu::SetGamesWindow()
     QPushButton *mainmenu_btn = new QPushButton(QString("Main Menu"));
     //Customizitation to all the layers
     //Window
-    gameswindow->setGeometry(100, 150, 480, 420);
+    gameswindow->setGeometry(400, 150, 480, 420);
     gameswindow->setObjectName("window");
     gameswindow->setStyleSheet("#window{background: rgba(34,32,40,0.72);border-radius: 20px;}");
     //Layout
@@ -93,6 +93,7 @@ void MainMenu::SetGamesWindow()
     QFont font("Arial", 42, QFont::Bold);
     Games->setFont(font);
     Games->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    Games->setStyleSheet("color: gray;");
     //hlayout1
     hLayout1->addStretch();
     hLayout1->addWidget(newgame_btn);
@@ -162,6 +163,8 @@ void MainMenu::SetSettingsWindow()
     QFont font("Arial", 42, QFont::Bold);
     settings->setFont(font);
     settings->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    settings->setStyleSheet("color: gray;");
+
     //hlayout1
 
     hLayout1->addWidget(fullscreen_check);

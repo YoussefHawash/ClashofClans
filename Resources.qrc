@@ -7,5 +7,6 @@
     </qresource>
     <qresource prefix="/sounds">
         <file>Resources/Backgroundmusic.mp3</file>
+        <file>Resources/storymode.mp3</file>
     </qresource>
 </RCC>
