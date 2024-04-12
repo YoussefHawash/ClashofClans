@@ -10,9 +10,12 @@ QT += multimedia
 
 SOURCES += \
     building.cpp \
+    bullet.cpp \
+    cannon.cpp \
     enemy.cpp \
     gamescene.cpp \
     grass.cpp \
+    health.cpp \
     main.cpp \
     hud.cpp \
     mainmenu.cpp \
@@ -21,9 +24,12 @@ SOURCES += \
 
 HEADERS += \
     building.h \
+    bullet.h \
+    cannon.h \
     enemy.h \
     gamescene.h \
     grass.h \
+    health.h \
     hud.h \
     mainmenu.h \
     player.h \
