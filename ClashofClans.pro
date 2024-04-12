@@ -12,18 +12,22 @@ SOURCES += \
     building.cpp \
     enemy.cpp \
     gamescene.cpp \
+    grass.cpp \
     main.cpp \
     hud.cpp \
     mainmenu.cpp \
-    player.cpp
+    player.cpp \
+    townhall.cpp
 
 HEADERS += \
     building.h \
     enemy.h \
     gamescene.h \
+    grass.h \
     hud.h \
     mainmenu.h \
-    player.h
+    player.h \
+    townhall.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -5,13 +5,13 @@
 #include <QTimer>
 #include "building.h"
 #include "enemy.h"
-
+#include "grass.h"
 using namespace std;
 class GameScene : public QGraphicsScene
 {
 private:
     QTimer *time;
-    int map[9][16];
+    int map[18][32];
     int gamemode;
 
 public:

@@ -9,8 +9,10 @@
 #include <QLabel>
 #include <QMainWindow>
 #include <QMediaPlayer>
+#include <QMouseEvent>
 #include <QPushButton>
 #include <QSizePolicy>
+
 #include "gamescene.h"
 #include "mainmenu.h"
 class HUD :  public QGraphicsView

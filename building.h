@@ -8,6 +8,7 @@ class Building : public QGraphicsPixmapItem, public QObject
 private:
 public:
     Building();
+    virtual bool IsMovable() { return 1; };
 
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override

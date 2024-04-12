@@ -6,25 +6,24 @@ GameScene::GameScene(double w, double h, int k)
 {
     setSceneRect(0, 0, w, h);
 
-    if (k == 1) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 16; j++) {
-                if (j < 3 || i < 3 || j > 12 || i > 5) {
-                    // enemies can spawn
-                    map[i][j] = -1;
-                } else {
-                    map[i][j] = 0;
-                }
-            }
-        }
-        time = new QTimer();
-        connect(time, SIGNAL(timeout()), this, SLOT(createEnemy()));
-        time->start(2000);
-    }
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 16; j++) {
-            // enemies can spawn
-            map[i][j] = 1;
+    // if (k == 1) {
+    //     for (int i = 0; i < 9; i++) {
+    //         for (int j = 0; j < 16; j++) {
+    //             if (j < 3 || i < 3 || j > 12 || i > 5) {
+    //                 // enemies can spawn
+    //                 map[i][j] = -1;
+    //             } else {
+    //                 map[i][j] = 0;
+    //             }
+    //         }
+    //     }
+    // time = new QTimer();
+    // connect(time, SIGNAL(timeout()), this, SLOT(createEnemy()));
+    // time->start(2000);
+    // }
+    for (int i = 0; i < 18; i++) {
+        for (int j = 0; j < 32; j++) {
+            map[i][j] = 0;
         }
     }
 
@@ -64,20 +63,19 @@ void GameScene::createEnemy()
 
 void GameScene::DisplayMap()
 {
-    double yfactor = height() / 9;
-    double xfactor = width() / 16;
+    double yfactor = height() / 18;
+    double xfactor = width() / 32;
 
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 16; j++) {
-            if (map[i][j] == 1) {
-                qDebug() << map[i][j] << yfactor << xfactor;
-                Building *a = new Building;
+    for (int i = 0; i < 18; i++) {
+        for (int j = 0; j < 32; j++) {
+            if (map[i][j] == 0) {
+                // qDebug() << map[i][j] << yfactor << xfactor;
+                Grass *a = new Grass;
                 QPixmap grass(":/Imgs/Resources/GrassChunk.jpg");
                 grass = grass.scaled(xfactor, yfactor);
                 a->setPixmap(grass);
                 a->setPos(j * xfactor, i * yfactor);
                 //a->setPen(Qt::NoPen);
-
                 addItem(a);
             }
         }
