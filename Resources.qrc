@@ -1,12 +1,12 @@
 <RCC>
     <qresource prefix="/Imgs">
         <file>Resources/icon.png</file>
-        <file>Resources/background.jpg</file>
-        <file>Resources/settings.jpg</file>
-        <file>Resources/games.jpg</file>
+        <file>Resources/Games.jpg</file>
+        <file>Resources/Main.jpg</file>
+        <file>Resources/Settings.jpg</file>
+        <file>Resources/GrassChunk.jpg</file>
     </qresource>
     <qresource prefix="/sounds">
-        <file>Resources/Backgroundmusic.mp3</file>
-        <file>Resources/storymode.mp3</file>
+        <file>Resources/backgroundmusic.mp3</file>
     </qresource>
 </RCC>

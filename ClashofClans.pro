@@ -9,6 +9,7 @@ QT += multimedia
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    building.cpp \
     enemy.cpp \
     gamescene.cpp \
     main.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
     player.cpp
 
 HEADERS += \
+    building.h \
     enemy.h \
     gamescene.h \
     hud.h \

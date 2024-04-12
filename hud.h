@@ -18,21 +18,20 @@ class HUD :  public QGraphicsView
     Q_OBJECT
 private:
     QApplication *App;
-    MainMenu *mainmenu;
-    GameScene *game;
-    QMediaPlayer *sound;
+    MainMenu *MainUI;
+    GameScene *gamescene;
+    QMediaPlayer *Sound;
     QAudioOutput *audioOutput;
 
 public:
     HUD(QApplication * = nullptr);
     void DisplayMainMenu();
-
     ~HUD();
 
 public slots:
-    void newgame();
-    void randomgame();
-    void storymode();
-    void exit();
+    void NewGame();
+    void RandomGame();
+    void StoryMode();
+    void Exit();
 };
 #endif // HUD_H

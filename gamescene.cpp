@@ -1,8 +1,11 @@
 #include "gamescene.h"
 
-GameScene::GameScene(int k)
+GameScene::GameScene(double w, double h, int k)
     : gamemode(k)
+
 {
+    setSceneRect(0, 0, w, h);
+
     if (k == 1) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 16; j++) {
@@ -18,6 +21,14 @@ GameScene::GameScene(int k)
         connect(time, SIGNAL(timeout()), this, SLOT(createEnemy()));
         time->start(2000);
     }
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 16; j++) {
+            // enemies can spawn
+            map[i][j] = 1;
+        }
+    }
+
+    DisplayMap();
 }
 
 void GameScene::createEnemy()
@@ -49,4 +60,26 @@ void GameScene::createEnemy()
     // 4 means troop
     map[x][y] = 4;
     Enemy(x, y);
+}
+
+void GameScene::DisplayMap()
+{
+    double yfactor = height() / 9;
+    double xfactor = width() / 16;
+
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 16; j++) {
+            if (map[i][j] == 1) {
+                qDebug() << map[i][j] << yfactor << xfactor;
+                Building *a = new Building;
+                QPixmap grass(":/Imgs/Resources/GrassChunk.jpg");
+                grass = grass.scaled(xfactor, yfactor);
+                a->setPixmap(grass);
+                a->setPos(j * xfactor, i * yfactor);
+                //a->setPen(Qt::NoPen);
+
+                addItem(a);
+            }
+        }
+    }
 }

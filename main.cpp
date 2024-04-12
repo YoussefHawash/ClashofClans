@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    HUD w(&a);
-    return a.exec();
+    QApplication App(argc, argv);
+    HUD w(&App);
+    return App.exec();
 }

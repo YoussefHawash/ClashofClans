@@ -15,7 +15,7 @@ class MainMenu : public QMainWindow
 {
     Q_OBJECT
 private:
-    bool IsFullscreen;
+    bool fullscreen;
     int volumelevel;
     int level;
     QAudioOutput *Output;
@@ -25,19 +25,22 @@ private:
     QWidget *settingswindow;
 
 public:
-    explicit MainMenu(QAudioOutput *);
-    void SetMainWindow();
-    void SetGamesWindow();
-    void SetSettingsWindow();
-    void ShowMainWindow();
-    void ShowGamesWindow();
-    void ShowSettingsWindow();
-    bool fullscreen();
+    MainMenu(QAudioOutput *);
+    //SetUp Ui
+    void SetMainMenuContainer();
+    void SetGamesContainer();
+    void SetSettingsContainer();
+    //Hiding and Showing
+    void ShowMainMenu();
+    void ShowGames();
+    void ShowSettings();
+    //Getters
+    bool IsFullscreen() const;
 signals:
-    void exit();
     void newgame();
     void randomgame();
     void storymode();
+    void exit();
 private slots:
     void checkBoxStateChanged(bool);
     void sliderValueChanged(int);

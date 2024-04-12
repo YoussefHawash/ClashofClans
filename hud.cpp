@@ -3,82 +3,79 @@
 HUD::HUD(QApplication *a)
     : App(a)
 {
+    //Setting View
     setWindowIcon(QIcon(":/Imgs/Resources/icon.png"));
     setFixedSize(800, 600);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    sound = new QMediaPlayer;
+    //Setting Sounds
+    Sound = new QMediaPlayer;
     audioOutput = new QAudioOutput();
-    sound->setLoops(QMediaPlayer::Infinite);
-    sound->setSource(QUrl("qrc:/sounds/Resources/Backgroundmusic.mp3"));
-    sound->setAudioOutput(audioOutput);
+    Sound->setLoops(QMediaPlayer::Infinite);
+    Sound->setSource(QUrl("qrc:/sounds/Resources/backgroundmusic.mp3"));
+    Sound->setAudioOutput(audioOutput);
     audioOutput->setVolume(1);
-    sound->play();
+    Sound->play();
+    //DisplayingMain
     DisplayMainMenu();
 }
+
 void HUD::DisplayMainMenu()
 {
-    mainmenu = new MainMenu(audioOutput);
-    connect(mainmenu, SIGNAL(newgame()), this, SLOT(newgame()));
-    connect(mainmenu, SIGNAL(randomgame()), this, SLOT(randomgame()));
-    connect(mainmenu, SIGNAL(storymode()), this, SLOT(storymode()));
-    connect(mainmenu, SIGNAL(exit()), this, SLOT(exit()));
-    mainmenu->show();
+    MainUI = new MainMenu(audioOutput);
+    connect(MainUI, SIGNAL(newgame()), this, SLOT(NewGame()));
+    connect(MainUI, SIGNAL(randomgame()), this, SLOT(RandomGame()));
+    connect(MainUI, SIGNAL(storymode()), this, SLOT(StoryMode()));
+    connect(MainUI, SIGNAL(exit()), this, SLOT(Exit()));
+    MainUI->show();
 }
-void HUD::exit()
+
+void HUD::NewGame()
 {
-    mainmenu->hide();
+    if (MainUI->IsFullscreen())
+        showFullScreen();
+    else
+        setFixedSize(1280, 720);
+
+    gamescene = new GameScene(width(), height(), 0);
+    setWindowTitle("New Game");
+    setScene(gamescene);
+    MainUI->hide();
+    show();
+}
+
+void HUD::RandomGame()
+{
+    if (MainUI->IsFullscreen())
+        showFullScreen();
+    else
+        setFixedSize(1280, 720);
+
+    gamescene = new GameScene(width(), height(), 1);
+    setWindowTitle("Random Game");
+    setScene(gamescene);
+
+    show();
+}
+
+void HUD::StoryMode()
+{
+    if (MainUI->IsFullscreen())
+        showFullScreen();
+    else
+        setFixedSize(1280, 720);
+
+    gamescene = new GameScene(width(), height(), 2);
+    setWindowTitle("Story Mode");
+    setScene(gamescene);
+    MainUI->hide();
+    show();
+}
+
+void HUD::Exit()
+{
+    MainUI->hide();
     App->quit();
 }
+
 HUD::~HUD() {}
-
-void HUD::newgame()
-{
-    sound->setSource(QUrl("qrc:/sounds/Resources/storymode.mp3"));
-    sound->play();
-    mainmenu->hide();
-    if (mainmenu->fullscreen()) {
-        showFullScreen();
-    } else {
-        setFixedSize(1280, 720);
-    }
-    game = new GameScene(0);
-    setScene(game);
-    game->setSceneRect(0, 0, width(), height());
-    setWindowTitle("New Game");
-    show();
-}
-
-void HUD::randomgame()
-{
-    sound->setSource(QUrl("qrc:/sounds/Resources/storymode.mp3"));
-    sound->play();
-    mainmenu->hide();
-    if (mainmenu->fullscreen()) {
-        showFullScreen();
-    } else {
-        setFixedSize(1280, 720);
-    }
-    game = new GameScene(1);
-    setScene(game);
-    game->setSceneRect(0, 0, width(), height());
-    setWindowTitle("Random Game");
-    show();
-}
-
-void HUD::storymode()
-{
-    sound->setSource(QUrl("qrc:/sounds/Resources/storymode.mp3"));
-    sound->play();
-    mainmenu->hide();
-    if (mainmenu->fullscreen()) {
-        showFullScreen();
-    } else {
-        setFixedSize(1280, 720);
-    }
-    game = new GameScene(2);
-    setScene(game);
-    game->setSceneRect(0, 0, width(), height());
-    setWindowTitle("Story Mode");
-    show();
-}

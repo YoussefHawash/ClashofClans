@@ -3,7 +3,10 @@
 #include <QGraphicsScene>
 #include <QRandomGenerator>
 #include <QTimer>
+#include "building.h"
 #include "enemy.h"
+
+using namespace std;
 class GameScene : public QGraphicsScene
 {
 private:
@@ -12,8 +15,9 @@ private:
     int gamemode;
 
 public:
-    GameScene(int);
+    GameScene(double, double, int);
     void createEnemy();
+    void DisplayMap();
 };
 
 #endif // GAMESCENE_H
