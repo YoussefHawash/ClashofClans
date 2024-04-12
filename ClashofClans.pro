@@ -9,31 +9,33 @@ QT += multimedia
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    building.cpp \
-    bullet.cpp \
-    cannon.cpp \
-    enemy.cpp \
+    GameElements/defenseunit.cpp \
+    GameElements\fence.cpp \
+    GameElements\building.cpp \
+    GameElements\bullet.cpp \
+    GameElements\enemy.cpp \
     gamescene.cpp \
-    grass.cpp \
-    health.cpp \
+    GameElements\grass.cpp \
+    GameElements\health.cpp \
     main.cpp \
-    hud.cpp \
     mainmenu.cpp \
-    player.cpp \
-    townhall.cpp
+    GameElements\player.cpp \
+    GameElements\townhall.cpp \
+    view.cpp\
 
 HEADERS += \
-    building.h \
-    bullet.h \
-    cannon.h \
-    enemy.h \
+    GameElements/defenseunit.h \
+    GameElements\fence.h \
+    GameElements\building.h \
+    GameElements\bullet.h \
+    GameElements\enemy.h \
     gamescene.h \
-    grass.h \
-    health.h \
-    hud.h \
+    GameElements\grass.h \
+    GameElements\health.h \
     mainmenu.h \
-    player.h \
-    townhall.h
+    GameElements\player.h \
+    GameElements\townhall.h \
+    view.h\
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -44,3 +46,5 @@ FORMS +=
 
 RESOURCES += \
     Resources.qrc
+
+

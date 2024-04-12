@@ -1,10 +1,10 @@
-#include "hud.h"
+#include "view.h"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication App(argc, argv);
-    HUD w(&App);
+    View w(&App);
     return App.exec();
 }

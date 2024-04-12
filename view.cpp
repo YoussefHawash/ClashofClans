@@ -1,6 +1,6 @@
-#include "hud.h"
+#include "view.h"
 
-HUD::HUD(QApplication *a)
+View::View(QApplication *a)
     : App(a)
 {
     //Setting View
@@ -20,7 +20,7 @@ HUD::HUD(QApplication *a)
     DisplayMainMenu();
 }
 
-void HUD::DisplayMainMenu()
+void View::DisplayMainMenu()
 {
     MainUI = new MainMenu(audioOutput);
     connect(MainUI, SIGNAL(newgame()), this, SLOT(NewGame()));
@@ -30,7 +30,7 @@ void HUD::DisplayMainMenu()
     MainUI->show();
 }
 
-void HUD::NewGame()
+void View::NewGame()
 {
     if (MainUI->IsFullscreen())
         showFullScreen();
@@ -44,7 +44,7 @@ void HUD::NewGame()
     show();
 }
 
-void HUD::RandomGame()
+void View::RandomGame()
 {
     if (MainUI->IsFullscreen())
         showFullScreen();
@@ -58,7 +58,7 @@ void HUD::RandomGame()
     show();
 }
 
-void HUD::StoryMode()
+void View::StoryMode()
 {
     if (MainUI->IsFullscreen())
         showFullScreen();
@@ -72,10 +72,10 @@ void HUD::StoryMode()
     show();
 }
 
-void HUD::Exit()
+void View::Exit()
 {
     MainUI->hide();
     App->quit();
 }
 
-HUD::~HUD() {}
+View::~View() {}

@@ -5,6 +5,10 @@
         <file>Resources/Main.jpg</file>
         <file>Resources/Settings.jpg</file>
         <file>Resources/GrassChunk.jpg</file>
+        <file>Resources/GrassBackgorund.jpg</file>
+        <file>Resources/townhall.jpg</file>
+        <file>Resources/fence.jpg</file>
+        <file>Resources/cannon.jpg</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Resources/backgroundmusic.mp3</file>

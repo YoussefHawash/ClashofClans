@@ -6,11 +6,13 @@
 #include <QBrush>
 class health : public QGraphicsRectItem {
 public:
-    health(int);
+    health(int, int, int, int);
     void increasehealth(int);
     bool decreasehealth(int);
     void updateHealthBar();
+
 private:
+    int x, y;
     QGraphicsRectItem *healthrect;
     int currentHealth;
     int maxHealth;

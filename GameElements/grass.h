@@ -4,8 +4,7 @@
 class Grass : public Building
 {
 public:
-    Grass();
-    virtual bool IsMovable() { return 0; };
+    Grass(int, int);
 };
 
 #endif // GRASS_H
