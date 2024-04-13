@@ -4,6 +4,9 @@ GameScene::GameScene(double w, double h, int k)
     : gamemode(k)
 
 {
+    QPixmap bgPixmap(
+        ":/Imgs/Resources/GrassBackgorund.jpg"); // Replace ":/path/to/background.jpg" with the path to your background image
+    setBackgroundBrush(bgPixmap.scaled(1280, 720));
     setSceneRect(0, 0, w, h);
     int game_rows = 9;
     int game_cols = 16;
@@ -18,11 +21,11 @@ GameScene::GameScene(double w, double h, int k)
     }
     map[4][7] = 1;
     map[3][7] = 2;
-    for (int var = 3; var < 6; ++var) {
+    for (int var = 2; var < 7; ++var) {
         map[var][5] = 3;
         map[var][9] = 3;
     }
-    for (int var = 6; var < 9; ++var) {
+    for (int var = 5; var < 10; ++var) {
         map[2][var] = 3;
         map[6][var] = 3;
     }
@@ -51,27 +54,35 @@ void GameScene::DisplayMap()
 
     for (int i = 0; i < map.size(); i++) {
         for (int j = 0; j < map[i].size(); j++) {
-            if (map[i][j] == 0) {
+            /*if (map[i][j] == 0) {
                 // qDebug() << map[i][j] << yfactor << xfactor;
                 Grass *a = new Grass(xfactor, yfactor);
                 a->setPos(j * xfactor, i * yfactor);
 
                 addItem(a);
-            } else if (map[i][j] == 1) {
+            }*/
+            if (map[i][j] == 1) {
                 // qDebug() << map[i][j] << yfactor << xfactor;
                 TownHall *a = new TownHall(xfactor, yfactor);
                 a->setPos(j * xfactor, i * yfactor);
 
                 a->SetHealth(this);
+
                 addItem(a);
             } else if (map[i][j] == 3) {
                 // qDebug() << map[i][j] << yfactor << xfactor;
-                Fence *a = new Fence(xfactor, yfactor);
-                a->setPos(j * xfactor, i * yfactor);
-                a->SetHealth(this);
-                addItem(a);
-            } else if (map[i][j] == 2) {
-                qDebug() << map[i][j] << yfactor << xfactor;
+
+                Fence *b = new Fence(xfactor, yfactor);
+                b->setPos(j * xfactor, i * yfactor);
+                b->SetHealth(this);
+
+                addItem(b);
+
+                //x
+            }
+
+            else if (map[i][j] == 2) {
+                // qDebug() << map[i][j] << yfactor << xfactor;
                 DefenseUnit *a = new DefenseUnit(xfactor, yfactor, 1);
                 x_cannon = j * xfactor;
                 y_cannon = i * yfactor;

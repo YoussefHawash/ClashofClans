@@ -2,7 +2,7 @@
 
 Fence::Fence(int xfactor, int yfactor)
 {
-    img = new QPixmap(":/Imgs/Resources/fence.jpg");
+    img = new QPixmap(":/Imgs/Resources/fence.png");
     *img = img->scaled(xfactor, yfactor);
     setPixmap(*img);
 }

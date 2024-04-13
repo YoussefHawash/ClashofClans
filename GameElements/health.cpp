@@ -1,12 +1,12 @@
 #include "health.h"
 
 health::health(int a, int b, int w, int v)
-    : x(a + 10)
-    , y(b)
+    : x(a)
+    , y(b - 5)
 {
     // Set rectangels
 
-    setRect(x, y, w - 20, 5);
+    setRect(x, y, w, 3);
 
     setZValue(100);
 
