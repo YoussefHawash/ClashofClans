@@ -10,6 +10,7 @@ QT += multimedia
 
 SOURCES += \
     GameElements/defenseunit.cpp \
+    GameElements/townworkers.cpp \
     GameElements\fence.cpp \
     GameElements\building.cpp \
     GameElements\bullet.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 
 HEADERS += \
     GameElements/defenseunit.h \
+    GameElements/townworkers.h \
     GameElements\fence.h \
     GameElements\building.h \
     GameElements\bullet.h \

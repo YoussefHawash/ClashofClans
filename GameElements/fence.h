@@ -3,6 +3,7 @@
 #include "building.h"
 class Fence : public Building
 {
+private:
 public:
     Fence(int, int);
 };

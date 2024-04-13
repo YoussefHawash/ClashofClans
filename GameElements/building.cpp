@@ -1,5 +1,5 @@
 #include "building.h"
-
+using namespace std;
 Building::Building()
 {
     setAcceptHoverEvents(true);
@@ -11,6 +11,20 @@ void Building::SetHealth(QGraphicsScene *a)
     a->addItem(h);
     h->hide();
     qDebug() << x();
+}
+
+void Building::reducehealth(int i)
+{
+    if(h->decreasehealth(i)){
+    }
+    else{
+        delete this;
+    }
+}
+
+void Building::increasehealth(int i)
+{
+    h->increasehealth(i);
 }
 void Building::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
@@ -27,3 +41,4 @@ void Building::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
         h->hide();
     QGraphicsPixmapItem::hoverLeaveEvent(event);
 }
+

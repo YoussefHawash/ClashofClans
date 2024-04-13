@@ -4,9 +4,7 @@ GameScene::GameScene(double w, double h, int k)
     : gamemode(k)
 
 {
-    QPixmap bgPixmap(
-        ":/Imgs/Resources/GrassBackgorund.jpg"); // Replace ":/path/to/background.jpg" with the path to your background image
-    setBackgroundBrush(bgPixmap.scaled(1280, 720));
+
     setSceneRect(0, 0, w, h);
     int game_rows = 9;
     int game_cols = 16;
@@ -21,30 +19,34 @@ GameScene::GameScene(double w, double h, int k)
     }
     map[4][7] = 1;
     map[3][7] = 2;
-    for (int var = 2; var < 7; ++var) {
+    for (int var = 3; var < 6; ++var) {
         map[var][5] = 3;
         map[var][9] = 3;
     }
-    for (int var = 5; var < 10; ++var) {
+    for (int var = 6; var < 9; ++var) {
         map[2][var] = 3;
         map[6][var] = 3;
     }
     DisplayMap();
-    if (k == 1) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 16; j++) {
-                if (j < 3 || i < 3 || j > 12 || i > 5) {
-                    // enemies can spawn
-                    map[i][j] = -1;
-                } else {
-                    map[i][j] = 0;
-                }
-            }
-        }
-        time = new QTimer();
-        connect(time, SIGNAL(timeout()), this, SLOT(createEnemy()));
-        time->start(2000);
-    }
+    // if (k == 1) {
+    //     for (int i = 0; i < 9; i++) {
+    //         for (int j = 0; j < 16; j++) {
+    //             if (j < 3 || i < 3 || j > 12 || i > 5) {
+    //                 // enemies can spawn
+    //                 map[i][j] = -1;
+    //             } else {
+    //                 map[i][j] = 0;
+    //             }
+    //         }
+    //     }
+
+    // }
+    qDebug() << "working";
+    time = new QTimer();
+    QObject::connect(time, SIGNAL(timeout()), this, SLOT(createenemy()));
+    time->start(2000);
+    qDebug() << "working";
+
 }
 
 void GameScene::DisplayMap()
@@ -54,35 +56,28 @@ void GameScene::DisplayMap()
 
     for (int i = 0; i < map.size(); i++) {
         for (int j = 0; j < map[i].size(); j++) {
-            /*if (map[i][j] == 0) {
+            if (map[i][j] == 0) {
                 // qDebug() << map[i][j] << yfactor << xfactor;
                 Grass *a = new Grass(xfactor, yfactor);
                 a->setPos(j * xfactor, i * yfactor);
 
                 addItem(a);
-            }*/
-            if (map[i][j] == 1) {
+            } else if (map[i][j] == 1) {
                 // qDebug() << map[i][j] << yfactor << xfactor;
                 TownHall *a = new TownHall(xfactor, yfactor);
                 a->setPos(j * xfactor, i * yfactor);
-
+                x_townhall = j * xfactor;
+                y_townhall = i * yfactor;
                 a->SetHealth(this);
-
                 addItem(a);
             } else if (map[i][j] == 3) {
                 // qDebug() << map[i][j] << yfactor << xfactor;
-
-                Fence *b = new Fence(xfactor, yfactor);
-                b->setPos(j * xfactor, i * yfactor);
-                b->SetHealth(this);
-
-                addItem(b);
-
-                //x
-            }
-
-            else if (map[i][j] == 2) {
-                // qDebug() << map[i][j] << yfactor << xfactor;
+                Fence *a = new Fence(xfactor, yfactor);
+                a->setPos(j * xfactor, i * yfactor);
+                a->SetHealth(this);
+                addItem(a);
+            } else if (map[i][j] == 2) {
+                qDebug() << map[i][j] << yfactor << xfactor;
                 DefenseUnit *a = new DefenseUnit(xfactor, yfactor, 1);
                 x_cannon = j * xfactor;
                 y_cannon = i * yfactor;
@@ -106,5 +101,15 @@ void GameScene::shoot(const QPointF &mousePos)
 {
     Bullet *a = new Bullet(x_cannon + 40, y_cannon + 40, mousePos.x(), mousePos.y());
     addItem(a);
+
+    Enemy *enemy = new Enemy(0,0,x_townhall,y_townhall);
+    addItem(enemy);
     // qDebug() << mousePos.x() << mousePos.y();
+}
+
+void GameScene::createenemy()
+{
+    qDebug() << "spown";
+    Enemy *enemy = new Enemy(0,0,x_townhall,y_townhall);
+    addItem(enemy);
 }

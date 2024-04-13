@@ -14,6 +14,8 @@ protected:
 public:
     Building();
     void SetHealth(QGraphicsScene *);
+    void reducehealth(int);
+    void increasehealth(int);
     void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *) override;
 };

@@ -2,21 +2,24 @@
 #define ENEMY_H
 
 #include <QTimer>
+#include <QObject>
+#include "fence.h"
+#include "townhall.h"
+#include "townworkers.h"
 #include "player.h"
 
 class Enemy : public Player
 {
+    Q_OBJECT
 private:
     // The dimentions of the troop
-    int posx = -1;
-    int posy = -1;
-    QTimer *movetime;
+
 
 public:
-    Enemy(int, int);
+    Enemy(int, int, int , int);
     void move();
     void getdamage();
-    void dealdamage();
+    void check();
 };
 
 #endif // ENEMY_H

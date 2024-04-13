@@ -1,7 +1,7 @@
 #include "player.h"
 
-Player::Player(int h)
-    : health(h)
+Player::Player(int x , int y, int h,int s)
+    : health(h),speed(s),posx(x),posy(y)
 {}
 
 void Player::getdamage()
