@@ -18,7 +18,6 @@ private:
 public:
     Enemy(int, int, int , int);
     void move();
-    void getdamage();
 public slots:
     void check();
 };
