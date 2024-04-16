@@ -16,7 +16,7 @@
 using namespace std;
 class GameScene : public QGraphicsScene
 {
-    //Q_OBJECT
+    Q_OBJECT
 private:
     QTimer *time;
     vector<vector<int>> map;
@@ -30,10 +30,10 @@ public:
     GameScene(double, double, int);
     void DisplayMap();
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
     void shoot(const QPointF &mousePos);
-
+public slots:
     void createenemy();
 };
 

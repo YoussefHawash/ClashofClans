@@ -4,6 +4,9 @@ GameScene::GameScene(double w, double h, int k)
     : gamemode(k)
 
 {
+    QPixmap bgPixmap(
+        ":/Imgs/Resources/GrassBackgorund.jpg"); // Replace ":/path/to/background.jpg" with the path to your background image
+    setBackgroundBrush(bgPixmap.scaled(1280, 720));
 
     setSceneRect(0, 0, w, h);
     int game_rows = 9;
@@ -42,10 +45,9 @@ GameScene::GameScene(double w, double h, int k)
 
     // }
     qDebug() << "working";
-    time = new QTimer();
-    QObject::connect(time, SIGNAL(timeout()), this, SLOT(createenemy()));
+    time = new QTimer(this);
+    connect(time, SIGNAL(timeout()), this, SLOT(createenemy()));
     time->start(2000);
-    qDebug() << "working";
 
 }
 
@@ -58,10 +60,10 @@ void GameScene::DisplayMap()
         for (int j = 0; j < map[i].size(); j++) {
             if (map[i][j] == 0) {
                 // qDebug() << map[i][j] << yfactor << xfactor;
-                Grass *a = new Grass(xfactor, yfactor);
-                a->setPos(j * xfactor, i * yfactor);
+                // Grass *a = new Grass(xfactor, yfactor);
+                // a->setPos(j * xfactor, i * yfactor);
 
-                addItem(a);
+                // addItem(a);
             } else if (map[i][j] == 1) {
                 // qDebug() << map[i][j] << yfactor << xfactor;
                 TownHall *a = new TownHall(xfactor, yfactor);
@@ -102,14 +104,12 @@ void GameScene::shoot(const QPointF &mousePos)
     Bullet *a = new Bullet(x_cannon + 40, y_cannon + 40, mousePos.x(), mousePos.y());
     addItem(a);
 
-    Enemy *enemy = new Enemy(0,0,x_townhall,y_townhall);
-    addItem(enemy);
     // qDebug() << mousePos.x() << mousePos.y();
 }
 
 void GameScene::createenemy()
 {
-    qDebug() << "spown";
+    qDebug() << "spawn";
     Enemy *enemy = new Enemy(0,0,x_townhall,y_townhall);
     addItem(enemy);
 }
