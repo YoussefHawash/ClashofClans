@@ -1,8 +1,10 @@
 #include "player.h"
 
 Player::Player(int x , int y, int h,int s)
-    : health(h),speed(s),posx(x),posy(y)
-{}
+    :posx(x),posy (y), health(h),speed(s)
+{
+    setPos(x,y);
+}
 
 void Player::getdamage()
 {

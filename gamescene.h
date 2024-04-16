@@ -5,6 +5,9 @@
 #include <QPainter>
 #include <QRandomGenerator>
 #include <QTimer>
+#include <QEventLoop>
+#include <cstdlib>
+#include <ctime>
 #include "GameElements/bullet.h"
 #include "GameElements/defenseunit.h"
 #include "GameElements/fence.h"
@@ -17,7 +20,7 @@ class GameScene : public QGraphicsScene
 {
     Q_OBJECT
 private:
-    QTimer *time;
+    QTimer *timer;
     vector<vector<int>> map;
 
     int gamemode;

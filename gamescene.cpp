@@ -31,9 +31,11 @@ GameScene::GameScene(double w, double h, int k)
         map[6][var] = 3;
     }
     DisplayMap();
-    time = new QTimer();
-    QObject::connect(time, SIGNAL(timeout()), this, SLOT(createenemy()));
-    time->start(2000);
+    timer = new QTimer();
+
+    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
+    timer->start(1000);
+    // createenemy();
 }
 
 void GameScene::DisplayMap()
@@ -94,8 +96,53 @@ void GameScene::shoot(const QPointF &mousePos)
 
 void GameScene::createenemy()
 {
-    // qDebug() << "spawn";
-    Enemy *enemy = new Enemy(0, 0, x_townhall, y_townhall);
-    addItem(enemy);
+    int p;
+
+    srand(time(0));
+
+    for(int i=0;i<10;i++){
+        int n = rand()%4;
+
+        if(n==0){
+            p=rand()%1280;
+            Enemy *enemy = new Enemy(p, 0, x_townhall, y_townhall);
+            addItem(enemy);
+            QEventLoop loop;
+            QTimer::singleShot(2000, &loop, SLOT(quit()));
+            loop.exec();
+
+        }
+        else if(n==1){
+            p=rand()%720;
+            qDebug() << p;
+
+            Enemy *enemy = new Enemy(1280, p, x_townhall, y_townhall);
+            addItem(enemy);
+            QEventLoop loop;
+            QTimer::singleShot(2000, &loop, SLOT(quit()));
+            loop.exec();
+
+        }
+        else if(n==2){
+            p=rand()%1280;
+
+            Enemy *enemy = new Enemy(p, 720, x_townhall, y_townhall);
+            addItem(enemy);
+            QEventLoop loop;
+            QTimer::singleShot(2000, &loop, SLOT(quit()));
+            loop.exec();
+
+        }
+        else if(n==3){
+            p=rand()%720;
+
+            Enemy *enemy = new Enemy(0, p, x_townhall, y_townhall);
+            addItem(enemy);
+            QEventLoop loop;
+            QTimer::singleShot(2000, &loop, SLOT(quit()));
+            loop.exec();
+
+        }
+    }
 }
 

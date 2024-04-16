@@ -12,8 +12,8 @@ class Player : public QGraphicsPixmapItem, public QObject
 protected:
     int health;
     int speed;
-    int posx = -1;
-    int posy = -1;
+    int posx ;
+    int posy ;
     int targetx=0,targety =0;
     int vol=40;
     float dx;
