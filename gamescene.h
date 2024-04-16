@@ -1,7 +1,6 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 #include <QGraphicsScene>
-#include <QObject>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QRandomGenerator>
@@ -29,10 +28,9 @@ private:
 public:
     GameScene(double, double, int);
     void DisplayMap();
-
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-
+    void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
+
 public slots:
     void createenemy();
 };

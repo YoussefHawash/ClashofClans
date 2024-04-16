@@ -24,26 +24,19 @@ void Enemy::check()
     for(int i=0,n=colliding_items.size();i<n;++i)
     {
         // detecting fence
-        if (Fence *fence = dynamic_cast<Fence*>(colliding_items[i])) {
+        if (Building *fence = dynamic_cast<Building *>(colliding_items[i])) {
             fence->reducehealth(100);
             return;
 
         }
         // detecting townhall
-        else if (TownHall *town = dynamic_cast<TownHall*>(colliding_items[i])) {
-            town->reducehealth(100);
-            return;
 
-        }
         //detecting townworkers
-        else if (townworkers *worker = dynamic_cast<townworkers*>(colliding_items[i])) {
+        else if (townworkers *worker = dynamic_cast<townworkers *>(colliding_items[i])) {
             //worker->reducehealth(100);
         }
     }
-    setPos(x()+dx, y()+dy);
+    setPos(x() - dx, y() - dy);
 }
 
-void Enemy::move(){
-    setPos(x()+dx, y()+dy);
-}
 

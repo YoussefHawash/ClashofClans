@@ -31,24 +31,9 @@ GameScene::GameScene(double w, double h, int k)
         map[6][var] = 3;
     }
     DisplayMap();
-    // if (k == 1) {
-    //     for (int i = 0; i < 9; i++) {
-    //         for (int j = 0; j < 16; j++) {
-    //             if (j < 3 || i < 3 || j > 12 || i > 5) {
-    //                 // enemies can spawn
-    //                 map[i][j] = -1;
-    //             } else {
-    //                 map[i][j] = 0;
-    //             }
-    //         }
-    //     }
-
-    // }
-    qDebug() << "working";
-    time = new QTimer(this);
-    connect(time, SIGNAL(timeout()), this, SLOT(createenemy()));
+    time = new QTimer();
+    QObject::connect(time, SIGNAL(timeout()), this, SLOT(createenemy()));
     time->start(2000);
-
 }
 
 void GameScene::DisplayMap()
@@ -109,7 +94,8 @@ void GameScene::shoot(const QPointF &mousePos)
 
 void GameScene::createenemy()
 {
-    qDebug() << "spawn";
-    Enemy *enemy = new Enemy(0,0,x_townhall,y_townhall);
+    // qDebug() << "spawn";
+    Enemy *enemy = new Enemy(0, 0, x_townhall, y_townhall);
     addItem(enemy);
 }
+

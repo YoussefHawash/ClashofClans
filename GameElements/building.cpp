@@ -7,7 +7,7 @@ Building::Building()
 
 void Building::SetHealth(QGraphicsScene *a)
 {
-    h = new health(x(), y(), pixmap().width(), 100);
+    h = new health(x(), y(), pixmap().width(), 500);
     a->addItem(h);
     h->hide();
     qDebug() << x();
