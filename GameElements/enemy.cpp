@@ -1,15 +1,16 @@
 #include "enemy.h"
 
-Enemy::Enemy(int x, int y, int tx, int ty)
+Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
     : Player(x, y, 500, 5)
+    , damage(d)
 {
-    int slope_x = posx-tx;
-    int slope_y = posy-ty;
-    dx = speed*((slope_x/sqrt(pow(slope_y,2)+pow(slope_x,2))));
-    dy = speed*((slope_y/sqrt(pow(slope_x,2)+pow(slope_y,2))));
     QPixmap *img = new QPixmap(":/Imgs/Resources/icon.png");
-    *img = img->scaled(80, 80);
+    *img = img->scaled(50, 50);
     setPixmap(*img);
+    int slope_x = posx - x_tower;
+    int slope_y = posy - y_tower;
+    dx = speed * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
+    dy = speed*((slope_y/sqrt(pow(slope_x,2)+pow(slope_y,2))));
 
     movetime = new QTimer();
     connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
@@ -19,46 +20,32 @@ Enemy::Enemy(int x, int y, int tx, int ty)
 // checks whether to move or deal damage
 void Enemy::check()
 {
-
-    QList<QGraphicsItem *>colliding_items =collidingItems();
+    QList<QGraphicsItem *> colliding_items = collidingItems();
     for(int i=0,n=colliding_items.size();i<n;++i)
     {
         // detecting fence
         if (Fence *fence = dynamic_cast<Fence *>(colliding_items[i])) {
-            fence->reducehealth(200);
-            qDebug() << fence->gethealth();
+            fence->decreasehealth(damage);
             if (fence->gethealth() <= 0) {
                 delete fence;
-
-                qDebug() << "Deleted";
             }
             return;
 
         }
-
         else if (TownHall *hall = dynamic_cast<TownHall *>(colliding_items[i])) {
-            hall->reducehealth(200);
-            qDebug() << hall->gethealth();
+            hall->decreasehealth(damage);
             if (hall->gethealth() <= 0) {
                 delete hall;
                 QGraphicsScene *k= scene();
-                GameScene *s=dynamic_cast<GameScene*>(k);
-                if(s)
-                {
-                    s->Gameover();
-                }
-                qDebug() << "Deleted";
+                GameScene *scene = dynamic_cast<GameScene *>(k);
+                scene->Gameover();
             }
             return;
-
         }
-        // detecting townhall
-
         //detecting townworkers
         else if (townworkers *worker = dynamic_cast<townworkers *>(colliding_items[i])) {
-            worker->getdamage(100);
+            worker->gethealth()->decreasehealth(damage);
             return;
-
         }
     }
     move();
@@ -66,5 +53,4 @@ void Enemy::check()
 
 void Enemy::move() {
     setPos(x() - dx, y() - dy);
-
 }

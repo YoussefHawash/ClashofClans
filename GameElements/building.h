@@ -13,8 +13,8 @@ protected:
 
 public:
     Building();
-    void SetHealth(QGraphicsScene *);
-    void reducehealth(int);
+    void SetHealth(QGraphicsScene *, int);
+    void decreasehealth(int);
     void increasehealth(int);
     void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *) override;

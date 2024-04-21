@@ -37,7 +37,7 @@ void View::NewGame()
     else
         setFixedSize(1280, 720);
 
-    gamescene = new GameScene(width(), height(), 0);
+    gamescene = new GameScene(width(), height());
     setWindowTitle("New Game");
     setScene(gamescene);
     MainUI->hide();
@@ -51,7 +51,7 @@ void View::RandomGame()
     else
         setFixedSize(1280, 720);
 
-    gamescene = new GameScene(width(), height(), 1);
+    gamescene = new GameScene(width(), height());
     setWindowTitle("Random Game");
     setScene(gamescene);
 
@@ -65,7 +65,7 @@ void View::StoryMode()
     else
         setFixedSize(1280, 720);
 
-    gamescene = new GameScene(width(), height(), 2);
+    gamescene = new GameScene(width(), height());
     setWindowTitle("Story Mode");
     setScene(gamescene);
     MainUI->hide();

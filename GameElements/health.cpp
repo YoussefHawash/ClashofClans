@@ -1,8 +1,8 @@
 #include "health.h"
 
-health::health(int a, int b, int w, int v)
-    : x(a)
-    , y(b - 5)
+health::health(int x, int y, int w, int v)
+    : x(x)
+    , y(y - 5)
 {
     // Set rectangels
 
@@ -20,27 +20,21 @@ health::health(int a, int b, int w, int v)
 
 void health::increasehealth(int i)
 {
-    //check full health
-
-    if(currentHealth!= maxHealth){}
-
-    //increasing health
-
-    else if(currentHealth+i <= maxHealth){
-        currentHealth = currentHealth + i;
+    if (currentHealth + i <= maxHealth) {
+        currentHealth += i;
         updateHealthBar();
-    }
-    else{
+    } else {
         currentHealth = maxHealth;
         updateHealthBar();
     }
+
+    //increasing health
 }
 
 void health::decreasehealth(int i)
 {
     // decreasing health
-
-    currentHealth = currentHealth - i;
+    currentHealth -= i;
     updateHealthBar();
 }
 
@@ -51,8 +45,7 @@ void health::updateHealthBar()
 {
     // Scale to fit the width of the background
     float barWidth = (float(currentHealth) / maxHealth) * rect().width();
-
-    setRect(x, y, barWidth, 5);
+    setRect(x, y, barWidth, 3);
 }
 
 int health::gethealth()

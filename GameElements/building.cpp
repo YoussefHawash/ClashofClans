@@ -1,19 +1,17 @@
 #include "building.h"
-using namespace std;
 Building::Building()
 {
     setAcceptHoverEvents(true);
 }
 
-void Building::SetHealth(QGraphicsScene *a)
+void Building::SetHealth(QGraphicsScene *a, int max)
 {
-    h = new health(x(), y(), pixmap().width(), 6000);
+    h = new health(x(), y(), pixmap().width(), max);
     a->addItem(h);
     h->hide();
-    qDebug() << x();
 }
 
-void Building::reducehealth(int i)
+void Building::decreasehealth(int i)
 {
     h->decreasehealth(i);
 }

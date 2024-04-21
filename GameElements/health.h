@@ -14,7 +14,6 @@ public:
 
 private:
     int x, y;
-    QGraphicsRectItem *healthrect;
     int currentHealth;
     int maxHealth;
 };

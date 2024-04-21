@@ -4,27 +4,28 @@
 #include <QGraphicsPixmapItem>
 #include <QObject>
 #include <QTimer>
-
+#include "health.h"
 
 class Player : public QGraphicsPixmapItem, public QObject
 {
-   // Q_OBJECT
+    // Q_OBJECT
 protected:
-    int health;
+    health *h = nullptr;
     int damage;
     int speed;
     int posx ;
     int posy ;
-    int targetx=0,targety =0;
-    int vol=40;
+    int targetx;
+    int targety;
+    int vel;
     float dx;
     float dy;
-
     QTimer *movetime;
 public:
     Player(int,int,int,int);
-    void getdamage(int );
-    bool die();
+    health *gethealth();
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *) override;
 };
 
 #endif // PLAYER_H

@@ -10,15 +10,14 @@
 
 class Bullet :public QObject, public QGraphicsEllipseItem {
     Q_OBJECT
-public:
-
-    Bullet(int,int,int,int);
-private slots:
-    void shoot();
 private:
+    int xi, xf, yi, yf;
 
-    int xi,xf,yi,yf;
-
+public:
+    Bullet(int,int,int,int);
+    void CheckCollide();
+private slots:
+    void Move();
 };
 
 

@@ -13,11 +13,11 @@ class Enemy : public Player
 {
     Q_OBJECT
 private:
-    // The dimentions of the troop
+    int damage;
 
 public:
     QTimer *checked;
-    Enemy(int, int, int, int);
+    Enemy(int, int, int, int, int);
 
 public slots:
     void check();

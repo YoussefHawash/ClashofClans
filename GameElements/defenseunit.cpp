@@ -5,7 +5,6 @@ DefenseUnit::DefenseUnit(int xfactor, int yfactor, int level)
 {
     if (level == 1) {
         img = new QPixmap(":/Imgs/Resources/cannon.png");
-        damage = 10;
     }
     *img = img->scaled(xfactor, yfactor);
     setPixmap(*img);

@@ -25,20 +25,13 @@ class GameScene : public QGraphicsScene
 {
     Q_OBJECT
 private:
-    QTimer *timer;
-    QTimer *Wavetimer;
-
-    //int wavenum =3;
-    string massage;
+    QTimer *EnemyCreation;
     vector<vector<int>> map;
-    TownHall *a;
-    int gamemode;
-    //i can loop in the items and get hte coordinates
     int x_cannon, y_cannon;
     int x_townhall, y_townhall;
 
 public:
-    GameScene(double, double, int);
+    GameScene(double, double);
     void DisplayMap();
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
@@ -46,8 +39,7 @@ public:
     void Gameover();
 
 public slots:
-    void startwave();
-    void checkwin();
+    void EndWave();
     void createenemy();
 };
 

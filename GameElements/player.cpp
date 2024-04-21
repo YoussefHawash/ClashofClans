@@ -1,23 +1,30 @@
 #include "player.h"
 
-Player::Player(int x , int y, int h,int s)
-    :posx(x),posy (y), health(h),speed(s)
+Player::Player(int x, int y, int hp, int s)
+    : posx(x)
+    , posy(y)
+    , speed(s)
 {
+    h = new health(posx, posy, pixmap().width(), hp);
     setPos(x,y);
 }
 
-void Player::getdamage(int i)
+health *Player::gethealth()
 {
-    if (!this->die()) {
-        health = health - i;
-    }
+    return h;
+}
+void Player::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    setOpacity(0.8);
+    if (h != nullptr)
+        h->show();
+    QGraphicsPixmapItem::hoverEnterEvent(event);
 }
 
-bool Player::die()
+void Player::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    if (health <= 0) {
-        delete this;
-        return 1;
-    }
-    return 0;
+    setOpacity(1);
+    if (h != nullptr)
+        h->hide();
+    QGraphicsPixmapItem::hoverLeaveEvent(event);
 }
