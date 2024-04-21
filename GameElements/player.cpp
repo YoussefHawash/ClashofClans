@@ -6,10 +6,10 @@ Player::Player(int x , int y, int h,int s)
     setPos(x,y);
 }
 
-void Player::getdamage()
+void Player::getdamage(int i)
 {
     if (!this->die()) {
-        health = health - 50;
+        health = health - i;
     }
 }
 

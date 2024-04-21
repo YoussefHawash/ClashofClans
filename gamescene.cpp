@@ -32,11 +32,7 @@ GameScene::GameScene(double w, double h, int k)
         map[2][var] = 3;
         map[6][var] = 3;
     }
-    townworkers *workers[5];
-    for(int i= 0 ; i <5;i++){
-        workers[i] = new townworkers(x_townhall,y_townhall);
-        addItem(workers[i]);
-    }
+
 
     // QTimer *showtime = new QTimer;
 
@@ -120,8 +116,14 @@ void GameScene::DisplayMap()
                 a->setPos(x_cannon, y_cannon);
                 a->SetHealth(this);
                 addItem(a);
+
             }
         }
+    }
+    townworkers *workers[3];
+    for(int i= 0 ; i <3;i++){
+        workers[i] = new townworkers((x_townhall-80)+(i*200),y_townhall);
+        addItem(workers[i]);
     }
 }
 void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)

@@ -23,7 +23,7 @@ protected:
     QTimer *movetime;
 public:
     Player(int,int,int,int);
-    void getdamage();
+    void getdamage(int );
     bool die();
 };
 

@@ -54,7 +54,7 @@ void Bullet::shoot()
             Enemy *enemy = dynamic_cast<Enemy *>(colliding_items[i]);
             if (enemy) {
                 // If the cast was successful, reduce the health of the enemy
-                enemy->getdamage();
+                enemy->getdamage(200);
                 delete this;
             }
             QMediaPlayer *sound = new QMediaPlayer;

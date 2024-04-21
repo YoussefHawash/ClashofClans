@@ -49,7 +49,9 @@ void Enemy::check()
 
         //detecting townworkers
         else if (townworkers *worker = dynamic_cast<townworkers *>(colliding_items[i])) {
-            //worker->reducehealth(100);
+            worker->getdamage(100);
+            return;
+
         }
     }
     move();
