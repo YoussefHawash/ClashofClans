@@ -55,6 +55,7 @@ void Bullet::shoot()
             if (enemy) {
                 // If the cast was successful, reduce the health of the enemy
                 enemy->getdamage();
+                delete this;
             }
             QMediaPlayer *sound = new QMediaPlayer;
             QAudioOutput *audioOutput = new QAudioOutput();
@@ -66,8 +67,8 @@ void Bullet::shoot()
             return;
         }
     }
-
     //     if(y() < 0  || y() > scene()->height() || x() < 0 || x() > scene()->width()) {
+    //     qDebug() << y();
     //         scene()->removeItem(this);
     //         delete this;
     // }

@@ -14,6 +14,7 @@
 #include "GameElements/grass.h"
 #include "GameElements/townhall.h"
 #include "GameElements/enemy.h"
+#include "GameElements/townworkers.h"
 #include <vector>
 using namespace std;
 class GameScene : public QGraphicsScene
@@ -21,6 +22,9 @@ class GameScene : public QGraphicsScene
     Q_OBJECT
 private:
     QTimer *timer;
+    QTimer *Wavetimer;
+    //int wavenum =3;
+    string massage;
     vector<vector<int>> map;
 
     int gamemode;
@@ -33,10 +37,11 @@ public:
     void DisplayMap();
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
-
+    void start();
 
 public slots:
-    void start();
+    void startwave();
+    void DisplayText();
 
     void createenemy();
 };

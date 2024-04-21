@@ -52,7 +52,10 @@ void Enemy::check()
             //worker->reducehealth(100);
         }
     }
-    setPos(x() - dx, y() - dy);
+    move();
 }
 
-void Enemy::move() {}
+void Enemy::move() {
+    setPos(x() - dx, y() - dy);
+
+}

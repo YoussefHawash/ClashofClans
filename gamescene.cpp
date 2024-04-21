@@ -30,25 +30,17 @@ GameScene::GameScene(double w, double h, int k)
         map[2][var] = 3;
         map[6][var] = 3;
     }
+    townworkers *workers[5];
+    for(int i= 0 ; i <5;i++){
+        workers[i] = new townworkers(x_townhall,y_townhall);
+        addItem(workers[i]);
+    }
     // display map
     DisplayMap();
 
     // i do not know if this is the best way
 
-    // QTimer::singleShot(0, this, [this]() {
-    //     for(int i = 0 ;i<3;i++){
-    //         QObject::connect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
-    //         timer->start(1000);
-    //         QEventLoop loop;
-    //         QTimer::singleShot(60000, &loop, SLOT(quit()));
-    //         loop.exec();
-    //     }
-    // });
-    // start();
-    createenemy();
-    // QObject::connect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
-    // timer->start(1000);
-    // createenemy();
+    start();
 }
 
 void GameScene::DisplayMap()
@@ -112,14 +104,25 @@ void GameScene::shoot(const QPointF &mousePos)
 
 }
 
+void GameScene::DisplayText()
+{
+    QObject::disconnect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
+    massage = "Vitory";
+}
 void GameScene::start(){
+    startwave();
+    Wavetimer = new QTimer();
+    QObject::connect(Wavetimer, SIGNAL(timeout()),this,SLOT(DisplayText()));
+    Wavetimer->start(60000);
+}
+
+void GameScene::startwave(){
     timer = new QTimer();
 
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
-    timer->start(3000);
-    // QEventLoop loop;
-    // QTimer::singleShot(60000, &loop, SLOT(quit()));
-    // loop.exec();
+    timer->start(4000);
+    //wavenum--;
+
 
 }
 
