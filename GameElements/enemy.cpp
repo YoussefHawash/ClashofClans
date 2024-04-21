@@ -24,7 +24,13 @@ void Enemy::check()
     for(int i=0,n=colliding_items.size();i<n;++i)
     {
         // detecting fence
-        if (Building *fence = dynamic_cast<Building *>(colliding_items[i])) {
+        if (Fence *fence = dynamic_cast<Fence *>(colliding_items[i])) {
+            fence->reducehealth(25);
+            return;
+
+        }
+
+        else if (TownHall *fence = dynamic_cast<TownHall *>(colliding_items[i])) {
             fence->reducehealth(25);
             return;
 

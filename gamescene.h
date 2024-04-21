@@ -34,7 +34,10 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
 
+
 public slots:
+    void start();
+
     void createenemy();
 };
 
