@@ -29,6 +29,7 @@ void Enemy::check()
             qDebug() << fence->gethealth();
             if (fence->gethealth() <= 0) {
                 delete fence;
+
                 qDebug() << "Deleted";
             }
             return;
@@ -40,6 +41,12 @@ void Enemy::check()
             qDebug() << hall->gethealth();
             if (hall->gethealth() <= 0) {
                 delete hall;
+                QGraphicsScene *k= scene();
+                GameScene *s=dynamic_cast<GameScene*>(k);
+                if(s)
+                {
+                    s->Gameover();
+                }
                 qDebug() << "Deleted";
             }
             return;

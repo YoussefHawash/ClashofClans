@@ -40,5 +40,7 @@ void Building::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 int Building::gethealth()
 {
+    if(h==nullptr)
+        return 0;
     return h->gethealth();
 }

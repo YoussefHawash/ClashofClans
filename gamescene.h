@@ -27,7 +27,7 @@ class GameScene : public QGraphicsScene
 private:
     QTimer *timer;
     QTimer *Wavetimer;
-    QTimer *check;
+
     //int wavenum =3;
     string massage;
     vector<vector<int>> map;
@@ -43,11 +43,10 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
     void start();
-    void gameover();
+    void Gameover();
 
 public slots:
     void startwave();
-    void checklose();
     void checkwin();
     void createenemy();
 };

@@ -7,6 +7,7 @@
 #include "townhall.h"
 #include "townworkers.h"
 #include "player.h"
+#include "gamescene.h"
 
 class Enemy : public Player
 {

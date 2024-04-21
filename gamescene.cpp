@@ -69,9 +69,8 @@ GameScene::GameScene(double w, double h, int k)
     // display map
     DisplayMap();
 
-    check = new QTimer();
-    QObject::connect(check,SIGNAL(timeout()),this, SLOT(checklose()));
-    check->start(1000);
+
+
     start();
 }
 
@@ -142,14 +141,14 @@ void GameScene::shoot(const QPointF &mousePos)
 
 }
 
-void GameScene::checklose()
-{
 
-    qDebug() << 1;
-    if(a->gethealth()<=0){
-        qDebug() << 2;
-        QObject::disconnect(check,SIGNAL(timeout()),this, SLOT(checklose()));
-        QObject::disconnect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
+void GameScene::Gameover()
+{
+    QObject::disconnect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
+    Building *h=new Building;
+    int health=h->gethealth();
+    if(health<=0)
+    {
         QMediaPlayer *sound = new QMediaPlayer();
         QAudioOutput *audioOutput = new QAudioOutput();
         sound->setSource(QUrl("qrc:/sounds/Resources/Voicy_Barbarian death cry - Clash of Clans.mp3"));
@@ -171,10 +170,9 @@ void GameScene::checklose()
         msg->setStyleSheet("QLabel{min-width: 500px;min-height: 100px;font-size: 40px}");
         msg->setText(QString("GAME OVER"));
         msg->exec();
-        }
-
     }
 
+}
 
 void GameScene::checkwin(){
     QObject::disconnect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
