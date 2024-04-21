@@ -1,11 +1,15 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
+#pragma once
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QRandomGenerator>
 #include <QTimer>
 #include <QEventLoop>
+#include <QtMultimedia/QMediaPlayer>
+#include <QAudioOutput>
+#include <QMessageBox>
 #include <cstdlib>
 #include <ctime>
 #include "GameElements/bullet.h"
@@ -23,10 +27,11 @@ class GameScene : public QGraphicsScene
 private:
     QTimer *timer;
     QTimer *Wavetimer;
+    QTimer *check;
     //int wavenum =3;
     string massage;
     vector<vector<int>> map;
-
+    TownHall *a;
     int gamemode;
     //i can loop in the items and get hte coordinates
     int x_cannon, y_cannon;
@@ -38,11 +43,12 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
     void start();
+    void gameover();
 
 public slots:
     void startwave();
-    void DisplayText();
-
+    void checklose();
+    void checkwin();
     void createenemy();
 };
 

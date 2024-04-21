@@ -6,3 +6,5 @@ TownHall::TownHall(int xfactor, int yfactor)
     *img = img->scaled(xfactor, yfactor);
     setPixmap(*img);
 }
+
+

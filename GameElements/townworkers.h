@@ -11,7 +11,6 @@ public:
     townworkers(int =0, int=0);
     void direct(int,int);
     void move();
-    void fix();
     void check();
 };
 

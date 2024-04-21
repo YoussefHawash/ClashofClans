@@ -1,4 +1,6 @@
 #include "gamescene.h"
+#include <QLabel>
+#include <QVBoxLayout>
 
 GameScene::GameScene(double w, double h, int k)
     : gamemode(k)
@@ -35,11 +37,45 @@ GameScene::GameScene(double w, double h, int k)
         workers[i] = new townworkers(x_townhall,y_townhall);
         addItem(workers[i]);
     }
+
+    // QTimer *showtime = new QTimer;
+
+    // // Create a label to display the timer value
+    // QLabel label("1:00");
+    // label.setAlignment(Qt::AlignCenter);
+
+    // Create a widget to hold the label
+    // QWidget widget;
+    // QVBoxLayout layout(&widget);
+    // layout.addWidget(&label);
+    // widget.setLayout(&layout);
+    // widget.show();
+
+    // QObject::connect(showtime, &QTimer::timeout, [&]() {
+    //     // Decrement the timer value and update the label text
+    //     static int seconds = 60; // 1 minute = 60 seconds
+    //     if (seconds > 0) {
+    //         --seconds;
+    //         int minutes = seconds / 60;
+    //         int remainingSeconds = seconds % 60;
+    //         label.setText(QString("%1:%2").arg(minutes, 2, 10, QChar('0')).arg(remainingSeconds, 2, 10, QChar('0')));
+    //     } else {
+    //         showtime->stop(); // Stop the timer when it reaches 0
+    //     }
+    // });
+
+    // Set the interval for the timer in milliseconds (e.g., 1000 ms = 1 second)
+    // showtime->setInterval(1000); // 1 second interval
+
+    // // Start the timer
+    // showtime->start();
+
     // display map
     DisplayMap();
 
-    // i do not know if this is the best way
-
+    check = new QTimer();
+    QObject::connect(check,SIGNAL(timeout()),this, SLOT(checklose()));
+    check->start(1000);
     start();
 }
 
@@ -52,7 +88,7 @@ void GameScene::DisplayMap()
     for (int i = 0; i < map.size(); i++) {
         for (int j = 0; j < map[i].size(); j++) {
              if (map[i][j] == 1) { // townall =1
-                TownHall *a = new TownHall(xfactor, yfactor);
+                a = new TownHall(xfactor, yfactor);
                 a->setPos(j * xfactor, i * yfactor);
                 x_townhall = j * xfactor;
                 y_townhall = i * yfactor;
@@ -104,15 +140,48 @@ void GameScene::shoot(const QPointF &mousePos)
 
 }
 
-void GameScene::DisplayText()
+void GameScene::checklose()
 {
+
+    qDebug() << 1;
+    if(a->gethealth()<=0){
+        qDebug() << 2;
+        QObject::disconnect(check,SIGNAL(timeout()),this, SLOT(checklose()));
+        QObject::disconnect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
+        QMediaPlayer *sound = new QMediaPlayer();
+        QAudioOutput *audioOutput = new QAudioOutput();
+        sound->setSource(QUrl("qrc:/sounds/Resources/Voicy_Barbarian death cry - Clash of Clans.mp3"));
+        sound->setAudioOutput(audioOutput);
+        audioOutput->setVolume(50);
+        sound->play();
+
+
+
+
+        QGraphicsTextItem* gameOverText = new QGraphicsTextItem();
+        gameOverText->setDefaultTextColor(Qt::red);
+        gameOverText->setFont(QFont("serif", 48));
+        gameOverText->setPlainText("GAME OVER!");
+        gameOverText->setPos(width() / 2 - 180,height() / 2 - 48);
+        addItem(gameOverText);
+        QMessageBox* msg = new QMessageBox();
+        msg->setWindowTitle(QString("You Lost"));
+        msg->setStyleSheet("QLabel{min-width: 500px;min-height: 100px;font-size: 40px}");
+        msg->setText(QString("GAME OVER"));
+        msg->exec();
+        }
+
+    }
+
+
+void GameScene::checkwin(){
     QObject::disconnect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
-    massage = "Vitory";
+
 }
 void GameScene::start(){
     startwave();
     Wavetimer = new QTimer();
-    QObject::connect(Wavetimer, SIGNAL(timeout()),this,SLOT(DisplayText()));
+    QObject::connect(Wavetimer, SIGNAL(timeout()),this,SLOT(checkwin()));
     Wavetimer->start(60000);
 }
 
