@@ -14,12 +14,13 @@ class Enemy : public Player
 private:
     // The dimentions of the troop
 
-
 public:
-    Enemy(int, int, int , int);
-    void move();
+    QTimer *checked;
+    Enemy(int, int, int, int);
+
 public slots:
     void check();
+    void move();
 };
 
 #endif // ENEMY_H

@@ -36,21 +36,12 @@ void health::increasehealth(int i)
     }
 }
 
-bool health::decreasehealth(int i)
+void health::decreasehealth(int i)
 {
-
-    // checking if died and if so return 0
-    if(currentHealth-i <= 0){
-        return 0;
-    }
-
     // decreasing health
 
-    else{
-        currentHealth = currentHealth-i;
-        updateHealthBar();
-        return 1;
-    }
+    currentHealth = currentHealth - i;
+    updateHealthBar();
 }
 
 
@@ -62,4 +53,9 @@ void health::updateHealthBar()
     float barWidth = (float(currentHealth) / maxHealth) * rect().width();
 
     setRect(x, y, barWidth, 5);
+}
+
+int health::gethealth()
+{
+    return currentHealth;
 }

@@ -7,7 +7,7 @@ Building::Building()
 
 void Building::SetHealth(QGraphicsScene *a)
 {
-    h = new health(x(), y(), pixmap().width(), 500);
+    h = new health(x(), y(), pixmap().width(), 6000);
     a->addItem(h);
     h->hide();
     qDebug() << x();
@@ -15,11 +15,7 @@ void Building::SetHealth(QGraphicsScene *a)
 
 void Building::reducehealth(int i)
 {
-    if(h->decreasehealth(i)){
-    }
-    else{
-        delete this;
-    }
+    h->decreasehealth(i);
 }
 
 void Building::increasehealth(int i)
@@ -42,3 +38,7 @@ void Building::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     QGraphicsPixmapItem::hoverLeaveEvent(event);
 }
 
+int Building::gethealth()
+{
+    return h->gethealth();
+}

@@ -8,10 +8,10 @@
         <file>Resources/GrassBackgorund.jpg</file>
         <file>Resources/fence.png</file>
         <file>Resources/grasscannon.jpg</file>
-        <file>Resources/grassfence.jpg</file>
         <file>Resources/grasstownhall.jpg</file>
         <file>Resources/cannon.png</file>
         <file>Resources/townhall.png</file>
+        <file>Resources/wall.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Resources/backgroundmusic.mp3</file>

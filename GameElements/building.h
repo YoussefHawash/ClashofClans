@@ -18,6 +18,7 @@ public:
     void increasehealth(int);
     void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *) override;
+    int gethealth();
 };
 
 #endif // BUILDING_H

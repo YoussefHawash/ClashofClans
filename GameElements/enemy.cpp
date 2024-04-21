@@ -1,8 +1,7 @@
 #include "enemy.h"
 
-
-Enemy::Enemy(int x, int y, int tx,int ty)
-    : Player(x,y,500,40)
+Enemy::Enemy(int x, int y, int tx, int ty)
+    : Player(x, y, 500, 5)
 {
     int slope_x = posx-tx;
     int slope_y = posy-ty;
@@ -11,9 +10,10 @@ Enemy::Enemy(int x, int y, int tx,int ty)
     QPixmap *img = new QPixmap(":/Imgs/Resources/icon.png");
     *img = img->scaled(80, 80);
     setPixmap(*img);
+
     movetime = new QTimer();
     connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
-    movetime->start(500);
+    movetime->start(100);
 }
 
 // checks whether to move or deal damage
@@ -25,13 +25,23 @@ void Enemy::check()
     {
         // detecting fence
         if (Fence *fence = dynamic_cast<Fence *>(colliding_items[i])) {
-            fence->reducehealth(25);
+            fence->reducehealth(200);
+            qDebug() << fence->gethealth();
+            if (fence->gethealth() <= 0) {
+                delete fence;
+                qDebug() << "Deleted";
+            }
             return;
 
         }
 
-        else if (TownHall *fence = dynamic_cast<TownHall *>(colliding_items[i])) {
-            fence->reducehealth(25);
+        else if (TownHall *hall = dynamic_cast<TownHall *>(colliding_items[i])) {
+            hall->reducehealth(200);
+            qDebug() << hall->gethealth();
+            if (hall->gethealth() <= 0) {
+                delete hall;
+                qDebug() << "Deleted";
+            }
             return;
 
         }
@@ -45,4 +55,4 @@ void Enemy::check()
     setPos(x() - dx, y() - dy);
 }
 
-
+void Enemy::move() {}

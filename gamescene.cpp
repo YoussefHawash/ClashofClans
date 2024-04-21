@@ -22,11 +22,11 @@ GameScene::GameScene(double w, double h, int k)
     map[4][7] = 1;
     map[3][7] = 2;
     // adding elements
-    for (int var = 3; var < 6; ++var) {
+    for (int var = 2; var < 7; ++var) {
         map[var][5] = 3;
         map[var][9] = 3;
     }
-    for (int var = 6; var < 9; ++var) {
+    for (int var = 5; var < 10; ++var) {
         map[2][var] = 3;
         map[6][var] = 3;
     }
@@ -44,7 +44,8 @@ GameScene::GameScene(double w, double h, int k)
     //         loop.exec();
     //     }
     // });
-    start();
+    // start();
+    createenemy();
     // QObject::connect(timer, SIGNAL(timeout()), this, SLOT(createenemy()));
     // timer->start(1000);
     // createenemy();
@@ -54,6 +55,7 @@ void GameScene::DisplayMap()
 {
     double yfactor = height() / map.size();
     double xfactor = width() / map[0].size();
+    // Load the first image
 
     for (int i = 0; i < map.size(); i++) {
         for (int j = 0; j < map[i].size(); j++) {
@@ -65,10 +67,23 @@ void GameScene::DisplayMap()
                 a->SetHealth(this);
                 addItem(a);
             } else if (map[i][j] == 3) { // fence = 3
-                Fence *a = new Fence(xfactor, yfactor);
-                a->setPos(j * xfactor, i * yfactor);
-                a->SetHealth(this);
-                addItem(a);
+                std::vector<int> a;
+                if (map[i - 1][j] == 3) {
+                    a.push_back(0);
+                }
+                if (map[i + 1][j] == 3) {
+                    a.push_back(2);
+                }
+                if (map[i][j - 1] == 3) {
+                    a.push_back(3);
+                }
+                if (map[i][j + 1] == 3) {
+                    a.push_back(1);
+                }
+                Fence *fence = new Fence(xfactor, yfactor, a);
+                fence->setPos(j * xfactor, i * yfactor);
+                fence->SetHealth(this);
+                addItem(fence);
             } else if (map[i][j] == 2) { // defence unit =2
                 qDebug() << map[i][j] << yfactor << xfactor;
                 DefenseUnit *a = new DefenseUnit(xfactor, yfactor, 1);

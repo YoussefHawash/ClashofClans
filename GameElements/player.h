@@ -11,6 +11,7 @@ class Player : public QGraphicsPixmapItem, public QObject
    // Q_OBJECT
 protected:
     int health;
+    int damage;
     int speed;
     int posx ;
     int posy ;

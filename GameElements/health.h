@@ -8,8 +8,9 @@ class health : public QGraphicsRectItem {
 public:
     health(int, int, int, int);
     void increasehealth(int);
-    bool decreasehealth(int);
+    void decreasehealth(int);
     void updateHealthBar();
+    int gethealth();
 
 private:
     int x, y;
