@@ -1,7 +1,7 @@
 #include "gamescene.h"
+#include <QGraphicsProxyWidget>
 #include <QLabel>
-#include <QVBoxLayout>
-
+#include <QPushButton>
 GameScene::GameScene(double w, double h)
 
 {
@@ -34,6 +34,7 @@ GameScene::GameScene(double w, double h)
 
     // display map
     DisplayMap();
+    clickable = 1;
     start();
 }
 
@@ -70,7 +71,7 @@ void GameScene::DisplayMap()
                 fence->SetHealth(this, 4000);
                 addItem(fence);
             } else if (map[i][j] == 2) { // defence unit =2
-                qDebug() << map[i][j] << yfactor << xfactor;
+
                 DefenseUnit *a = new DefenseUnit(xfactor, yfactor, 1);
                 x_cannon = j * xfactor;
                 y_cannon = i * yfactor;
@@ -81,7 +82,7 @@ void GameScene::DisplayMap()
         }
     }
     townworkers *workers[3];
-    for(int i= 0 ; i <3;i++){
+    for (int i = 0; i < 2; i++) {
         workers[i] = new townworkers((x_townhall-80)+(i*200),y_townhall);
         addItem(workers[i]);
     }
@@ -97,14 +98,18 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void GameScene::shoot(const QPointF &mousePos)
 {
-    Bullet *a = new Bullet(x_cannon + 40, y_cannon + 40, mousePos.x(), mousePos.y());
-    addItem(a);
+    if (clickable) {
+        Bullet *a = new Bullet(x_cannon + 40, y_cannon + 40, mousePos.x(), mousePos.y());
+        addItem(a);
+    }
 }
 
 
 void GameScene::Gameover()
 {
-    EndWave();
+    clickable = 0;
+    QObject::disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createenemy()));
+    clear();
     QMediaPlayer *sound = new QMediaPlayer();
     QAudioOutput *audioOutput = new QAudioOutput();
     sound->setSource(QUrl("qrc:/sounds/Resources/Voicy_Barbarian death cry - Clash of Clans.mp3"));
@@ -121,16 +126,47 @@ void GameScene::Gameover()
 
 void GameScene::EndWave()
 {
-    QObject::disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createenemy()));
-    clear();
+    if (timeleft == 0) {
+        clickable = 0;
+        QObject::disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createenemy()));
+        clear();
+        QGraphicsTextItem *gameOverText = new QGraphicsTextItem();
+        gameOverText->setDefaultTextColor(Qt::white);
+        gameOverText->setFont(QFont("serif", 48));
+        gameOverText->setPlainText("Victory!");
+        gameOverText->setPos(width() / 2 - 180, height() / 2 - 48);
+        addItem(gameOverText);
+    } else {
+        timeleft--;
+        WaveTime->setPlainText("Time Remaining : " + QString::number(timeleft));
+    }
 }
-void GameScene::start(){
+void GameScene::start()
+{
+    //setting time
+    timeleft = 60;
+    // Wave label
+    WaveTime = new QGraphicsTextItem();
+    WaveTime->setDefaultTextColor(Qt::black);
+    WaveTime->setFont(QFont("serif", 16));
+    WaveTime->setPlainText("Time Remaining : " + QString::number(timeleft));
+    WaveTime->setPos(0, 25);
+    addItem(WaveTime);
+    //Wave Time Label
+    QGraphicsTextItem *WaveLabel = new QGraphicsTextItem();
+    WaveLabel->setDefaultTextColor(Qt::black);
+    WaveLabel->setFont(QFont("serif", 16));
+    WaveLabel->setPlainText("Wave 1");
+    WaveLabel->setPos(0, 0);
+    addItem(WaveLabel);
+    //Times
     EnemyCreation = new QTimer();
     QObject::connect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createenemy()));
     EnemyCreation->start(4000);
+
     QTimer *Wavetimer = new QTimer();
     QObject::connect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
-    Wavetimer->start(60000);
+    Wavetimer->start(1000);
 }
 
 void GameScene::createenemy()

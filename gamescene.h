@@ -29,6 +29,9 @@ private:
     vector<vector<int>> map;
     int x_cannon, y_cannon;
     int x_townhall, y_townhall;
+    QGraphicsTextItem *WaveTime;
+    int timeleft;
+    bool clickable;
 
 public:
     GameScene(double, double);

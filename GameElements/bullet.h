@@ -8,7 +8,8 @@
 #include <QObject>
 #include <QGraphicsEllipseItem>
 
-class Bullet :public QObject, public QGraphicsEllipseItem {
+class Bullet : public QObject, public QGraphicsPixmapItem
+{
     Q_OBJECT
 private:
     int xi, xf, yi, yf;
@@ -19,7 +20,5 @@ public:
 private slots:
     void Move();
 };
-
-
 
 #endif // BULLET_H

@@ -2,7 +2,7 @@
 townworkers::townworkers(int x, int y):Player(x,y,1000,20){
     setPos(x,y);
     QPixmap *img = new QPixmap(":/Imgs/Resources/Citizen worker.png");
-    *img = img->scaled(40, 40);
+    *img = img->scaled(60, 60);
     setPixmap(*img);
 }
 
@@ -14,10 +14,6 @@ void townworkers::direct(int x, int y)
     int slope_y = posy-targety;
     dx = speed*((slope_x/sqrt(pow(slope_y,2)+pow(slope_x,2))));
     dy = speed*((slope_y/sqrt(pow(slope_x,2)+pow(slope_y,2))));
-
-    //movetime = new QTimer();
-    // QObject::connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
-    // movetime->start(500);
 }
 
 void townworkers::check()

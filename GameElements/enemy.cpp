@@ -1,7 +1,7 @@
 #include "enemy.h"
 
 Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
-    : Player(x, y, 500, 5)
+    : Player(x, y, 600, 5)
     , damage(d)
 {
     QPixmap *img = new QPixmap(":/Imgs/Resources/icon.png");

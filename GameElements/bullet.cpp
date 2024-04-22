@@ -20,9 +20,10 @@ Bullet::Bullet(int xi_pos, int yi_pos, int xf_pos, int yf_pos)
     sound->setAudioOutput(audioOutput);
     audioOutput->setVolume(0.5);
     sound->play();
-    // Change with bullet
-    setBrush(Qt::red);
-    setRect(xi_pos,yi_pos,15,10);
+    QPixmap *img = new QPixmap(":/Imgs/Resources/bullet.png");
+    *img = img->scaled(15, 15);
+    setPixmap(*img);
+    setPos(xi_pos, yi_pos);
     // Change with bullet
     QTimer *timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(Move()));
@@ -49,17 +50,22 @@ void Bullet::CheckCollide()
         if (typeid(*(colliding_items[i])) == typeid(Enemy)) {
             Enemy *enemy = dynamic_cast<Enemy *>(colliding_items[i]);
             if (enemy) {
-                // If the cast was successful, reduce the health of the enemy
-                enemy->gethealth()->decreasehealth(200);
+                QMediaPlayer *sound = new QMediaPlayer;
+                QAudioOutput *audioOutput = new QAudioOutput();
+                sound->setSource(
+                    QUrl("qrc:/sounds/Resources/Voicy_Barbarian death cry - Clash of Clans.mp3"));
+                sound->setAudioOutput(audioOutput);
+                audioOutput->setVolume(0.5);
+                sound->play();
                 delete this;
+                // If the cast was successful, reduce the health of the enemy
+                enemy->gethealth()->decreasehealth(100);
+                if (enemy->gethealth()->gethealth() <= 0) {
+                    delete enemy;
+                }
+                return;
             }
-            QMediaPlayer *sound = new QMediaPlayer;
-            QAudioOutput *audioOutput = new QAudioOutput();
-            sound->setSource(
-                QUrl("qrc:/sounds/Resources/Voicy_Barbarian death cry - Clash of Clans.mp3"));
-            sound->setAudioOutput(audioOutput);
-            audioOutput->setVolume(0.5);
-            sound->play();
+
             return;
         }
     }

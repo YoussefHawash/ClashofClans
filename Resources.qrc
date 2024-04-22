@@ -13,13 +13,11 @@
         <file>Resources/townhall.png</file>
         <file>Resources/wall.png</file>
         <file>Resources/Citizen worker.png</file>
+        <file>Resources/bullet.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Resources/backgroundmusic.mp3</file>
         <file>Resources/bom.mp3 (online-audio-converter.com).mp3</file>
         <file>Resources/Voicy_Barbarian death cry - Clash of Clans.mp3</file>
-    </qresource>
-    <qresource prefix="/new/prefix1">
-        <file>Resources/Citizen worker.png</file>
     </qresource>
 </RCC>
