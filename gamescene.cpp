@@ -1,6 +1,7 @@
 #include "gamescene.h"
 #include <QFile>
 #include <QLabel>
+#include <QDebug>
 #include <QPushButton>
 #include <QGraphicsProxyWidget>
 #include "GameElements/bullet.h"
@@ -10,6 +11,7 @@
 #include "GameElements/townworkers.h"
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 GameScene::GameScene(double w, double h)
 
 {
@@ -21,31 +23,68 @@ GameScene::GameScene(double w, double h)
     int game_cols = 16;
     map.resize(game_rows);
 
-    for (int var = 0; var < map.size(); ++var) {
-        map[var].resize(game_cols);
+
+    QFile file(":/Imgs/map.txt");
+    if (!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "Failed to open file for reading:" << file.errorString();
+        return;
     }
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            map[i][j] = 0;
+
+    QTextStream stream(&file);
+    QString temp = stream.readAll();
+    qDebug() << temp;
+
+
+    QStringList lines = temp.split("\n", Qt::SkipEmptyParts);
+
+
+    map.clear();
+    for (const QString& line : lines) {
+        QStringList tokens = line.split(' ', Qt::SkipEmptyParts);
+        std::vector<int> row; // Use std::vector<int> instead of QVector<int>
+        for (const QString& token : tokens) {
+            bool ok;
+            int value = token.toInt(&ok);
+            if (!ok) {
+                qDebug() << "Failed to convert token to integer:" << token;
+
+            }
+            row.push_back(value);
         }
+        map.push_back(row);
     }
-    map[4][7] = 1;
-    map[3][7] = 2;
-    // adding elements
-    for (int var = 2; var < 7; ++var) {
-        map[var][5] = 3;
-        map[var][9] = 3;
-    }
-    for (int var = 5; var < 10; ++var) {
-        map[2][var] = 3;
-        map[6][var] = 3;
-    }
+
+    file.close();
+
+
+    // for (int var = 0; var < map.size(); ++var) {
+    //     map[var].resize(game_cols);
+    // }
+    // for (int i = 0; i < map.size(); i++) {
+    //     for (int j = 0; j < map[i].size(); j++) {
+    //         map[i][j] = 0;
+    //     }
+    // }
+    // map[4][7] = 1;
+    // map[3][7] = 2;
+    // // adding elements
+    // for (int var = 2; var < 7; ++var) {
+    //     map[var][5] = 3;
+    //     map[var][9] = 3;
+    // }
+    // for (int var = 5; var < 10; ++var) {
+    //     map[2][var] = 3;
+    //     map[6][var] = 3;
+    // }
+
+
 
     // display map
     RenderingMap();
     clickable = true;
     start();
 }
+
 
 void GameScene::RenderingMap()
 {
@@ -96,6 +135,7 @@ void GameScene::RenderingMap()
         addItem(workers[i]);
     }
 }
+
 void GameScene::createenemy()
 {
     int RandPos;
