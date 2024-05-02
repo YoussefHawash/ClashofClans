@@ -12,10 +12,15 @@ Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
     dx = speed * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
     dy = speed*((slope_y/sqrt(pow(slope_x,2)+pow(slope_y,2))));
 
-    movetime = new QTimer();
     connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
+}
+
+void Enemy::stop()
+{
     movetime->start(100);
 }
+
+
 
 // checks whether to move or deal damage
 void Enemy::check()

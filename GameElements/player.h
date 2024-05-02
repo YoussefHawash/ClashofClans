@@ -20,8 +20,8 @@ protected:
     int vel;
     float dx;
     float dy;
-    QTimer *movetime;
 public:
+    static QTimer *movetime;
     Player(int,int,int,int);
     health *gethealth();
     void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;

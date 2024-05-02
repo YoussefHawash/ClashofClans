@@ -1,5 +1,8 @@
 #include "player.h"
 
+QTimer* Player::movetime = new QTimer;
+
+
 Player::Player(int x, int y, int hp, int s)
     : posx(x)
     , posy(y)

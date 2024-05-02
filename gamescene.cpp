@@ -174,6 +174,8 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void GameScene::shoot(const QPointF &mousePos)
 {
+    Enemy* h = new Enemy(0, 0, x_townhall, y_townhall, 100);
+    h->stop();
     if (clickable) {
         Bullet *a = new Bullet(x_cannon + (xfactor / 2),
                                y_cannon + (yfactor / 2),
