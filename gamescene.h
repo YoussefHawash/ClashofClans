@@ -12,6 +12,7 @@
 #include <QMessageBox>
 #include <cstdlib>
 #include <ctime>
+#include "mainmenu.h"
 #include "GameElements/bullet.h"
 #include "GameElements/defenseunit.h"
 #include "GameElements/fence.h"
@@ -26,6 +27,8 @@ class GameScene : public QGraphicsScene
     Q_OBJECT
 private:
     QTimer *EnemyCreation;
+    QTimer *Wavetimer;
+    TownHall *townhall;
     vector<vector<int>> map;
     int x_cannon, y_cannon;
     int x_townhall, y_townhall;
@@ -39,9 +42,10 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
     void start();
-    void Gameover();
 
 public slots:
+    void Gameover();
+    void Return_to_Menu();
     void EndWave();
     void createenemy();
 };

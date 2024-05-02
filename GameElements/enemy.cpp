@@ -36,15 +36,21 @@ void Enemy::check()
             hall->decreasehealth(damage);
             if (hall->gethealth() <= 0) {
                 delete hall;
-                QGraphicsScene *k= scene();
-                GameScene *scene = dynamic_cast<GameScene *>(k);
-                scene->Gameover();
+                // QGraphicsScene *k= scene();
+                // GameScene *scene = dynamic_cast<GameScene *>(k);
+                // scene->Gameover();
+                // return;
+
             }
             return;
+
         }
         //detecting townworkers
         else if (townworkers *worker = dynamic_cast<townworkers *>(colliding_items[i])) {
             worker->gethealth()->decreasehealth(damage);
+            if (worker->gethealth()->gethealth() <= 0) {
+                delete worker;
+            }
             return;
         }
     }

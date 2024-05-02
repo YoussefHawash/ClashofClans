@@ -32,16 +32,17 @@ Bullet::Bullet(int xi_pos, int yi_pos, int xf_pos, int yf_pos)
 
 void Bullet::Move()
 {
+        if(y() < 0  || y() > scene()->height() || x() < 0 || x() > scene()->width()) {
+            scene()->removeItem(this);
+            delete this;
+            return;
+    }
     const int Velocity = 20;
     double dx = Velocity * (((xf - xi) / sqrt(pow((yf - yi), 2) + pow((xf - xi), 2))));
     double dy = Velocity * (((yf - yi) / sqrt(pow((yf - yi), 2) + pow((xf - xi), 2))));
     setPos(x()+dx, y()+dy);
     CheckCollide();
-    //     if(y() < 0  || y() > scene()->height() || x() < 0 || x() > scene()->width()) {
-    //     qDebug() << y();
-    //         scene()->removeItem(this);
-    //         delete this;
-    // }
+
 }
 void Bullet::CheckCollide()
 {

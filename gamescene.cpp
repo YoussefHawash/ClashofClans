@@ -46,7 +46,7 @@ void GameScene::DisplayMap()
     for (int i = 0; i < map.size(); i++) {
         for (int j = 0; j < map[i].size(); j++) {
              if (map[i][j] == 1) { // townall =1
-                 TownHall *townhall = new TownHall(xfactor, yfactor);
+                 townhall = new TownHall(xfactor, yfactor);
                  x_townhall = j * xfactor;
                  y_townhall = i * yfactor;
                  townhall->setPos(x_townhall, y_townhall);
@@ -104,43 +104,88 @@ void GameScene::shoot(const QPointF &mousePos)
     }
 }
 
-
 void GameScene::Gameover()
 {
     clickable = 0;
+    QObject::disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
     QObject::disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createenemy()));
+
+    // Clean up any existing items
     clear();
+
     QMediaPlayer *sound = new QMediaPlayer();
     QAudioOutput *audioOutput = new QAudioOutput();
     sound->setSource(QUrl("qrc:/sounds/Resources/Voicy_Barbarian death cry - Clash of Clans.mp3"));
     sound->setAudioOutput(audioOutput);
     audioOutput->setVolume(50);
     sound->play();
+
+    // Display game over text
     QGraphicsTextItem *gameOverText = new QGraphicsTextItem();
     gameOverText->setDefaultTextColor(Qt::red);
     gameOverText->setFont(QFont("serif", 48));
     gameOverText->setPlainText("GAME OVER!");
     gameOverText->setPos(width() / 2 - 180, height() / 2 - 48);
     addItem(gameOverText);
+
+    QPushButton *Return = new QPushButton("Return To mainmenu");
+    Return->setFixedSize(400, 120);
+    QGraphicsProxyWidget *Return_to_MainMenu = new QGraphicsProxyWidget();
+    Return_to_MainMenu->setWidget(Return);
+    addItem(Return_to_MainMenu);
+    Return_to_MainMenu->setPos(400, 450);
+    connect(Return, &QPushButton::clicked,this, &GameScene::Return_to_Menu);
+
+    // delete allocated resources
+    delete sound;
+    delete audioOutput;
+
 }
 
 void GameScene::EndWave()
 {
-    if (timeleft == 0) {
+    if(townhall->gethealth() <=0 ){
+        Gameover();
+    }
+    else if (timeleft == 0) {
         clickable = 0;
+        QObject::disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
         QObject::disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createenemy()));
         clear();
+        // QMediaPlayer *sound = new QMediaPlayer();
+        // QAudioOutput *audioOutput = new QAudioOutput();
+        // sound->setSource(QUrl("qrc:/sounds/Resources/Voicy_Barbarian death cry - Clash of Clans.mp3"));
+        // sound->setAudioOutput(audioOutput);
+        // audioOutput->setVolume(50);
+        // sound->play();
         QGraphicsTextItem *gameOverText = new QGraphicsTextItem();
         gameOverText->setDefaultTextColor(Qt::white);
         gameOverText->setFont(QFont("serif", 48));
         gameOverText->setPlainText("Victory!");
         gameOverText->setPos(width() / 2 - 180, height() / 2 - 48);
         addItem(gameOverText);
-    } else {
+
+
+
+        QPushButton *Return = new QPushButton("Return To mainmenu");
+        Return->setFixedSize(400, 120);
+        QGraphicsProxyWidget *Return_to_MainMenu = new QGraphicsProxyWidget();
+        Return_to_MainMenu->setWidget(Return);
+        addItem(Return_to_MainMenu);
+        Return_to_MainMenu->setPos(400, 450);
+        connect(Return, &QPushButton::clicked,this, &GameScene::Return_to_Menu);
+    }
+    else {
         timeleft--;
         WaveTime->setPlainText("Time Remaining : " + QString::number(timeleft));
     }
 }
+
+void GameScene::Return_to_Menu(){
+    qDebug() << "gg";
+    //MainMenu* Main_Menu = new MainMenu;
+}
+
 void GameScene::start()
 {
     //setting time
@@ -164,7 +209,7 @@ void GameScene::start()
     QObject::connect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createenemy()));
     EnemyCreation->start(4000);
 
-    QTimer *Wavetimer = new QTimer();
+    Wavetimer = new QTimer();
     QObject::connect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
     Wavetimer->start(1000);
 }
