@@ -3,18 +3,13 @@
 #include <QApplication>
 #include <QAudioOutput>
 #include <QBoxLayout>
-#include <QDebug>
-#include <QGraphicsTextItem>
 #include <QGraphicsView>
-#include <QLabel>
-#include <QMainWindow>
 #include <QMediaPlayer>
-#include <QMouseEvent>
-#include <QPushButton>
 #include <QSizePolicy>
 
 #include "gamescene.h"
 #include "mainmenu.h"
+
 class View : public QGraphicsView
 {
     Q_OBJECT
@@ -34,6 +29,7 @@ public slots:
     void NewGame();
     void RandomGame();
     void StoryMode();
+    void ReturnToMainMenu();
     void Exit();
 };
 #endif // VIEW_H

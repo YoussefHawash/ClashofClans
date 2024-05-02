@@ -10,17 +10,10 @@
 #include <QtMultimedia/QMediaPlayer>
 #include <QAudioOutput>
 #include <QMessageBox>
-#include <cstdlib>
-#include <ctime>
-#include "mainmenu.h"
-#include "GameElements/bullet.h"
-#include "GameElements/defenseunit.h"
-#include "GameElements/fence.h"
-#include "GameElements/grass.h"
-#include "GameElements/townhall.h"
-#include "GameElements/enemy.h"
-#include "GameElements/townworkers.h"
 #include <vector>
+
+#include "GameElements/townhall.h"
+
 using namespace std;
 class GameScene : public QGraphicsScene
 {
@@ -30,19 +23,22 @@ private:
     QTimer *Wavetimer;
     TownHall *townhall;
     vector<vector<int>> map;
-    int x_cannon, y_cannon;
-    int x_townhall, y_townhall;
     QGraphicsTextItem *WaveTime;
     int timeleft;
+    // Ability to click on the scene
     bool clickable;
+    // Important Coordiantes
+    int x_cannon, y_cannon;
+    int x_townhall, y_townhall;
+    // x and y factors
+    double yfactor, xfactor;
 
 public:
     GameScene(double, double);
-    void DisplayMap();
+    void RenderingMap();
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
     void start();
-
 public slots:
     void Gameover();
     void Return_to_Menu();
@@ -51,3 +47,5 @@ public slots:
 };
 
 #endif // GAMESCENE_H
+
+

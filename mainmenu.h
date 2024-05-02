@@ -16,8 +16,7 @@ class MainMenu : public QMainWindow
     Q_OBJECT
 private:
     bool fullscreen;
-    int volumelevel;
-    int level;
+    int volumelevel, gamelevel;
     QAudioOutput *Output;
     QLabel *volume_label;
     QWidget *mainwindow;

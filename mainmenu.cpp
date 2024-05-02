@@ -3,7 +3,7 @@
 MainMenu::MainMenu(QAudioOutput *audioOutput)
     : fullscreen(0)
     , volumelevel(100)
-    , level(1)
+    , gamelevel(1)
     , Output(audioOutput)
 {
     //Setting The MainWindow
@@ -227,7 +227,7 @@ void MainMenu::SetSettingsContainer()
 
     //Levels ComboBox
 
-    levels->addItems({"Peacful", "Easy", "Normal", "Difficult", "Extreme"});
+    levels->addItems({"Peaceful", "Easy", "Normal", "Difficult", "Extreme"});
     connect(levels, QOverload<int>::of(&QComboBox::activated), this, &MainMenu::comboBoxActivated);
 
     //hlayout3
@@ -256,6 +256,7 @@ void MainMenu::SetSettingsContainer()
 }
 
 //Showing Methods
+
 void MainMenu::ShowMainMenu()
 {
     //Setting Theme
@@ -331,5 +332,5 @@ void MainMenu::sliderValueChanged(int value)
 }
 void MainMenu::comboBoxActivated(int index)
 {
-    level = index + 1;
+    gamelevel = index + 1;
 }

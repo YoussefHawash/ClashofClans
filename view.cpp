@@ -9,10 +9,12 @@ View::View(QApplication *a)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     //Setting Sounds
+    // Momken tt7t fee mainmenu
     Sound = new QMediaPlayer;
     audioOutput = new QAudioOutput();
     Sound->setLoops(QMediaPlayer::Infinite);
     Sound->setSource(QUrl("qrc:/sounds/Resources/backgroundmusic.mp3"));
+
     Sound->setAudioOutput(audioOutput);
     audioOutput->setVolume(1);
     Sound->play();
@@ -23,11 +25,11 @@ View::View(QApplication *a)
 void View::DisplayMainMenu()
 {
     MainUI = new MainMenu(audioOutput);
+    MainUI->show();
     connect(MainUI, SIGNAL(newgame()), this, SLOT(NewGame()));
     connect(MainUI, SIGNAL(randomgame()), this, SLOT(RandomGame()));
     connect(MainUI, SIGNAL(storymode()), this, SLOT(StoryMode()));
     connect(MainUI, SIGNAL(exit()), this, SLOT(Exit()));
-    MainUI->show();
 }
 
 void View::NewGame()
@@ -42,6 +44,7 @@ void View::NewGame()
     setScene(gamescene);
     MainUI->hide();
     show();
+    connect(gamescene, SIGNAL(Retrun()), this, SLOT(ReturnToMainMenu()));
 }
 
 void View::RandomGame()
@@ -64,12 +67,18 @@ void View::StoryMode()
         showFullScreen();
     else
         setFixedSize(1280, 720);
-
     gamescene = new GameScene(width(), height());
     setWindowTitle("Story Mode");
     setScene(gamescene);
     MainUI->hide();
     show();
+}
+
+void View::ReturnToMainMenu()
+{
+    hide();
+    delete gamescene;
+    MainUI->show();
 }
 
 void View::Exit()
@@ -78,4 +87,7 @@ void View::Exit()
     App->quit();
 }
 
-View::~View() {}
+View::~View()
+{
+    delete this;
+}

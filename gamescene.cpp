@@ -1,17 +1,26 @@
 #include "gamescene.h"
-#include <QGraphicsProxyWidget>
+#include <QFile>
 #include <QLabel>
 #include <QPushButton>
+#include <QGraphicsProxyWidget>
+#include "GameElements/bullet.h"
+#include "GameElements/defenseunit.h"
+#include "GameElements/enemy.h"
+#include "GameElements/fence.h"
+#include "GameElements/townworkers.h"
+#include <cstdlib>
+#include <ctime>
 GameScene::GameScene(double w, double h)
 
 {
-    QPixmap bgPixmap(":/Imgs/Resources/GrassBackgorund.jpg"); // Replace ":/path/to/background.jpg" with the path to your background image
-    setBackgroundBrush(bgPixmap.scaled(1280, 720));
+    QPixmap bgPixmap(":/Imgs/Resources/GrassBackgorund.jpg");
+    setBackgroundBrush(bgPixmap.scaled(w, h));
     setSceneRect(0, 0, w, h);
+    // MAP RENDERING
     int game_rows = 9;
     int game_cols = 16;
     map.resize(game_rows);
-    // resize the map
+
     for (int var = 0; var < map.size(); ++var) {
         map[var].resize(game_cols);
     }
@@ -33,40 +42,40 @@ GameScene::GameScene(double w, double h)
     }
 
     // display map
-    DisplayMap();
-    clickable = 1;
+    RenderingMap();
+    clickable = true;
     start();
 }
 
-void GameScene::DisplayMap()
+void GameScene::RenderingMap()
 {
-    double yfactor = height() / map.size();
-    double xfactor = width() / map[0].size();
+    yfactor = height() / map.size();
+    xfactor = width() / map[0].size();
 
     for (int i = 0; i < map.size(); i++) {
         for (int j = 0; j < map[i].size(); j++) {
-             if (map[i][j] == 1) { // townall =1
-                 townhall = new TownHall(xfactor, yfactor);
-                 x_townhall = j * xfactor;
-                 y_townhall = i * yfactor;
-                 townhall->setPos(x_townhall, y_townhall);
-                 townhall->SetHealth(this, 5000);
-                 addItem(townhall);
+            if (map[i][j] == 1) { // townall =1
+                townhall = new TownHall(xfactor, yfactor);
+                x_townhall = j * xfactor;
+                y_townhall = i * yfactor;
+                townhall->setPos(x_townhall, y_townhall);
+                townhall->SetHealth(this, 5000);
+                addItem(townhall);
             } else if (map[i][j] == 3) { // fence = 3
-                std::vector<int> a;
+                vector<int> Edges;
                 if (map[i - 1][j] == 3) {
-                    a.push_back(0);
+                    Edges.push_back(0);
                 }
                 if (map[i + 1][j] == 3) {
-                    a.push_back(2);
+                    Edges.push_back(2);
                 }
                 if (map[i][j - 1] == 3) {
-                    a.push_back(3);
+                    Edges.push_back(3);
                 }
                 if (map[i][j + 1] == 3) {
-                    a.push_back(1);
+                    Edges.push_back(1);
                 }
-                Fence *fence = new Fence(xfactor, yfactor, a);
+                Fence *fence = new Fence(xfactor, yfactor, Edges);
                 fence->setPos(j * xfactor, i * yfactor);
                 fence->SetHealth(this, 4000);
                 addItem(fence);
@@ -77,14 +86,41 @@ void GameScene::DisplayMap()
                 y_cannon = i * yfactor;
                 a->setPos(x_cannon, y_cannon);
                 addItem(a);
-
             }
         }
     }
-    townworkers *workers[3];
+    // Random Workers Generation
+    townworkers *workers[2];
     for (int i = 0; i < 2; i++) {
         workers[i] = new townworkers((x_townhall-80)+(i*200),y_townhall);
         addItem(workers[i]);
+    }
+}
+void GameScene::createenemy()
+{
+    int RandPos;
+    srand(time(0));
+    // random generator of the enemies
+    int Edge = rand() % 4;
+
+    if (Edge == 0) {
+        RandPos = rand() % int(width());
+        Enemy *enemy = new Enemy(RandPos, 0, x_townhall, y_townhall, 100);
+        addItem(enemy);
+    } else if (Edge == 1) {
+        RandPos = rand() % int(height());
+        Enemy *enemy = new Enemy(width(), RandPos, x_townhall, y_townhall, 100);
+        addItem(enemy);
+
+    } else if (Edge == 2) {
+        RandPos = rand() % int(width());
+        Enemy *enemy = new Enemy(RandPos, height(), x_townhall, y_townhall, 100);
+        addItem(enemy);
+
+    } else if (Edge == 3) {
+        RandPos = rand() % int(height());
+        Enemy *enemy = new Enemy(0, RandPos, x_townhall, y_townhall, 100);
+        addItem(enemy);
     }
 }
 void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -99,10 +135,42 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void GameScene::shoot(const QPointF &mousePos)
 {
     if (clickable) {
-        Bullet *a = new Bullet(x_cannon + 40, y_cannon + 40, mousePos.x(), mousePos.y());
+        Bullet *a = new Bullet(x_cannon + (xfactor / 2),
+                               y_cannon + (yfactor / 2),
+                               mousePos.x(),
+                               mousePos.y());
         addItem(a);
     }
 }
+
+void GameScene::start()
+{
+    //setting time
+    timeleft = 60;
+    // Wave label
+    WaveTime = new QGraphicsTextItem();
+    WaveTime->setDefaultTextColor(Qt::black);
+    WaveTime->setFont(QFont("serif", 16));
+    WaveTime->setPlainText("Time Remaining : " + QString::number(timeleft));
+    WaveTime->setPos(0, 25);
+    addItem(WaveTime);
+    //Wave Time Label
+    QGraphicsTextItem *WaveLabel = new QGraphicsTextItem();
+    WaveLabel->setDefaultTextColor(Qt::black);
+    WaveLabel->setFont(QFont("serif", 16));
+    WaveLabel->setPlainText("Wave 1");
+    WaveLabel->setPos(0, 0);
+    addItem(WaveLabel);
+    //Times
+    EnemyCreation = new QTimer();
+    QObject::connect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createenemy()));
+    EnemyCreation->start(4000);
+
+    QTimer *Wavetimer = new QTimer();
+    QObject::connect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
+    Wavetimer->start(1000);
+}
+
 
 void GameScene::Gameover()
 {
@@ -185,62 +253,5 @@ void GameScene::Return_to_Menu(){
     qDebug() << "gg";
     //MainMenu* Main_Menu = new MainMenu;
 }
-
-void GameScene::start()
-{
-    //setting time
-    timeleft = 60;
-    // Wave label
-    WaveTime = new QGraphicsTextItem();
-    WaveTime->setDefaultTextColor(Qt::black);
-    WaveTime->setFont(QFont("serif", 16));
-    WaveTime->setPlainText("Time Remaining : " + QString::number(timeleft));
-    WaveTime->setPos(0, 25);
-    addItem(WaveTime);
-    //Wave Time Label
-    QGraphicsTextItem *WaveLabel = new QGraphicsTextItem();
-    WaveLabel->setDefaultTextColor(Qt::black);
-    WaveLabel->setFont(QFont("serif", 16));
-    WaveLabel->setPlainText("Wave 1");
-    WaveLabel->setPos(0, 0);
-    addItem(WaveLabel);
-    //Times
-    EnemyCreation = new QTimer();
-    QObject::connect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createenemy()));
-    EnemyCreation->start(4000);
-
-    Wavetimer = new QTimer();
-    QObject::connect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
-    Wavetimer->start(1000);
-}
-
-void GameScene::createenemy()
-{
-    int RandPos;
-
-    srand(time(0));
-    // random generator of the enemies
-    int Edge = rand() % 4;
-
-    if (Edge == 0) {
-        RandPos = rand() % 1280;
-        Enemy *enemy = new Enemy(RandPos, 0, x_townhall, y_townhall, 100);
-        addItem(enemy);
-    } else if (Edge == 1) {
-        RandPos = rand() % 720;
-        Enemy *enemy = new Enemy(1280, RandPos, x_townhall, y_townhall, 100);
-        addItem(enemy);
-
-    } else if (Edge == 2) {
-        RandPos = rand() % 1280;
-        Enemy *enemy = new Enemy(RandPos, 720, x_townhall, y_townhall, 100);
-        addItem(enemy);
-
-    } else if (Edge == 3) {
-        RandPos = rand() % 720;
-        Enemy *enemy = new Enemy(0, RandPos, x_townhall, y_townhall, 100);
-        addItem(enemy);
-    }
-    }
 
 
