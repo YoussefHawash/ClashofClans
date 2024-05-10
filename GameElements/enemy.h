@@ -18,7 +18,6 @@ private:
 public:
     QTimer *checked;
     Enemy(int, int, int, int, int);
-    void stop();
 public slots:
     void check();
     void move();

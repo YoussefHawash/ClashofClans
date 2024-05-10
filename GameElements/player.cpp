@@ -3,6 +3,17 @@
 QTimer* Player::movetime = new QTimer;
 
 
+void Player::startmove()
+{
+    movetime = new QTimer;
+    movetime->start(100);
+}
+
+void Player::stopmove()
+{
+    movetime->stop();
+}
+
 Player::Player(int x, int y, int hp, int s)
     : posx(x)
     , posy(y)

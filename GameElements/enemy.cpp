@@ -15,10 +15,6 @@ Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
     connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
 }
 
-void Enemy::stop()
-{
-    movetime->start(100);
-}
 
 
 

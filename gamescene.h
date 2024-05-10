@@ -19,26 +19,34 @@ class GameScene : public QGraphicsScene
 {
     Q_OBJECT
 private:
-    QTimer *EnemyCreation;
+    // Next wave view
+    QPushButton *NextWaveButton;
+    QGraphicsTextItem *NextwaveText;
+    QGraphicsProxyWidget *Move_Next_Wave;
+
+    int Wavenum=1;
+    QTimer *EnemyCreation = new QTimer();
     QTimer *Wavetimer;
     TownHall *townhall;
-    vector<vector<Building *> > map;
     QGraphicsTextItem *WaveTime;
+    QGraphicsTextItem *WaveLabel;
+    vector<vector<Building *> > map;
     int timeleft;
+    int Creationtime = 4000;
     // Ability to click on the scene
     bool clickable;
     // Important Coordiantes
     int x_cannon, y_cannon;
     int x_townhall, y_townhall;
     // x and y factors
-    double yfactor, xfactor;
+    int yfactor, xfactor;
 
 public:
     GameScene(double, double);
     void RenderingMap();
-    void DisplayMapToDebug();
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
+    void clearEnemies();
     void start();
 public slots:
     void Gameover();

@@ -21,6 +21,8 @@ protected:
     float dx;
     float dy;
 public:
+    void startmove();
+    void stopmove();
     static QTimer *movetime;
     Player(int,int,int,int);
     health *gethealth();
