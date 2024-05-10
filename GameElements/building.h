@@ -8,6 +8,7 @@
 class Building : public QGraphicsPixmapItem, public QObject
 {
 protected:
+    int type;
     QPixmap *img;
     health *h = nullptr;
 
@@ -19,6 +20,7 @@ public:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *) override;
     int gethealth();
+    int gettype();
 };
 
 #endif // BUILDING_H

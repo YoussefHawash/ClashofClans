@@ -11,76 +11,14 @@
 #include "GameElements/townworkers.h"
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
 GameScene::GameScene(double w, double h)
-
 {
     QPixmap bgPixmap(":/Imgs/Resources/GrassBackgorund.jpg");
     setBackgroundBrush(bgPixmap.scaled(w, h));
     setSceneRect(0, 0, w, h);
-    // MAP RENDERING
-    int game_rows = 9;
-    int game_cols = 16;
-    map.resize(game_rows);
-
-
-    QFile file(":/Imgs/map.txt");
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Failed to open file for reading:" << file.errorString();
-        return;
-    }
-
-    QTextStream stream(&file);
-    QString temp = stream.readAll();
-    qDebug() << temp;
-
-
-    QStringList lines = temp.split("\n", Qt::SkipEmptyParts);
-
-
-    map.clear();
-    for (const QString& line : lines) {
-        QStringList tokens = line.split(' ', Qt::SkipEmptyParts);
-        std::vector<int> row; // Use std::vector<int> instead of QVector<int>
-        for (const QString& token : tokens) {
-            bool ok;
-            int value = token.toInt(&ok);
-            if (!ok) {
-                qDebug() << "Failed to convert token to integer:" << token;
-
-            }
-            row.push_back(value);
-        }
-        map.push_back(row);
-    }
-
-    file.close();
-
-
-    // for (int var = 0; var < map.size(); ++var) {
-    //     map[var].resize(game_cols);
-    // }
-    // for (int i = 0; i < map.size(); i++) {
-    //     for (int j = 0; j < map[i].size(); j++) {
-    //         map[i][j] = 0;
-    //     }
-    // }
-    // map[4][7] = 1;
-    // map[3][7] = 2;
-    // // adding elements
-    // for (int var = 2; var < 7; ++var) {
-    //     map[var][5] = 3;
-    //     map[var][9] = 3;
-    // }
-    // for (int var = 5; var < 10; ++var) {
-    //     map[2][var] = 3;
-    //     map[6][var] = 3;
-    // }
-
-
-
     // display map
     RenderingMap();
+    DisplayMapToDebug();
     clickable = true;
     start();
 }
@@ -88,54 +26,86 @@ GameScene::GameScene(double w, double h)
 
 void GameScene::RenderingMap()
 {
-    yfactor = height() / map.size();
-    xfactor = width() / map[0].size();
-
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            if (map[i][j] == 1) { // townall =1
+    map.resize(9);
+    for (int var = 0; var < 9; ++var) {
+        map[var].resize(16, nullptr);
+    }
+    yfactor = height() / 9;
+    xfactor = width() / 16;
+    QFile file(":/Imgs/map.txt");
+    if (!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "Failed to open file for reading:" << file.errorString();
+    } else {
+        QTextStream in(&file);
+        int i(0), j(0);
+        while (!in.atEnd()) {
+            // Read a single character
+            int value;
+            in >> value;
+            if (value == 1) { // townall =1
                 townhall = new TownHall(xfactor, yfactor);
                 x_townhall = j * xfactor;
                 y_townhall = i * yfactor;
                 townhall->setPos(x_townhall, y_townhall);
                 townhall->SetHealth(this, 5000);
                 addItem(townhall);
-            } else if (map[i][j] == 3) { // fence = 3
+                map[i][j] = townhall;
+            } else if (value == 3) { // fence = 3
                 vector<int> Edges;
-                if (map[i - 1][j] == 3) {
-                    Edges.push_back(0);
-                }
-                if (map[i + 1][j] == 3) {
-                    Edges.push_back(2);
-                }
-                if (map[i][j - 1] == 3) {
-                    Edges.push_back(3);
-                }
-                if (map[i][j + 1] == 3) {
-                    Edges.push_back(1);
-                }
+                // if (map[i - 1][j] != nullptr && typeid(*(map[i - 1][j])) == typeid(Fence)) {
+                //     Edges.push_back(0);
+                // }
+                // if (map[i + 1][j] != nullptr && typeid(*(map[i + 1][j])) == typeid(Fence)) {
+                //     Edges.push_back(2);
+                // }
+                // if (map[i][j - 1] != nullptr && typeid(*(map[i][j - 1])) == typeid(Fence)) {
+                //     Edges.push_back(3);
+                // }
+                // if (map[i][j + 1] != nullptr && typeid(*(map[i][j + 1])) == typeid(Fence)) {
+                //     Edges.push_back(1);
+                // }
                 Fence *fence = new Fence(xfactor, yfactor, Edges);
                 fence->setPos(j * xfactor, i * yfactor);
                 fence->SetHealth(this, 4000);
                 addItem(fence);
-            } else if (map[i][j] == 2) { // defence unit =2
-
+                map[i][j] = fence;
+            } else if (value == 2) { // defence unit =2
                 DefenseUnit *a = new DefenseUnit(xfactor, yfactor, 1);
                 x_cannon = j * xfactor;
                 y_cannon = i * yfactor;
                 a->setPos(x_cannon, y_cannon);
                 addItem(a);
+                map[i][j] = a;
+            }
+            j++;
+            if (j == 16) {
+                j = 0;
+                i++;
             }
         }
-    }
-    // Random Workers Generation
-    townworkers *workers[2];
-    for (int i = 0; i < 2; i++) {
-        workers[i] = new townworkers((x_townhall-80)+(i*200),y_townhall);
-        addItem(workers[i]);
+
+        // Random Workers Generation
+        townworkers *workers[2];
+        for (int i = 0; i < 2; i++) {
+            workers[i] = new townworkers((x_townhall - 80) + (i * 200), y_townhall);
+            addItem(workers[i]);
+        }
     }
 }
-
+void GameScene::DisplayMapToDebug()
+{
+    for (int x = 0; x < map.size(); x++) {
+        for (int y = 0; y < map[y].size(); y++) {
+            qDebug() << "column Number #" << x;
+            qDebug() << "Row Number #" << y;
+            if (map[x][y] != nullptr)
+                qDebug() << &map[x][y];
+            else
+                qDebug() << nullptr;
+        }
+        qDebug() << "\n";
+    }
+};
 void GameScene::createenemy()
 {
     int RandPos;
@@ -295,5 +265,3 @@ void GameScene::Return_to_Menu(){
     qDebug() << "gg";
     //MainMenu* Main_Menu = new MainMenu;
 }
-
-

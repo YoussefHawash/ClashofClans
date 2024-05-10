@@ -22,7 +22,7 @@ private:
     QTimer *EnemyCreation;
     QTimer *Wavetimer;
     TownHall *townhall;
-    vector<vector<int>> map;
+    vector<vector<Building *> > map;
     QGraphicsTextItem *WaveTime;
     int timeleft;
     // Ability to click on the scene
@@ -36,6 +36,7 @@ private:
 public:
     GameScene(double, double);
     void RenderingMap();
+    void DisplayMapToDebug();
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
     void start();

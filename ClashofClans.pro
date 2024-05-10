@@ -16,7 +16,6 @@ SOURCES += \
     GameElements\bullet.cpp \
     GameElements\enemy.cpp \
     gamescene.cpp \
-    GameElements\grass.cpp \
     GameElements\health.cpp \
     main.cpp \
     mainmenu.cpp \
@@ -32,7 +31,6 @@ HEADERS += \
     GameElements\bullet.h \
     GameElements\enemy.h \
     gamescene.h \
-    GameElements\grass.h \
     GameElements\health.h \
     mainmenu.h \
     GameElements\player.h \

@@ -1,6 +1,7 @@
 #include "building.h"
 Building::Building()
 {
+    type = 0;
     setAcceptHoverEvents(true);
 }
 
@@ -41,4 +42,8 @@ int Building::gethealth()
     if(h==nullptr)
         return 0;
     return h->gethealth();
+}
+int Building::gettype()
+{
+    return type;
 }
