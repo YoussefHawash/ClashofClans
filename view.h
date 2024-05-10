@@ -19,16 +19,13 @@ private:
     GameScene *gamescene;
     QMediaPlayer *Sound;
     QAudioOutput *audioOutput;
-
 public:
     View(QApplication * = nullptr);
-    void DisplayMainMenu();
+    void DisplayGameMenu();
     ~View();
 
 public slots:
     void NewGame();
-    void RandomGame();
-    void StoryMode();
     void ReturnToMainMenu();
     void Exit();
 };

@@ -19,40 +19,45 @@ class GameScene : public QGraphicsScene
 {
     Q_OBJECT
 private:
-    // Next wave view
+    // Next wave
+    QGraphicsProxyWidget *EndWaveWidget;
     QPushButton *NextWaveButton;
     QGraphicsTextItem *NextwaveText;
-    QGraphicsProxyWidget *Move_Next_Wave;
-
-    int Wavenum=1;
+    //Display Elements
+    QGraphicsTextItem *TimeInfo;
+    QGraphicsTextItem *WaveInfo;
+    //All timers
     QTimer *EnemyCreation = new QTimer();
     QTimer *Wavetimer;
+    //Townhall_Object
     TownHall *townhall;
-    QGraphicsTextItem *WaveTime;
-    QGraphicsTextItem *WaveLabel;
+    //Map
     vector<vector<Building *> > map;
-    int timeleft;
-    int Creationtime = 4000;
+    // x and y factors
+    int yfactor, xfactor;
+    //Variables
+    int Wavenum;
+    int WaveTime;
+    int CreationFrequency = 4000;
     // Ability to click on the scene
     bool clickable;
     // Important Coordiantes
     int x_cannon, y_cannon;
-    int x_townhall, y_townhall;
-    // x and y factors
-    int yfactor, xfactor;
 
 public:
     GameScene(double, double);
     void RenderingMap();
-    void mousePressEvent(QGraphicsSceneMouseEvent *) override;
-    void shoot(const QPointF &mousePos);
     void clearEnemies();
     void start();
+    //Check Again!!!! Shooting in defenese unit
+    void mousePressEvent(QGraphicsSceneMouseEvent *) override;
+    void shoot(const QPointF &mousePos);
 public slots:
-    void Gameover();
-    void Return_to_Menu();
+    void GameEnd(bool);
     void EndWave();
-    void createenemy();
+    void createEnemy();
+signals:
+    void ReturnMainMenu();
 };
 
 #endif // GAMESCENE_H

@@ -25,11 +25,12 @@ private:
 
 public:
     MainMenu(QAudioOutput *);
+    ~MainMenu();
     //SetUp Ui
     void SetMainMenuContainer();
     void SetGamesContainer();
     void SetSettingsContainer();
-    //Hiding and Showing
+    //Toggling Between Widnows
     void ShowMainMenu();
     void ShowGames();
     void ShowSettings();
@@ -37,8 +38,6 @@ public:
     bool IsFullscreen() const;
 signals:
     void newgame();
-    void randomgame();
-    void storymode();
     void exit();
 private slots:
     void checkBoxStateChanged(bool);

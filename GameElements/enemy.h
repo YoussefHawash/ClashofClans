@@ -21,6 +21,8 @@ public:
 public slots:
     void check();
     void move();
+signals:
+    void TownhallDestroyed(bool);
 };
 
 #endif // ENEMY_H

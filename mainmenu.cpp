@@ -96,9 +96,9 @@ void MainMenu::SetGamesContainer()
     QHBoxLayout *hLayout2 = new QHBoxLayout;
     QHBoxLayout *hLayout3 = new QHBoxLayout;
     QHBoxLayout *hLayout4 = new QHBoxLayout;
-    QPushButton *newgame_btn = new QPushButton("New Game");
-    QPushButton *randommap_btn = new QPushButton(QString("Random Map"));
-    QPushButton *storymode_btn = new QPushButton(QString("Story Mode"));
+    QPushButton *newgame_btn = new QPushButton("First Map");
+    QPushButton *randommap_btn = new QPushButton(QString("Second Map"));
+    QPushButton *storymode_btn = new QPushButton(QString("Third Map"));
     QPushButton *mainmenu_btn = new QPushButton(QString("Return to Main Menu"));
 
     //Customizitation to all the layers
@@ -146,7 +146,6 @@ void MainMenu::SetGamesContainer()
     //Settingsbtn
 
     randommap_btn->setFixedSize(250, 50);
-    connect(randommap_btn, &QPushButton::clicked, this, &MainMenu::randomgame);
 
     //hlayout3
 
@@ -157,7 +156,6 @@ void MainMenu::SetGamesContainer()
     //storymode_btn
 
     storymode_btn->setFixedSize(250, 50);
-    connect(storymode_btn, &QPushButton::clicked, this, &MainMenu::storymode);
 
     //hlayout4
 
@@ -333,4 +331,8 @@ void MainMenu::sliderValueChanged(int value)
 void MainMenu::comboBoxActivated(int index)
 {
     gamelevel = index + 1;
+}
+MainMenu::~MainMenu()
+{
+    delete this;
 }

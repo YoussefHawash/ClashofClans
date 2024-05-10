@@ -37,11 +37,7 @@ void Enemy::check()
             hall->decreasehealth(damage);
             if (hall->gethealth() <= 0) {
                 delete hall;
-                // QGraphicsScene *k= scene();
-                // GameScene *scene = dynamic_cast<GameScene *>(k);
-                // scene->Gameover();
-                // return;
-
+                emit TownhallDestroyed(0);
             }
             return;
 

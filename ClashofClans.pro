@@ -47,7 +47,4 @@ FORMS +=
 RESOURCES += \
     Resources.qrc
 
-SUBDIRS += \
-    B:/this pc/cs lab/Chicken_invaders/Chicken-Invaders/session 5 - game - Exercise/Tutorial.pro
-
 
