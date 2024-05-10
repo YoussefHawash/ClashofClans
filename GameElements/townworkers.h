@@ -1,8 +1,8 @@
 #ifndef TOWNWORKERS_H
 #define TOWNWORKERS_H
+#include "./MapElements/fence.h"
+#include "./MapElements/townhall.h"
 #include "player.h"
-#include "fence.h"
-#include "townhall.h"
 
 class townworkers: public Player
 {

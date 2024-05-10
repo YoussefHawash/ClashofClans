@@ -1,26 +1,29 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include <QTimer>
 #include <QObject>
-#include "fence.h"
-#include "townhall.h"
-#include "townworkers.h"
-#include "player.h"
+#include <QTimer>
+#include "./MapElements/fence.h"
+#include "./MapElements/townhall.h"
 #include "gamescene.h"
+#include "player.h"
+#include "townworkers.h"
 
 class Enemy : public Player
 {
     Q_OBJECT
 private:
     int damage;
+    Building *damging;
 
 public:
-    QTimer *checked;
+    QTimer *HitTimer;
+
     Enemy(int, int, int, int, int);
 public slots:
     void check();
     void move();
+    void hitbuilding();
 signals:
     void TownhallDestroyed(bool);
 };

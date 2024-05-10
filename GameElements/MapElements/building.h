@@ -4,17 +4,17 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QObject>
-#include "health.h"
+#include "../health.h"
 class Building : public QGraphicsPixmapItem, public QObject
 {
 protected:
-    int type;
+    QGraphicsScene *mainscene;
     QPixmap *img;
-    health *h = nullptr;
+    health *h;
 
 public:
-    Building();
-    void SetHealth(QGraphicsScene *, int);
+    Building(QGraphicsScene *, int x, int y);
+    void SetHealth(int);
     void decreasehealth(int);
     void increasehealth(int);
     void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;

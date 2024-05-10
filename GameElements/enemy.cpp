@@ -1,5 +1,5 @@
 #include "enemy.h"
-
+#include <QTimer>
 Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
     : Player(x, y, 600, 5)
     , damage(d)
@@ -26,28 +26,20 @@ void Enemy::check()
     {
         // detecting fence
         if (Fence *fence = dynamic_cast<Fence *>(colliding_items[i])) {
-            fence->decreasehealth(damage);
-            if (fence->gethealth() <= 0) {
-                delete fence;
-            }
+            damging = fence;
+            disconnect(movetime, SIGNAL(timeout()), this, SLOT(check()));
+            HitTimer = new QTimer;
+            connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
+            HitTimer->start(1000);
             return;
 
         }
         else if (TownHall *hall = dynamic_cast<TownHall *>(colliding_items[i])) {
-            hall->decreasehealth(damage);
-            if (hall->gethealth() <= 0) {
-                delete hall;
-                emit TownhallDestroyed(0);
-            }
-            return;
-
-        }
-        //detecting townworkers
-        else if (townworkers *worker = dynamic_cast<townworkers *>(colliding_items[i])) {
-            worker->gethealth()->decreasehealth(damage);
-            if (worker->gethealth()->gethealth() <= 0) {
-                delete worker;
-            }
+            damging = hall;
+            HitTimer = new QTimer;
+            disconnect(movetime, SIGNAL(timeout()), this, SLOT(check()));
+            connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
+            HitTimer->start(1000);
             return;
         }
     }
@@ -56,4 +48,16 @@ void Enemy::check()
 
 void Enemy::move() {
     setPos(x() - dx, y() - dy);
+}
+
+void Enemy::hitbuilding()
+{
+    damging->decreasehealth(damage);
+    if (damging->gethealth() <= 0) {
+        if (typeid(*(damging)) == typeid(TownHall))
+            emit TownhallDestroyed(0);
+        delete damging;
+        disconnect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
+        connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
+    }
 }

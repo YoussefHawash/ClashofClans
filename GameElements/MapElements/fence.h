@@ -5,9 +5,8 @@
 
 class Fence : public Building
 {
-private:
 public:
-    Fence(int, int, std::vector<int>);
+    Fence(QGraphicsScene *, int, int, int, int, std::vector<int>);
 };
 
 #endif // FENCE_H

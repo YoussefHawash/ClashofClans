@@ -1,8 +1,9 @@
 #include "health.h"
 
-health::health(int x, int y, int w, int v)
+health::health(int x, int y, int w, int hp)
     : x(x)
     , y(y - 5)
+    , originalwidth(w)
 {
     // Set rectangels
 
@@ -12,7 +13,7 @@ health::health(int x, int y, int w, int v)
 
     // intialize health and brushes and adding them
 
-    currentHealth = maxHealth = v;
+    currentHealth = maxHealth = hp;
 
     QBrush Green(Qt::green);
     setBrush(Green);
@@ -43,9 +44,16 @@ void health::decreasehealth(int i)
 
 void health::updateHealthBar()
 {
-    // Scale to fit the width of the background
-    float barWidth = (float(currentHealth) / maxHealth) * rect().width();
+    // S cale to fit the width of the background
+    float barWidth = (float(currentHealth) / maxHealth) * originalwidth;
     setRect(x, y, barWidth, 3);
+    if (float(currentHealth / maxHealth) < 1 && float(currentHealth / maxHealth) > 0.5) {
+        QBrush yellow(Qt::yellow);
+        setBrush(yellow);
+    } else {
+        QBrush red(Qt::red);
+        setBrush(red);
+    }
 }
 
 int health::gethealth()

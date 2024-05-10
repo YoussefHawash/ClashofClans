@@ -1,18 +1,29 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 #pragma once
+#include <QAudioOutput>
+#include <QDebug>
+#include <QEventLoop>
+#include <QFile>
+#include <QGraphicsProxyWidget>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QLabel>
+#include <QMessageBox>
 #include <QPainter>
+#include <QPushButton>
 #include <QRandomGenerator>
 #include <QTimer>
-#include <QEventLoop>
 #include <QtMultimedia/QMediaPlayer>
-#include <QAudioOutput>
-#include <QMessageBox>
+#include "GameElements/MapElements/defenseunit.h"
+#include "GameElements/MapElements/fence.h"
+#include "GameElements/MapElements/townhall.h"
+#include "GameElements/bullet.h"
+#include "GameElements/enemy.h"
+#include "GameElements/townworkers.h"
+#include <cstdlib>
+#include <ctime>
 #include <vector>
-
-#include "GameElements/townhall.h"
 
 using namespace std;
 class GameScene : public QGraphicsScene
@@ -32,7 +43,7 @@ private:
     //Townhall_Object
     TownHall *townhall;
     //Map
-    vector<vector<Building *> > map;
+    vector<vector<int> > map;
     // x and y factors
     int yfactor, xfactor;
     //Variables
@@ -53,7 +64,7 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void shoot(const QPointF &mousePos);
 public slots:
-    void GameEnd(bool);
+    void Gameover(bool);
     void EndWave();
     void createEnemy();
 signals:

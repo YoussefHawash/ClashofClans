@@ -4,18 +4,20 @@
 #include <QGraphicsView>
 #include <QWidgetItem>
 #include <QBrush>
-class health : public QGraphicsRectItem {
+class health : public QGraphicsRectItem
+{
+private:
+    int x, y;
+    float currentHealth;
+    float maxHealth;
+    double originalwidth;
+
 public:
     health(int, int, int, int);
     void increasehealth(int);
     void decreasehealth(int);
     void updateHealthBar();
     int gethealth();
-
-private:
-    int x, y;
-    int currentHealth;
-    int maxHealth;
 };
 
 #endif // HEALTH_H

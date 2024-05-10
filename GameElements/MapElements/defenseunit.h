@@ -8,7 +8,8 @@ private:
     float damage;
 
 public:
-    DefenseUnit(int, int, int);
+    DefenseUnit(QGraphicsScene *, int, int, int, int, int);
+    int getdamage();
 };
 
 #endif // DEFENSEUNIT_H

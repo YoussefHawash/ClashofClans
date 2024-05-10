@@ -9,10 +9,10 @@ QT += multimedia
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    GameElements/defenseunit.cpp \
+    GameElements\MapElements\defenseunit.cpp \
     GameElements/townworkers.cpp \
-    GameElements\fence.cpp \
-    GameElements\building.cpp \
+    GameElements\MapElements\fence.cpp \
+    GameElements\MapElements\building.cpp \
     GameElements\bullet.cpp \
     GameElements\enemy.cpp \
     gamescene.cpp \
@@ -20,21 +20,21 @@ SOURCES += \
     main.cpp \
     mainmenu.cpp \
     GameElements\player.cpp \
-    GameElements\townhall.cpp \
+    GameElements\MapElements\townhall.cpp \
     view.cpp\
 
 HEADERS += \
-    GameElements/defenseunit.h \
+    GameElements/MapElements\defenseunit.h \
     GameElements/townworkers.h \
-    GameElements\fence.h \
-    GameElements\building.h \
+    GameElements\MapElements\fence.h \
+    GameElements\MapElements\building.h \
     GameElements\bullet.h \
     GameElements\enemy.h \
     gamescene.h \
     GameElements\health.h \
     mainmenu.h \
     GameElements\player.h \
-    GameElements\townhall.h \
+    GameElements\MapElements\townhall.h \
     view.h\
 
 # Default rules for deployment.

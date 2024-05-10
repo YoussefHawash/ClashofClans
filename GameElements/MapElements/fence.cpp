@@ -1,6 +1,7 @@
 #include "fence.h"
 
-Fence::Fence(int xfactor, int yfactor, std::vector<int> a)
+Fence::Fence(QGraphicsScene *scene, int x, int y, int xfactor, int yfactor, std::vector<int> a)
+    : Building(scene, x, y)
 {
     QPixmap pixmap1(":/Imgs/Resources/fence.png");
     pixmap1 = pixmap1.scaled(xfactor / 4, yfactor / 4);
@@ -37,4 +38,5 @@ Fence::Fence(int xfactor, int yfactor, std::vector<int> a)
         }
     }
     setPixmap(combinedPixmap);
+    SetHealth(80);
 }

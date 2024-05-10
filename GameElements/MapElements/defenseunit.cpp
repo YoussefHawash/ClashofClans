@@ -1,9 +1,10 @@
 #include "defenseunit.h"
 
-DefenseUnit::DefenseUnit(int xfactor, int yfactor, int level)
+DefenseUnit::DefenseUnit(QGraphicsScene *scene, int x, int y, int xfactor, int yfactor, int level)
     : level(level)
+    , Building(scene, x, y)
 {
-    type = 2;
+    setAcceptHoverEvents(false);
     if (level == 1) {
         img = new QPixmap(":/Imgs/Resources/cannon.png");
     }

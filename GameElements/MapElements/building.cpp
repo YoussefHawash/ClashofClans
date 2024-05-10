@@ -1,14 +1,16 @@
 #include "building.h"
-Building::Building()
+Building::Building(QGraphicsScene *scene, int x, int y)
+    : mainscene(scene)
+    , h(nullptr)
 {
-    type = 0;
     setAcceptHoverEvents(true);
+    setPos(x, y);
 }
 
-void Building::SetHealth(QGraphicsScene *a, int max)
+void Building::SetHealth(int max)
 {
     h = new health(x(), y(), pixmap().width(), max);
-    a->addItem(h);
+    mainscene->addItem(h);
     h->hide();
 }
 
@@ -42,8 +44,4 @@ int Building::gethealth()
     if(h==nullptr)
         return 0;
     return h->gethealth();
-}
-int Building::gettype()
-{
-    return type;
 }
