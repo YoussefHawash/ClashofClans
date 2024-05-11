@@ -13,12 +13,12 @@ class Enemy : public Player
 {
     Q_OBJECT
 private:
-    int damage;
+             int damage;
     Building *damging;
 
 public:
-    QTimer *HitTimer;
-
+    static QTimer *HitTimer;
+    void deletedamaging();
     Enemy(int, int, int, int, int);
 public slots:
     void check();

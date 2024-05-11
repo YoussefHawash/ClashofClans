@@ -1,5 +1,9 @@
 #include "enemy.h"
 #include <QTimer>
+
+QTimer *Enemy::HitTimer= new QTimer;
+
+
 Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
     : Player(x, y, 600, 20)
     , damage(d)
@@ -30,14 +34,14 @@ void Enemy::check()
 
             connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
             HitTimer->start(1000);
+            qDebug()<< "lol";
             return;
-
         }
         else if (TownHall *hall = dynamic_cast<TownHall *>(colliding_items[i])) {
             damging = hall;
             disconnect(movetime, SIGNAL(timeout()), this, SLOT(check()));
             connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
-            HitTimer->start(1000);
+            HitTimer->start();
             return;
         }
     }
@@ -50,16 +54,19 @@ void Enemy::move() {
 
 void Enemy::hitbuilding()
 {
-    if(damging!= nullptr){
     damging->decreasehealth(damage);
     if (damging->gethealth() <= 0) {
         if (typeid(*(damging)) == typeid(TownHall)){
             emit TownhallDestroyed(0);
             qDebug()<<1;}
-        else
-            delete damging;}}
+        else{
+            delete damging;
+            disconnect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
+            connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
 
-        disconnect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
-        connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
+        }}
+}
 
+void Enemy::deletedamaging(){
+    damging = nullptr;
 }

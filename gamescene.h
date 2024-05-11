@@ -41,6 +41,8 @@ private:
     QGraphicsTextItem *WaveInfo;
     QGraphicsTextItem *TogglePause;
     QGraphicsTextItem *BoostInfo;
+    QGraphicsTextItem *Navigation;
+    QGraphicsTextItem *gameOverText;
     //All timers
     QTimer *EnemyCreation = new QTimer();
     QTimer *Wavetimer;
@@ -55,7 +57,7 @@ private:
     //Variables
     int Wavenum;
     int WaveTime;
-    int CreationFrequency = 4000;
+    int CreationFrequency;
     int gamelevel;
     int BoostTime=0;
     bool boost;

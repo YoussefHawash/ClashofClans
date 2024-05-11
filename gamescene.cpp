@@ -5,11 +5,18 @@ GameScene::GameScene(int level, double w, double h)
     , gamelevel(level)
     , clickable(true)
 {
+    Enemy::HitTimer->start(1000);
     QPixmap *bgPixmap = new QPixmap(":/Imgs/Resources/GrassBackgorund.jpg");
     setBackgroundBrush(bgPixmap->scaled(w, h));
     setSceneRect(0, 0, w, h);
     //BlackWindow In case
+    BoostInfo = new QGraphicsTextItem();
+    WaveInfo = new QGraphicsTextItem();
+    TimeInfo = new QGraphicsTextItem();
+    TogglePause = new QGraphicsTextItem();
     EventWindow = new QGraphicsPixmapItem;
+    NextwaveText = new QGraphicsTextItem;
+    NextwaveTextNav = new QGraphicsTextItem;
     QPixmap *pause = new QPixmap(":/Imgs/Resources/pause.png");
     *pause = pause->scaled(100, 100);
     EventWindow->setPixmap(*pause);
@@ -17,7 +24,26 @@ GameScene::GameScene(int level, double w, double h)
     EventWindow->setZValue(10);
     addItem(EventWindow);
     EventWindow->hide();
-    NextwaveTextNav = new QGraphicsTextItem;
+
+    WaveInfo->setDefaultTextColor(Qt::black);
+    WaveInfo->setFont(QFont("serif", 16));
+    WaveInfo->setPos(0, 0);
+    addItem(WaveInfo);
+    // Wave label
+    TimeInfo->setDefaultTextColor(Qt::black);
+    TimeInfo->setFont(QFont("serif", 16));
+    TimeInfo->setPos(0, 25);
+    addItem(TimeInfo);
+    //Pause Info
+    TogglePause->setDefaultTextColor(Qt::black);
+    TogglePause->setFont(QFont("serif", 16));
+    TogglePause->setPos(0, 48);
+    addItem(TogglePause);
+
+
+    CreationFrequency = 10000/(gamelevel+1);
+
+
     NextwaveTextNav->setDefaultTextColor(Qt::black);
     NextwaveTextNav->setFont(QFont("serif", 16));
     NextwaveTextNav->setPos(width() / 2 - 180, height() / 2 + 48);
@@ -30,11 +56,12 @@ GameScene::GameScene(int level, double w, double h)
 void GameScene::MoveToNextLevel()
 {
     // hiding all gameover elements
-    NextwaveText->hide();
-    NextwaveTextNav->hide();
+    gameOverText->hide();
+    Navigation->hide();
     gamelevel++;
     Wavenum = 1;
-    if (gamelevel > 5) {
+    CreationFrequency = 10000/(gamelevel+1);
+    if (gamelevel < 5) {
         RenderingMap();
         start();
     } else
@@ -42,7 +69,9 @@ void GameScene::MoveToNextLevel()
 }
 void GameScene::RenderingMap()
 {
+    map.clear();
     map.resize(9);
+
     yfactor = height() / 9;
     xfactor = width() / 16;
     QFile file(":/maps/Resources/map" + QString::number(gamelevel) + ".txt");
@@ -63,8 +92,8 @@ void GameScene::RenderingMap()
             }
         }
 
-        for (size_t i = 0; i < map.size(); ++i) {
-            for (size_t j = 0; j < map[i].size(); ++j) {
+        for (int i = 0; i < map.size(); ++i) {
+            for (int j = 0; j < map[i].size(); ++j) {
                 if (map[i][j] == 1) { // townall =1
                     townhall = new TownHall(this, j * xfactor, i * yfactor, xfactor, yfactor);
                     addItem(townhall);
@@ -82,12 +111,12 @@ void GameScene::RenderingMap()
                     }
                     if (map[i][j + 1] == 3) {
                         Edges.push_back(1);
-                    }           
+                    }
                     Fence *fence = new Fence(this, j * xfactor, i * yfactor, xfactor, yfactor, Edges);
                     addItem(fence);
 
                 } else if (map[i][j] == 2) { // defence unit =2
-                    Cannon = new DefenseUnit(this, j * xfactor, i * yfactor, xfactor, yfactor, 1);
+                    Cannon = new DefenseUnit(this, j * xfactor, i * yfactor, xfactor, yfactor, gamelevel);
                     addItem(Cannon);
                 }
             }
@@ -151,34 +180,20 @@ void GameScene::start()
         NextwaveText->hide();
         NextwaveTextNav->hide();
     }
-
     //setting time
-    WaveTime = 50;
+    WaveTime = 1;
     //Wave Time Label
-    WaveInfo = new QGraphicsTextItem();
-    WaveInfo->setDefaultTextColor(Qt::black);
-    WaveInfo->setFont(QFont("serif", 16));
-    WaveInfo->setPlainText("Wave " + QString::number(Wavenum));
-    WaveInfo->setPos(0, 0);
-    addItem(WaveInfo);
-    // Wave label
-    TimeInfo = new QGraphicsTextItem();
-    TimeInfo->setDefaultTextColor(Qt::black);
-    TimeInfo->setFont(QFont("serif", 16));
-    TimeInfo->setPlainText("Time Remaining : " + QString::number(WaveTime));
-    TimeInfo->setPos(0, 25);
-    addItem(TimeInfo);
-    //Pause Info
-    TogglePause = new QGraphicsTextItem();
-    TogglePause->setDefaultTextColor(Qt::black);
-    TogglePause->setFont(QFont("serif", 16));
     TogglePause->setPlainText("[Escape] To Pause");
-    TogglePause->setPos(0, 48);
-    addItem(TogglePause);
-    //Times
+    TimeInfo->setPlainText("Time Remaining : " + QString::number(WaveTime));
+    WaveInfo->setPlainText("Wave " + QString::number(Wavenum));
+
+    WaveInfo->show();
+    TimeInfo->show();
+    TogglePause->show();
+
+    EnemyCreation->start(CreationFrequency);
 
     connect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
-    EnemyCreation->start(CreationFrequency);
     Wavetimer = new QTimer();
     connect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
     Wavetimer->start(1000);
@@ -203,15 +218,15 @@ void GameScene::EndWave()
         QObject::disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
         QObject::disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
         //Displaying
-        NextwaveText = new QGraphicsTextItem();
+
         NextwaveText->setDefaultTextColor(Qt::white);
         NextwaveText->setFont(QFont("serif", 48));
-        NextwaveText->setPlainText("Wave one Ended");
+        NextwaveText->setPlainText("Wave "+ QString::number(Wavenum)+ " Ended");
         NextwaveText->setPos(width() / 2 - 180, height() / 2 - 48);
         addItem(NextwaveText);
         NextwaveTextNav->setPlainText("[Enter] Next Wave \n[Escape] MainMenu");
-        Wavenum++;
-        CreationFrequency = (CreationFrequency * 2) / (3);
+        NextwaveTextNav->show();
+        CreationFrequency = (CreationFrequency * 4) / (5);
     } else {
         WaveTime--;
         TimeInfo->setPlainText("Time Remaining : " + QString::number(WaveTime));
@@ -224,9 +239,15 @@ void GameScene::Gameover(bool state = 0)
     disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
     disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
     // Clean up any existing items
-    clear();
+    clearEnemies();
+    for (int i = items().size() - 1; i >= 0; --i) {
+        if (Building *building = dynamic_cast<Building *>(items().at(i))) {
+            delete building;
+        }
+    }
 
-    QGraphicsTextItem *gameOverText = new QGraphicsTextItem();
+
+    gameOverText = new QGraphicsTextItem();
     gameOverText->setDefaultTextColor(Qt::red);
     gameOverText->setFont(QFont("serif", 48));
     gameOverText->setPos(width() / 2 - 180, height() / 2 - 48);
@@ -236,8 +257,14 @@ void GameScene::Gameover(bool state = 0)
         gameOverText->setDefaultTextColor(Qt::green);
         gameOverText->setPlainText("Victory!");
         if (gamelevel < 5) {
-            NextwaveTextNav->setPlainText("[Enter] Next Level \n[Escape] MainMenu");
-            NextwaveTextNav->show();
+            Navigation = new QGraphicsTextItem();
+            Navigation->setDefaultTextColor(Qt::black);
+            Navigation->setFont(QFont("serif", 16));
+            Navigation->setPlainText("[Escape] MainMenu /n[Enter] Next level");
+
+            Navigation->setPos(width() / 2 - 180, height() / 2 + 48);
+            Navigation->show();
+            addItem(Navigation);
         }
     } else {// Display game over text
         Wavenum=0;
@@ -245,7 +272,7 @@ void GameScene::Gameover(bool state = 0)
         qDebug() << 1;
         gameOverText->setPlainText("GAME OVER!");
         qDebug() << 1;
-        QGraphicsTextItem *Navigation = new QGraphicsTextItem();
+        Navigation = new QGraphicsTextItem();
         Navigation->setDefaultTextColor(Qt::black);
         Navigation->setFont(QFont("serif", 16));
         Navigation->setPlainText("[Escape] MainMenu");
@@ -301,10 +328,14 @@ void GameScene::keyPressEvent(QKeyEvent *event)
     if (WaveTime != 0 && event->key() == Qt::Key_Escape) {
         TogglePauseFunc();
     } else if (WaveTime == 0 && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
-        if (Wavenum == 3)
-            MoveToNextLevel();
+        if (Wavenum < 3){
+            Wavenum++;
+
+            start();}
+
         else
-            start();
+            MoveToNextLevel();
+
 
     } else if (WaveTime == 0 && event->key() == Qt::Key_Escape) {
         emit ReturnMainMenu();

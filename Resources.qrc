@@ -30,6 +30,9 @@
     <qresource prefix="/maps">
         <file>Resources/map1.txt</file>
         <file>Resources/map2.txt</file>
+        <file>Resources/map3.txt</file>
+        <file>Resources/map4.txt</file>
+        <file>Resources/map5.txt</file>
     </qresource>
     <qresource prefix="/">
         <file>Resources/bullet.png</file>
