@@ -13,10 +13,13 @@ class Bullet : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 private:
-    int xi, xf, yi, yf;
+    int xi, xf, yi, yf,damagebullet;
+    int Velocity;
+    bool boost;
+    QPixmap *img;
 
 public:
-    Bullet(int,int,int,int);
+    Bullet(int,int,int,int,bool);
     void CheckCollide();
 private slots:
     void Move();

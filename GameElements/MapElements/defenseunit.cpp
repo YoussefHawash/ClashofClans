@@ -4,6 +4,7 @@ DefenseUnit::DefenseUnit(QGraphicsScene *scene, int x, int y, int xfactor, int y
     : level(level)
     , Building(scene, x, y)
 {
+
     setAcceptHoverEvents(false);
     switch (level)
     {

@@ -277,11 +277,19 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void GameScene::shoot(const QPointF &mousePos)
 {
+
+
     if (clickable) {
+        if(BoostTime!=0)
+        {
+            boost=1;
+        }
+        else{boost=0;}
+
         Bullet *a = new Bullet(Cannon->x() + (xfactor / 2),
                                Cannon->y() + (yfactor / 2),
                                mousePos.x(),
-                               mousePos.y());
+                               mousePos.y(),boost);
         addItem(a);
         QObject::connect(a, SIGNAL(BoosterActivate()), this, SLOT(ActivateBooster()));
     }

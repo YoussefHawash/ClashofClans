@@ -58,6 +58,7 @@ private:
     int CreationFrequency = 4000;
     int gamelevel;
     int BoostTime=0;
+    bool boost;
     // Ability to click on the scene
     bool clickable;
 
