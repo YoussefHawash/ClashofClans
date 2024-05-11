@@ -31,6 +31,10 @@ class GameScene : public QGraphicsScene
     Q_OBJECT
 private:
     // Next wave
+    QGraphicsRectItem *blackwindow;
+    QPixmap *bgPixmap;
+    QPushButton *Pause;
+    QGraphicsProxyWidget *PauseWidget;
     QGraphicsProxyWidget *EndWaveWidget;
     QPushButton *NextWaveButton;
     QGraphicsTextItem *NextwaveText;
@@ -62,11 +66,25 @@ public:
     void start();
     //Check Again!!!! Shooting in defenese unit
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
+    void keyPressEvent(QKeyEvent *event) override
+    {
+        // Handle key press event
+        if (clickable && event->key() == Qt::Key_Escape) {
+            PauseWave();
+        } else if (WaveTime == 0
+                   && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
+            start();
+
+        } else if (WaveTime == 0 && event->key() == Qt::Key_Escape) {
+            ReturnMainMenu();
+        }
+    }
     void shoot(const QPointF &mousePos);
 public slots:
     void Gameover(bool);
     void EndWave();
     void createEnemy();
+    void PauseWave();
 signals:
     void ReturnMainMenu();
 };

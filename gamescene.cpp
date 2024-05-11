@@ -4,16 +4,31 @@ GameScene::GameScene(double w, double h)
     : Wavenum(1)
     , clickable(true)
 {
-    QPixmap bgPixmap(":/Imgs/Resources/GrassBackgorund.jpg");
-    setBackgroundBrush(bgPixmap.scaled(w, h));
+    bgPixmap = new QPixmap(":/Imgs/Resources/GrassBackgorund.jpg");
+    setBackgroundBrush(bgPixmap->scaled(w, h));
     setSceneRect(0, 0, w, h);
     // display map
+
     RenderingMap();
     start();
+    blackwindow = new QGraphicsRectItem(0, 0, 0, 0);
+    QBrush b(Qt::black); // Blue color
+    blackwindow->setBrush(b);
+    blackwindow->setZValue(10);
+    addItem(blackwindow);
 }
 
 void GameScene::RenderingMap()
 {
+    Pause = new QPushButton("Pause");
+    Pause->setFixedSize(150, 50);
+    PauseWidget = new QGraphicsProxyWidget();
+    PauseWidget->setWidget(Pause);
+    PauseWidget->setZValue(100);
+    addItem(PauseWidget);
+    PauseWidget->setPos(1130, 0);
+    connect(Pause, &QPushButton::clicked, this, &GameScene::PauseWave);
+
     map.resize(9);
     yfactor = height() / 9;
     xfactor = width() / 16;
@@ -110,7 +125,7 @@ void GameScene::start()
     }
 
     //setting time
-    WaveTime = 900;
+    WaveTime = 1;
     // Wave label
     TimeInfo = new QGraphicsTextItem();
     TimeInfo->setDefaultTextColor(Qt::black);
@@ -213,7 +228,7 @@ void GameScene::clearEnemies()
 }
 void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (clickable && event->button() == Qt::LeftButton) {
         // Get the mouse cursor position
         QPointF mousePos = event->scenePos();
         // Pass the mouse position to the shoot function
@@ -222,11 +237,29 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void GameScene::shoot(const QPointF &mousePos)
 {
+    Bullet *a = new Bullet(x_cannon + (xfactor / 2),
+                           y_cannon + (yfactor / 2),
+                           mousePos.x(),
+                           mousePos.y());
+    addItem(a);
+}
+void GameScene::PauseWave()
+{
     if (clickable) {
-        Bullet *a = new Bullet(x_cannon + (xfactor / 2),
-                               y_cannon + (yfactor / 2),
-                               mousePos.x(),
-                               mousePos.y());
-        addItem(a);
+        blackwindow->setRect(1280 / 4, 720 / 4, 1280 / 2, 720 / 2);
+        Pause->setText("Resume");
+        PauseWidget->setPos(565, 335);
+        clickable = 0;
+        EnemyCreation->stop();
+        Wavetimer->stop();
+        Player::movetime->stop();
+    } else {
+        blackwindow->setRect(0, 0, 0, 0);
+        Pause->setText("Pause");
+        PauseWidget->setPos(1130, 0);
+        clickable = 1;
+        EnemyCreation->start();
+        Wavetimer->start();
+        Player::movetime->start();
     }
 }
