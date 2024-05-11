@@ -1,7 +1,7 @@
 #include "enemy.h"
 #include <QTimer>
 Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
-    : Player(x, y, 600, 5)
+    : Player(x, y, 600, 20)
     , damage(d)
 {
     QPixmap *img = new QPixmap(":/Imgs/Resources/icon.png");
@@ -50,13 +50,16 @@ void Enemy::move() {
 
 void Enemy::hitbuilding()
 {
+    if(damging!= nullptr){
     damging->decreasehealth(damage);
     if (damging->gethealth() <= 0) {
-        if (typeid(*(damging)) == typeid(TownHall))
+        if (typeid(*(damging)) == typeid(TownHall)){
             emit TownhallDestroyed(0);
+            qDebug()<<1;}
         else
-            delete damging;
+            delete damging;}}
+
         disconnect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
         connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
-    }
+
 }

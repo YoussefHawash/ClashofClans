@@ -13,7 +13,7 @@ Player::Player(int x, int y, int hp, int s)
 }
 void Player::startmove()
 {
-    movetime = new QTimer;
+
     movetime->start(100);
 }
 
