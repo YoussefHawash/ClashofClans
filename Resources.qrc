@@ -16,6 +16,11 @@
         <file>Resources/bullet.png</file>
         <file>Resources/pause.png</file>
         <file>Resources/Coin.png</file>
+        <file>Resources/Tower1.png</file>
+        <file>Resources/Tower2.png</file>
+        <file>Resources/Tower3.png</file>
+        <file>Resources/Tower4.png</file>
+        <file>Resources/file.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Resources/backgroundmusic.mp3</file>
@@ -25,5 +30,8 @@
     <qresource prefix="/maps">
         <file>Resources/map1.txt</file>
         <file>Resources/map2.txt</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>Resources/bullet.png</file>
     </qresource>
 </RCC>

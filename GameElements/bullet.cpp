@@ -20,7 +20,7 @@ Bullet::Bullet(int xi_pos, int yi_pos, int xf_pos, int yf_pos)
     sound->setAudioOutput(audioOutput);
     audioOutput->setVolume(0.5);
     sound->play();
-    QPixmap *img = new QPixmap(":/Imgs/Resources/bullet.png");
+    QPixmap *img = new QPixmap(":/Imgs/Resources/file.png");
     *img = img->scaled(15, 15);
     setPixmap(*img);
     setPos(xi_pos, yi_pos);
