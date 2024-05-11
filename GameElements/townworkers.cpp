@@ -35,6 +35,20 @@ void townworkers::check()
     }
 }
 
+void townworkers::startmoving()
+{
+
+}
+
+void townworkers::setdirection(){
+    currentgoal = path[currentpath];
+    currentpath++;
+    int slope_x = posx - currentgoal.first * 80;
+    int slope_y = posy - currentgoal.second * 80;
+    dx = speed * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
+    dy = speed * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
+}
+
 void townworkers::move(){
     setPos(x()+dx, y()+dy);
 }

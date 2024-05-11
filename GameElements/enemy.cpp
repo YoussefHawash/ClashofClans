@@ -11,10 +11,11 @@ Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
     QPixmap *img = new QPixmap(":/Imgs/Resources/icon.png");
     *img = img->scaled(50, 50);
     setPixmap(*img);
-    int slope_x = posx - x_tower;
-    int slope_y = posy - y_tower;
-    dx = speed * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
-    dy = speed * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
+    // int slope_x = posx - x_tower;
+    // int slope_y = posy - y_tower;
+    // dx = speed * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
+    // dy = speed * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
+    setdirection();
     connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
 }
 
@@ -50,6 +51,11 @@ void Enemy::check()
 
 void Enemy::move() {
     setPos(x() - dx, y() - dy);
+    if((x()<(currentgoal.first+10) || x()<(currentgoal.first-10)) &&
+        (y()==(currentgoal.second+10)|| y()==(currentgoal.second-10)))
+    {
+        setdirection();
+    }
 }
 
 void Enemy::hitbuilding()
@@ -69,4 +75,14 @@ void Enemy::hitbuilding()
 
 void Enemy::deletedamaging(){
     damging = nullptr;
+}
+
+void Enemy::setdirection()
+{
+    currentgoal = path[currentpath];
+    currentpath++;
+    int slope_x = posx - currentgoal.first * 80;
+    int slope_y = posy - currentgoal.second * 80;
+    dx = speed * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
+    dy = speed * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
 }
