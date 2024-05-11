@@ -1,8 +1,8 @@
 #include "enemy.h"
 #include <QTimer>
-
+#include "gamescene.h"
+extern GameScene *gamescene;
 QTimer *Enemy::HitTimer= new QTimer;
-
 
 Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
     : Player(x, y, 600, 20)
@@ -11,16 +11,12 @@ Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
     QPixmap *img = new QPixmap(":/Imgs/Resources/icon.png");
     *img = img->scaled(50, 50);
     setPixmap(*img);
-    // int slope_x = posx - x_tower;
-    // int slope_y = posy - y_tower;
-    // dx = speed * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
-    // dy = speed * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
-    setdirection();
+
+    path = Dijekstra(*(*gamescene->getmap())[int((y - 1) / 80)][int((x - 1) / 80)],
+                     *(*gamescene->getmap())[int(y_tower / 80)][int(x_tower / 80)]);
+    ;
     connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
 }
-
-
-
 
 // checks whether to move or deal damage
 void Enemy::check()
@@ -32,10 +28,8 @@ void Enemy::check()
         if (Fence *fence = dynamic_cast<Fence *>(colliding_items[i])) {
             damging = fence;
             disconnect(movetime, SIGNAL(timeout()), this, SLOT(check()));
-
             connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
             HitTimer->start(1000);
-            qDebug()<< "lol";
             return;
         }
         else if (TownHall *hall = dynamic_cast<TownHall *>(colliding_items[i])) {
@@ -51,9 +45,8 @@ void Enemy::check()
 
 void Enemy::move() {
     setPos(x() - dx, y() - dy);
-    if((x()<(currentgoal.first+10) || x()<(currentgoal.first-10)) &&
-        (y()==(currentgoal.second+10)|| y()==(currentgoal.second-10)))
-    {
+    if ((x() < (currentgoal.x + 10) || x() < (currentgoal.x - 10))
+        && (y() == (currentgoal.y + 10) || y() == (currentgoal.y - 10))) {
         setdirection();
     }
 }
@@ -81,8 +74,8 @@ void Enemy::setdirection()
 {
     currentgoal = path[currentpath];
     currentpath++;
-    int slope_x = posx - currentgoal.first * 80;
-    int slope_y = posy - currentgoal.second * 80;
+    int slope_x = posx - currentgoal.x * 80;
+    int slope_y = posy - currentgoal.y * 80;
     dx = speed * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
     dy = speed * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
 }

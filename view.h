@@ -16,7 +16,6 @@ class View : public QGraphicsView
 private:
     QApplication *App;
     MainMenu *MainUI;
-    GameScene *gamescene;
     QMediaPlayer *Sound;
     QAudioOutput *audioOutput;
 public:

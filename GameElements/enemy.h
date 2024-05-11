@@ -1,14 +1,14 @@
 #ifndef ENEMY_H
 #define ENEMY_H
-
 #include <QObject>
 #include <QTimer>
-#include <vector>
 #include "./MapElements/fence.h"
 #include "./MapElements/townhall.h"
 #include "gamescene.h"
+#include "nodes.h"
 #include "player.h"
 #include "townworkers.h"
+#include <vector>
 
 using namespace std;
 class Enemy : public Player
@@ -17,8 +17,8 @@ class Enemy : public Player
 private:
     int damage;
     Building *damging;
-    vector<pair<int,int>> path;
-    pair<int,int> currentgoal;
+    vector<Nodes> path;
+    Nodes currentgoal;
     int currentpath=0;
 public:
     static QTimer *HitTimer;

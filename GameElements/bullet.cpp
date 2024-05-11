@@ -23,7 +23,6 @@ Bullet::Bullet(int xi_pos, int yi_pos, int xf_pos, int yf_pos,bool b)
     sound->setAudioOutput(audioOutput);
     audioOutput->setVolume(0.5);
     sound->play();
-    qDebug()<<boost;
     if(boost)
     {
     img = new QPixmap(":/Imgs/Resources/file.png");

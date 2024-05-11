@@ -1,5 +1,5 @@
 #include "view.h"
-
+extern GameScene *gamescene;
 View::View(QApplication *a)
     : App(a)
 {
