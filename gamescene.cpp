@@ -181,7 +181,7 @@ void GameScene::start()
         NextwaveTextNav->hide();
     }
     //setting time
-    WaveTime = 1;
+    WaveTime = 60;
     //Wave Time Label
     TogglePause->setPlainText("[Escape] To Pause");
     TimeInfo->setPlainText("Time Remaining : " + QString::number(WaveTime));
@@ -234,6 +234,7 @@ void GameScene::EndWave()
 }
 void GameScene::Gameover(bool state = 0)
 {
+    WaveTime = 0;
     clickable = false;
     disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
     disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
@@ -330,9 +331,7 @@ void GameScene::keyPressEvent(QKeyEvent *event)
     } else if (WaveTime == 0 && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         if (Wavenum < 3){
             Wavenum++;
-
             start();}
-
         else
             MoveToNextLevel();
 
@@ -351,6 +350,7 @@ void GameScene::TogglePauseFunc()
         Wavetimer->stop();
         BoosterTimer->stop();
         Player::movetime->stop();
+        Enemy::HitTimer->stop();
     } else {
         TogglePause->setPlainText("[Escape] To Pause");
         EventWindow->hide();
@@ -359,6 +359,7 @@ void GameScene::TogglePauseFunc()
         Wavetimer->start();
         BoosterTimer->start();
         Player::movetime->start();
+        Enemy::HitTimer->start();
     }
 }
 void GameScene::createEnemy()

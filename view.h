@@ -22,7 +22,6 @@ private:
 public:
     View(QApplication * = nullptr);
     void DisplayGameMenu();
-    ~View();
 
 public slots:
     void NewGame(int);

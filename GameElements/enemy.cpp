@@ -31,17 +31,15 @@ void Enemy::check()
         if (Fence *fence = dynamic_cast<Fence *>(colliding_items[i])) {
             damging = fence;
             disconnect(movetime, SIGNAL(timeout()), this, SLOT(check()));
-
             connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
             HitTimer->start(1000);
-            qDebug()<< "lol";
             return;
         }
         else if (TownHall *hall = dynamic_cast<TownHall *>(colliding_items[i])) {
             damging = hall;
             disconnect(movetime, SIGNAL(timeout()), this, SLOT(check()));
             connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
-            HitTimer->start();
+            HitTimer->start(1000);
             return;
         }
     }
@@ -58,13 +56,12 @@ void Enemy::hitbuilding()
     if (damging->gethealth() <= 0) {
         if (typeid(*(damging)) == typeid(TownHall)){
             emit TownhallDestroyed(0);
-            qDebug()<<1;}
-        else{
+        } else {
             delete damging;
             disconnect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
             connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
-
-        }}
+        }
+    }
 }
 
 void Enemy::deletedamaging(){

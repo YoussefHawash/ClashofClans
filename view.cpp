@@ -55,8 +55,3 @@ void View::Exit()
     MainUI->hide();
     App->quit();
 }
-
-View::~View()
-{
-    delete this;
-}
