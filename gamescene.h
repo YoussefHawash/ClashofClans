@@ -1,6 +1,7 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 #pragma once
+#include <random>
 #include <QAudioOutput>
 #include <QDebug>
 #include <QEventLoop>
@@ -21,37 +22,15 @@
 #include "GameElements/bullet.h"
 #include "GameElements/enemy.h"
 #include "GameElements/townworkers.h"
-#include "booster.h"
-#include "nodes.h"
 #include <cstdlib>
 #include <ctime>
-#include <queue>
-#include <random>
 #include <vector>
+#include "booster.h"
+
 using namespace std;
 class GameScene : public QGraphicsScene
 {
     Q_OBJECT
-public:
-    struct CostComparator
-    {
-        bool operator()(const std::pair<float, Nodes> &a, const std::pair<float, Nodes> &b) const
-        {
-            return a.first > b.first;
-        }
-    };
-    GameScene(int, double, double);
-    void MoveToNextLevel();
-    void RenderingMap();
-    vector<Nodes> Dijekstra(const Nodes &, const Nodes &);
-    void start();
-    void clearEnemies();
-    vector<vector<Nodes *> > *getmap();
-
-    void mousePressEvent(QGraphicsSceneMouseEvent *) override;
-    void keyPressEvent(QKeyEvent *event) override;
-    void shoot(const QPointF &mousePos);
-
 private:
     // Next wave
     QGraphicsPixmapItem *EventWindow;
@@ -72,7 +51,7 @@ private:
     TownHall *townhall;
     DefenseUnit *Cannon;
     //Map
-    vector<vector<Nodes *> > map;
+    vector<vector<int> > map;
     // x and y factors
     int yfactor, xfactor;
     //Variables
@@ -85,6 +64,15 @@ private:
     // Ability to click on the scene
     bool clickable;
 
+public:
+    GameScene(int, double, double);
+    void MoveToNextLevel();
+    void RenderingMap();
+    void start();
+    void clearEnemies();
+    void mousePressEvent(QGraphicsSceneMouseEvent *) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void shoot(const QPointF &mousePos);
 public slots:
     void Gameover(bool);
     void EndWave();

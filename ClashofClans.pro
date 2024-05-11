@@ -22,7 +22,6 @@ SOURCES += \
     mainmenu.cpp \
     GameElements\player.cpp \
     GameElements\MapElements\townhall.cpp \
-    nodes.cpp \
     view.cpp\
 
 HEADERS += \
@@ -38,7 +37,6 @@ HEADERS += \
     mainmenu.h \
     GameElements\player.h \
     GameElements\MapElements\townhall.h \
-    nodes.h \
     view.h\
 
 # Default rules for deployment.

@@ -71,6 +71,7 @@ void GameScene::RenderingMap()
 {
     map.clear();
     map.resize(9);
+
     yfactor = height() / 9;
     xfactor = width() / 16;
     QFile file(":/maps/Resources/map" + QString::number(gamelevel) + ".txt");
@@ -82,17 +83,8 @@ void GameScene::RenderingMap()
         while (!in.atEnd() && a != 9) {
             int value;
             in >> value;
-            Nodes *n = new Nodes(a, b, 0);
 
-            if (value == 0)
-                n->weight = 1;
-            else if (value == 3) {
-                n->weight = 25;
-            } else if (value == 1)
-                n->weight = 100;
-            else
-                n->weight = 1000;
-            map[a].push_back(n);
+            map[a].push_back(value);
             b++;
             if (b == 16) {
                 b = 0;
@@ -100,31 +92,31 @@ void GameScene::RenderingMap()
             }
         }
 
-        for (size_t i = 0; i < map.size(); ++i) {
-            for (size_t j = 0; j < map[i].size(); ++j) {
-                if (map[i][j]->weight == 100) { // townall =1
+        for (int i = 0; i < map.size(); ++i) {
+            for (int j = 0; j < map[i].size(); ++j) {
+                if (map[i][j] == 1) { // townall =1
                     townhall = new TownHall(this, j * xfactor, i * yfactor, xfactor, yfactor);
                     addItem(townhall);
-                } else if (map[i][j]->weight == 25) { // fence = 3
+                } else if (map[i][j] == 3) { // fence = 3
                     //Setting The fence to be rendered
                     vector<int> Edges;
-                    if (map[i - 1][j]->weight == 25) {
+                    if (map[i - 1][j] == 3) {
                         Edges.push_back(0);
                     }
-                    if (map[i + 1][j]->weight == 25) {
+                    if (map[i + 1][j] == 3) {
                         Edges.push_back(2);
                     }
-                    if (map[i][j - 1]->weight == 25) {
+                    if (map[i][j - 1] == 3) {
                         Edges.push_back(3);
                     }
-                    if (map[i][j + 1]->weight == 25) {
+                    if (map[i][j + 1] == 3) {
                         Edges.push_back(1);
                     }
                     Fence *fence = new Fence(this, j * xfactor, i * yfactor, xfactor, yfactor, Edges);
                     addItem(fence);
 
-                } else if (map[i][j]->weight == 1000) { // defence unit =2
-                    Cannon = new DefenseUnit(this, j * xfactor, i * yfactor, xfactor, yfactor, 1);
+                } else if (map[i][j] == 2) { // defence unit =2
+                    Cannon = new DefenseUnit(this, j * xfactor, i * yfactor, xfactor, yfactor, gamelevel);
                     addItem(Cannon);
                 }
             }
@@ -189,7 +181,7 @@ void GameScene::start()
         NextwaveTextNav->hide();
     }
     //setting time
-    WaveTime = 60;
+    WaveTime = 1;
     //Wave Time Label
     TogglePause->setPlainText("[Escape] To Pause");
     TimeInfo->setPlainText("Time Remaining : " + QString::number(WaveTime));
@@ -301,11 +293,6 @@ void GameScene::clearEnemies()
         }
     }
 }
-
-vector<vector<Nodes *> > *GameScene::getmap()
-{
-    return &map;
-}
 void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (clickable && event->button() == Qt::LeftButton) {
@@ -380,28 +367,25 @@ void GameScene::createEnemy()
     srand(time(0));
     // random generator of the enemies
     int Edge = rand() % 4;
+
     if (Edge == 0) {
         RandPos = rand() % int(width());
         Enemy *enemy = new Enemy(RandPos, 0, townhall->x(), townhall->y(), 20);
-
         addItem(enemy);
         connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
     } else if (Edge == 1) {
         RandPos = rand() % int(height());
         Enemy *enemy = new Enemy(width(), RandPos, townhall->x(), townhall->y(), 20);
-
         addItem(enemy);
         connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
     } else if (Edge == 2) {
         RandPos = rand() % int(width());
         Enemy *enemy = new Enemy(RandPos, height(), townhall->x(), townhall->y(), 20);
-
         addItem(enemy);
         connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
     } else {
         RandPos = rand() % int(height());
         Enemy *enemy = new Enemy(0, RandPos, townhall->x(), townhall->y(), 20);
-
         addItem(enemy);
         connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
     }
