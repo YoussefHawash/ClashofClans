@@ -135,7 +135,7 @@ void MainMenu::SetGamesContainer()
     //Playbtn
 
     newgame_btn->setFixedSize(250, 50);
-    connect(newgame_btn, &QPushButton::clicked, this, &MainMenu::newgame);
+    connect(newgame_btn, &QPushButton::clicked, this, &MainMenu::Emit_NEWGAME);
 
     //hlayout2
 

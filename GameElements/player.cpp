@@ -2,7 +2,15 @@
 
 QTimer* Player::movetime = new QTimer;
 
-
+Player::Player(int x, int y, int hp, int s)
+    : posx(x)
+    , posy(y)
+    , speed(s)
+{
+    h = new health(posx, posy, pixmap().width(), hp);
+    setPos(x,y);
+    startmove();
+}
 void Player::startmove()
 {
     movetime = new QTimer;
@@ -13,16 +21,6 @@ void Player::stopmove()
 {
     movetime->stop();
 }
-
-Player::Player(int x, int y, int hp, int s)
-    : posx(x)
-    , posy(y)
-    , speed(s)
-{
-    h = new health(posx, posy, pixmap().width(), hp);
-    setPos(x,y);
-}
-
 health *Player::gethealth()
 {
     return h;

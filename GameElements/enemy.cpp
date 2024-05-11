@@ -10,8 +10,7 @@ Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
     int slope_x = posx - x_tower;
     int slope_y = posy - y_tower;
     dx = speed * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
-    dy = speed*((slope_y/sqrt(pow(slope_x,2)+pow(slope_y,2))));
-
+    dy = speed * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
     connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
 }
 
@@ -22,13 +21,13 @@ Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
 void Enemy::check()
 {
     QList<QGraphicsItem *> colliding_items = collidingItems();
-    for(int i=0,n=colliding_items.size();i<n;++i)
-    {
+    for (int i = 0, n = colliding_items.size(); i < n; ++i) {
+        HitTimer = new QTimer;
         // detecting fence
         if (Fence *fence = dynamic_cast<Fence *>(colliding_items[i])) {
             damging = fence;
             disconnect(movetime, SIGNAL(timeout()), this, SLOT(check()));
-            HitTimer = new QTimer;
+
             connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
             HitTimer->start(1000);
             return;
@@ -36,7 +35,6 @@ void Enemy::check()
         }
         else if (TownHall *hall = dynamic_cast<TownHall *>(colliding_items[i])) {
             damging = hall;
-            HitTimer = new QTimer;
             disconnect(movetime, SIGNAL(timeout()), this, SLOT(check()));
             connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
             HitTimer->start(1000);
@@ -56,7 +54,8 @@ void Enemy::hitbuilding()
     if (damging->gethealth() <= 0) {
         if (typeid(*(damging)) == typeid(TownHall))
             emit TownhallDestroyed(0);
-        delete damging;
+        else
+            delete damging;
         disconnect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
         connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
     }

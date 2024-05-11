@@ -1,6 +1,6 @@
 #include "bullet.h"
 #include "enemy.h"
-#include "player.h"
+
 #include <QTimer>
 #include <QObject>
 #include <QPropertyAnimation>
@@ -10,8 +10,8 @@
 
 Bullet::Bullet(int xi_pos, int yi_pos, int xf_pos, int yf_pos)
     : xi(xi_pos)
-    , yi(yi_pos)
     , xf(xf_pos)
+    , yi(yi_pos)
     , yf(yf_pos)
 {
     QMediaPlayer *sound = new QMediaPlayer;

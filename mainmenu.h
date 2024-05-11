@@ -36,10 +36,12 @@ public:
     void ShowSettings();
     //Getters
     bool IsFullscreen() const;
+
 signals:
-    void newgame();
+    void newgame(int);
     void exit();
 private slots:
+    void Emit_NEWGAME() { emit newgame(gamelevel); };
     void checkBoxStateChanged(bool);
     void sliderValueChanged(int);
     void comboBoxActivated(int);

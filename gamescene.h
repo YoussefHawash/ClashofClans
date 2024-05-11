@@ -31,21 +31,19 @@ class GameScene : public QGraphicsScene
     Q_OBJECT
 private:
     // Next wave
-    QGraphicsRectItem *blackwindow;
-    QPixmap *bgPixmap;
-    QPushButton *Pause;
-    QGraphicsProxyWidget *PauseWidget;
-    QGraphicsProxyWidget *EndWaveWidget;
-    QPushButton *NextWaveButton;
+    QGraphicsPixmapItem *EventWindow;
     QGraphicsTextItem *NextwaveText;
-    //Display Elements
+    QGraphicsTextItem *NextwaveTextNav;
+    //HUD
     QGraphicsTextItem *TimeInfo;
     QGraphicsTextItem *WaveInfo;
+    QGraphicsTextItem *TogglePause;
     //All timers
     QTimer *EnemyCreation = new QTimer();
     QTimer *Wavetimer;
     //Townhall_Object
     TownHall *townhall;
+    DefenseUnit *Cannon;
     //Map
     vector<vector<int> > map;
     // x and y factors
@@ -54,37 +52,24 @@ private:
     int Wavenum;
     int WaveTime;
     int CreationFrequency = 4000;
+    int gamelevel;
     // Ability to click on the scene
     bool clickable;
-    // Important Coordiantes
-    int x_cannon, y_cannon;
 
 public:
-    GameScene(double, double);
+    GameScene(int, double, double);
+    void MoveToNextLevel();
     void RenderingMap();
-    void clearEnemies();
     void start();
-    //Check Again!!!! Shooting in defenese unit
+    void clearEnemies();
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
-    void keyPressEvent(QKeyEvent *event) override
-    {
-        // Handle key press event
-        if (clickable && event->key() == Qt::Key_Escape) {
-            PauseWave();
-        } else if (WaveTime == 0
-                   && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
-            start();
-
-        } else if (WaveTime == 0 && event->key() == Qt::Key_Escape) {
-            ReturnMainMenu();
-        }
-    }
+    void keyPressEvent(QKeyEvent *event) override;
     void shoot(const QPointF &mousePos);
 public slots:
     void Gameover(bool);
     void EndWave();
     void createEnemy();
-    void PauseWave();
+    void TogglePauseFunc();
 signals:
     void ReturnMainMenu();
 };

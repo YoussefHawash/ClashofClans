@@ -24,18 +24,18 @@ void View::DisplayGameMenu()
 {
     MainUI = new MainMenu(audioOutput);
     MainUI->show();
-    connect(MainUI, SIGNAL(newgame()), this, SLOT(NewGame()));
+    connect(MainUI, &MainMenu::newgame, this, &View::NewGame);
     connect(MainUI, SIGNAL(exit()), this, SLOT(Exit()));
 }
 
-void View::NewGame()
+void View::NewGame(int level)
 {
     if (MainUI->IsFullscreen())
         showFullScreen();
     else
         setFixedSize(1280, 720);
 
-    gamescene = new GameScene(width(), height());
+    gamescene = new GameScene(level, width(), height());
     setWindowTitle("New Game");
     setScene(gamescene);
     MainUI->hide();

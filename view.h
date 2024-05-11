@@ -25,7 +25,7 @@ public:
     ~View();
 
 public slots:
-    void NewGame();
+    void NewGame(int);
     void ReturnToMainMenu();
     void Exit();
 };
