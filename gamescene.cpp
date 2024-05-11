@@ -95,6 +95,53 @@ void GameScene::RenderingMap()
     }
 }
 
+void GameScene::createBooster()
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> distribX(0.0, width());
+    std::uniform_real_distribution<double> distribY(0.0, height());
+
+    double x = distribX(gen);
+    double y = distribY(gen);
+
+    Booster* boost = new Booster(x, y);
+    qDebug() << x;
+    qDebug() << y;
+    addItem(boost);
+}
+void GameScene::BoostTimer()
+{
+    // Wave label
+
+    if(BoostTime>0)
+    {
+        BoostInfo->setPlainText("Time Remaining : " + QString::number(BoostTime));
+        BoostTime--;
+    }else if(BoostTime==0)
+    {
+        BoostInfo->hide();
+        QObject::disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
+    }
+
+
+
+}
+void GameScene::ActivateBooster()
+{
+
+    if(BoostTime==0)
+    {
+    BoostTime=10;
+    QObject::connect(Wavetimer, SIGNAL(timeout()), this, SLOT(BoostTimer()));
+    BoostInfo = new QGraphicsTextItem();
+    BoostInfo->setDefaultTextColor(Qt::black);
+    BoostInfo->setFont(QFont("serif", 16));
+    BoostInfo->setPlainText("Time Remaining : " + QString::number(BoostTime));
+    BoostInfo->setPos(0, 75);
+    addItem(BoostInfo);
+    }
+}
 
 void GameScene::start()
 {
@@ -135,6 +182,9 @@ void GameScene::start()
     Wavetimer = new QTimer();
     connect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
     Wavetimer->start(1000);
+    BoosterTimer = new QTimer();
+    connect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
+    BoosterTimer->start(20000);
 }
 void GameScene::EndWave()
 {
@@ -151,6 +201,7 @@ void GameScene::EndWave()
         //Disconnect Timers
         QObject::disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
         QObject::disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
+        QObject::disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
         //Displaying
         NextwaveText = new QGraphicsTextItem();
         NextwaveText->setDefaultTextColor(Qt::white);
@@ -171,6 +222,7 @@ void GameScene::Gameover(bool state = 0)
     clickable = false;
     disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
     disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
+    disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
     // Clean up any existing items
     clear();
 
@@ -225,11 +277,15 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void GameScene::shoot(const QPointF &mousePos)
 {
-    Bullet *bullet = new Bullet(Cannon->x() + (xfactor / 2),
-                                Cannon->y() + (yfactor / 2),
-                                mousePos.x(),
-                                mousePos.y());
-    addItem(bullet);
+    if (clickable) {
+        Bullet *a = new Bullet(Cannon->x() + (xfactor / 2),
+                               Cannon->y() + (yfactor / 2),
+                               mousePos.x(),
+                               mousePos.y());
+        addItem(a);
+        QObject::connect(a, SIGNAL(BoosterActivate()), this, SLOT(ActivateBooster()));
+    }
+
 }
 void GameScene::keyPressEvent(QKeyEvent *event)
 {
@@ -254,6 +310,7 @@ void GameScene::TogglePauseFunc()
         clickable = false;
         EnemyCreation->stop();
         Wavetimer->stop();
+        BoosterTimer->stop();
         Player::movetime->stop();
     } else {
         TogglePause->setPlainText("[Escape] To Pause");
@@ -261,6 +318,7 @@ void GameScene::TogglePauseFunc()
         clickable = true;
         EnemyCreation->start();
         Wavetimer->start();
+        BoosterTimer->start();
         Player::movetime->start();
     }
 }

@@ -15,6 +15,7 @@
         <file>Resources/Citizen worker.png</file>
         <file>Resources/bullet.png</file>
         <file>Resources/pause.png</file>
+        <file>Resources/Coin.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Resources/backgroundmusic.mp3</file>

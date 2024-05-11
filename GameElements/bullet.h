@@ -7,6 +7,7 @@
 #include <QGraphicsPixmapItem>
 #include <QObject>
 #include <QGraphicsEllipseItem>
+#include "booster.h"
 
 class Bullet : public QObject, public QGraphicsPixmapItem
 {
@@ -19,6 +20,8 @@ public:
     void CheckCollide();
 private slots:
     void Move();
+signals:
+    void BoosterActivate();
 };
 
 #endif // BULLET_H

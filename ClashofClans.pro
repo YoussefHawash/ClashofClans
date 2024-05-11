@@ -15,6 +15,7 @@ SOURCES += \
     GameElements\MapElements\building.cpp \
     GameElements\bullet.cpp \
     GameElements\enemy.cpp \
+    booster.cpp \
     gamescene.cpp \
     GameElements\health.cpp \
     main.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     GameElements\MapElements\building.h \
     GameElements\bullet.h \
     GameElements\enemy.h \
+    booster.h \
     gamescene.h \
     GameElements\health.h \
     mainmenu.h \

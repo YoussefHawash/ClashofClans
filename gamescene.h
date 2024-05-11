@@ -1,6 +1,7 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 #pragma once
+#include <random>
 #include <QAudioOutput>
 #include <QDebug>
 #include <QEventLoop>
@@ -24,6 +25,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include "booster.h"
 
 using namespace std;
 class GameScene : public QGraphicsScene
@@ -38,9 +40,11 @@ private:
     QGraphicsTextItem *TimeInfo;
     QGraphicsTextItem *WaveInfo;
     QGraphicsTextItem *TogglePause;
+    QGraphicsTextItem *BoostInfo;
     //All timers
     QTimer *EnemyCreation = new QTimer();
     QTimer *Wavetimer;
+    QTimer* BoosterTimer;
     //Townhall_Object
     TownHall *townhall;
     DefenseUnit *Cannon;
@@ -53,6 +57,7 @@ private:
     int WaveTime;
     int CreationFrequency = 4000;
     int gamelevel;
+    int BoostTime=0;
     // Ability to click on the scene
     bool clickable;
 
@@ -70,6 +75,9 @@ public slots:
     void EndWave();
     void createEnemy();
     void TogglePauseFunc();
+    void createBooster();
+    void BoostTimer();
+    void ActivateBooster();
 signals:
     void ReturnMainMenu();
 };

@@ -68,6 +68,14 @@ void Bullet::CheckCollide()
             }
 
             return;
+        }else if(typeid(*(colliding_items[i])) == typeid(Booster))
+        {
+            Booster* boost = dynamic_cast<Booster*> (colliding_items[i]);
+            emit BoosterActivate();
+            delete boost;
+            delete this;
+            return;
+
         }
     }
 }
