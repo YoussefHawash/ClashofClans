@@ -43,8 +43,8 @@ void Player::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 }
 vector<Nodes> Player::Dijekstra(const Nodes &start, const Nodes &goal)
 {
-    int height = gamescene->getmap()->size();
-    int width = gamescene->getmap()[0].size();
+    int width = 16;
+    int height = 9;
 
     // Initialize the cost 2x2 matrix with really high values except for the start position
     vector<vector<float>> cost(height, vector<float>(width, 9999999));
@@ -92,7 +92,7 @@ vector<Nodes> Player::Dijekstra(const Nodes &start, const Nodes &goal)
     }
 
     vector<Nodes> path;
-    Nodes step = goal;
+    Nodes step(goal.x,goal.y,goal.weight) ;
 
     while (!(step.x == start.x && step.y == start.y)) {
         path.push_back(step);

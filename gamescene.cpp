@@ -87,7 +87,7 @@ void GameScene::RenderingMap()
             if (value == 0)
                 n->weight = 1;
             else if (value == 3) {
-                n->weight = 10;
+                n->weight = 25;
             } else if (value == 1)
                 n->weight = 100;
             else
@@ -105,19 +105,19 @@ void GameScene::RenderingMap()
                 if (map[i][j]->weight == 100) { // townall =1
                     townhall = new TownHall(this, j * xfactor, i * yfactor, xfactor, yfactor);
                     addItem(townhall);
-                } else if (map[i][j]->weight == 10) { // fence = 3
+                } else if (map[i][j]->weight == 25) { // fence = 3
                     //Setting The fence to be rendered
                     vector<int> Edges;
-                    if (map[i - 1][j]->weight == 10) {
+                    if (map[i - 1][j]->weight == 25) {
                         Edges.push_back(0);
                     }
-                    if (map[i + 1][j]->weight == 10) {
+                    if (map[i + 1][j]->weight == 25) {
                         Edges.push_back(2);
                     }
-                    if (map[i][j - 1]->weight == 10) {
+                    if (map[i][j - 1]->weight == 25) {
                         Edges.push_back(3);
                     }
-                    if (map[i][j + 1]->weight == 10) {
+                    if (map[i][j + 1]->weight == 25) {
                         Edges.push_back(1);
                     }
                     Fence *fence = new Fence(this, j * xfactor, i * yfactor, xfactor, yfactor, Edges);
@@ -189,7 +189,7 @@ void GameScene::start()
         NextwaveTextNav->hide();
     }
     //setting time
-    WaveTime = 1;
+    WaveTime = 60;
     //Wave Time Label
     TogglePause->setPlainText("[Escape] To Pause");
     TimeInfo->setPlainText("Time Remaining : " + QString::number(WaveTime));
