@@ -80,11 +80,27 @@ void GameScene::RenderingMap()
     } else {
         QTextStream in(&file);
         int a(0), b(0);
+        int townx,towny;
         while (!in.atEnd() && a != 9) {
             int value;
             in >> value;
+            Node *n=new Node(a,b,0,0);
+            if(value==0){
+                n->weight= 1;
+                n->type=0;}
+            else if (value ==3){
+                n->weight=25;
+                n->type=3;}
+            else if (value ==1){
+                n->weight=100;
+                n->type=1;
+                townx=a;
+                towny=b;}
+            else{
+                n->weight=1000;
+                n->type=2;}
 
-            map[a].push_back(value);
+            map[a].push_back(n);
             b++;
             if (b == 16) {
                 b = 0;
@@ -92,36 +108,52 @@ void GameScene::RenderingMap()
             }
         }
 
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 16; ++j)
+            {
+                map[i][j]->weight+=sqrt(pow(townx-i,2)+pow(towny-j,2));
+            }
+        }
+
+
         for (int i = 0; i < map.size(); ++i) {
             for (int j = 0; j < map[i].size(); ++j) {
-                if (map[i][j] == 1) { // townall =1
+                if (map[i][j]->type == 1) { // townall =1
                     townhall = new TownHall(this, j * xfactor, i * yfactor );
                     addItem(townhall);
-                } else if (map[i][j] == 3) { // fence = 3
+                } else if (map[i][j]->type == 3) { // fence = 3
                     //Setting The fence to be rendered
                     vector<int> Edges;
-                    if (map[i - 1][j] == 3) {
+                    if (map[i - 1][j]->type == 3) {
                         Edges.push_back(0);
                     }
-                    if (map[i + 1][j] == 3) {
+                    if (map[i + 1][j]->type ==3) {
                         Edges.push_back(2);
                     }
-                    if (map[i][j - 1] == 3) {
+                    if (map[i][j - 1]->type ==3) {
                         Edges.push_back(3);
                     }
-                    if (map[i][j + 1] == 3) {
+                    if (map[i][j + 1]->type == 3) {
                         Edges.push_back(1);
                     }
                     Fence *fence = new Fence(this, j * xfactor, i * yfactor, Edges);
                     addItem(fence);
 
-                } else if (map[i][j] == 2) { // defence unit =2
+                } else if (map[i][j]->type == 2) { // defence unit =2
                     Cannon = new DefenseUnit(this, j * xfactor, i * yfactor, gamelevel);
                     addItem(Cannon);
                 }
             }
         }
     }
+    for (int i = 0; i < 9; ++i) {
+        for (int j = 0; j < 16; ++j)
+        {
+            qDebug()  << map[i][j]->weight;
+        }
+    }
+
+
 }
 
 void GameScene::createBooster()

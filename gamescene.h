@@ -26,7 +26,7 @@
 #include <ctime>
 #include <vector>
 #include "booster.h"
-
+#include "node.h"
 using namespace std;
 class GameScene : public QGraphicsScene
 {
@@ -51,7 +51,7 @@ private:
     TownHall *townhall;
     DefenseUnit *Cannon;
     //Map
-    vector<vector<int> > map;
+
     // x and y factors
     int yfactor, xfactor;
     //Variables
@@ -65,6 +65,7 @@ private:
     bool clickable;
 
 public:
+     vector<vector<Node *> > map;
     GameScene(int, double, double);
     void MoveToNextLevel();
     void RenderingMap();
@@ -74,6 +75,7 @@ public:
     void keyPressEvent(QKeyEvent *event) override;
     void shoot(const QPointF &mousePos);
     TownHall*gettownhall(){return townhall;};
+
 public slots:
     void Gameover(bool);
     void EndWave();

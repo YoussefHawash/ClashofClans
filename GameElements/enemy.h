@@ -8,7 +8,7 @@
 #include "gamescene.h"
 #include "player.h"
 #include "townworkers.h"
-
+#include "node.h"
 class Enemy : public Player
 {
     Q_OBJECT
@@ -16,10 +16,15 @@ private:
     int damage;
     int hitting_speed;
     Building *HittingItem;
+    vector<Node> path;
+    Node currentgoal;
+    int currentpath=1;
+     vector<vector<Node *> > *map;
 
 public:
     Enemy(int, int, int, int, int);
     static QTimer *HitTimer;
+    void setgoals();
 public slots:
     void check();
     void move();
