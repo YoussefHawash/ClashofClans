@@ -15,7 +15,7 @@ class MainMenu : public QMainWindow
 {
     Q_OBJECT
 private:
-    bool fullscreen;
+    bool mute;
     int volumelevel, gamelevel;
     QAudioOutput *Output;
     QLabel *volume_label;
@@ -25,7 +25,7 @@ private:
 
 public:
     MainMenu(QAudioOutput *);
-    ~MainMenu();
+
     //SetUp Ui
     void SetMainMenuContainer();
     void SetGamesContainer();
@@ -35,13 +35,13 @@ public:
     void ShowGames();
     void ShowSettings();
     //Getters
-    bool IsFullscreen() const;
-
+    bool IsMute() const;
+    ~MainMenu();
 signals:
     void newgame(int);
     void exit();
 private slots:
-    void Emit_NEWGAME() { emit newgame(gamelevel); };
+    void Emit_NEWGAME() { newgame(gamelevel); };
     void checkBoxStateChanged(bool);
     void sliderValueChanged(int);
     void comboBoxActivated(int);

@@ -1,6 +1,7 @@
 #include "townworkers.h"
 #include "gamescene.h"
 extern GameScene *gamescene;
+QTimer *townworkers::HealTimer= new QTimer;
 townworkers::townworkers(int x, int y):Player(x,y,1000,20){
     setPos(x,y);
     homex=x;
@@ -10,43 +11,54 @@ townworkers::townworkers(int x, int y):Player(x,y,1000,20){
     setPixmap(*img);
 }
 
-void townworkers::direct(int x, int y)
+void townworkers::direct(int a, int b)
 {
-    path = Dijekstra(*(gamescene->map)[int((y - 1) / 80)][int((x - 1) / 80)],
-                     *(gamescene->map)[int(y / 80)][int(x / 80)]);
-
+    path = Dijekstra(*(gamescene->map)[int((y() - 1) / 80)][int((x() - 1) / 80)],
+                     *(gamescene->map)[int(a / 80)][int(b / 80)]);
+    connect(movetime,SIGNAL(timeout()),this,SLOT(check()));
+    disconnect(HealTimer,SIGNAL(timeout()),this,SLOT(Heal()));
+    HealTimer->start(1000);
     directed =1;
     setgoals();
 }
 
 void townworkers::check()
 {
-    if(x() == targetx && y() == targety){
         QList<QGraphicsItem *>colliding_items =collidingItems();
         for(int i=0,n=colliding_items.size();i<n;++i)
         {
+
             // detecting fence
             if (Fence *fence = dynamic_cast<Fence*>(colliding_items[i])) {
-                if(fence->gethealth()->gethealth() > 80){
-                    fence->gethealth()->increasehealth(4);
-                    return;
+                f=fence;
+                connect(HealTimer,SIGNAL(timeout()),this,SLOT(Heal()));
+                disconnect(movetime,SIGNAL(timeout()),this,SLOT(check()));
 
                 }
-                if (Fence *fence = dynamic_cast<Fence*>(colliding_items[i])) {
-                    if(fence->gethealth()->gethealth() <= 80){
-                        directed =0;
-                        direct(homex,homey);
-                        return;
 
-                    }
 
-                }
-            }
-        }
 
 
     }
-    move();
+        move();
+}
+
+void townworkers::Heal()
+{
+    if(f->gethealth()->gethealth() < 80){
+        f->gethealth()->increasehealth(5);
+        return;
+
+    }
+    if(f->gethealth()->gethealth() <= 80){
+        disconnect(HealTimer,SIGNAL(timeout()),this,SLOT(Heal()));
+        directed =0;
+        dx=0;
+        dy=0;
+        return;
+
+    }
+
 }
 
 

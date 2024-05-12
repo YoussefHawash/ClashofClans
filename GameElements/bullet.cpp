@@ -19,7 +19,7 @@ Bullet::Bullet(int xi_pos, int yi_pos, int xf_pos, int yf_pos,bool b)
     Velocity=20;
     QMediaPlayer *sound = new QMediaPlayer;
     QAudioOutput *audioOutput = new QAudioOutput();
-    sound->setSource(QUrl("qrc:/sounds/Resources/bom.mp3 (online-audio-converter.com).mp3"));
+    sound->setSource(QUrl("qrc:/sounds/Resources/laser.mp3"));
     sound->setAudioOutput(audioOutput);
     audioOutput->setVolume(0.5);
     sound->play();

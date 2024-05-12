@@ -1,5 +1,5 @@
 #include "view.h"
- GameScene *gamescene;
+GameScene *gamescene;
 View::View(QApplication *a)
     : App(a)
 {
@@ -30,11 +30,7 @@ void View::DisplayGameMenu()
 
 void View::NewGame(int level)
 {
-    if (MainUI->IsFullscreen())
-        showFullScreen();
-    else
-        setFixedSize(1280, 720);
-
+    setFixedSize(1280, 720);
     gamescene = new GameScene(level, width(), height());
     setWindowTitle("New Game");
     setScene(gamescene);

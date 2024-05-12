@@ -6,7 +6,6 @@
 #include <QGraphicsView>
 #include <QMediaPlayer>
 #include <QSizePolicy>
-
 #include "gamescene.h"
 #include "mainmenu.h"
 
@@ -16,7 +15,6 @@ class View : public QGraphicsView
 private:
     QApplication *App;
     MainMenu *MainUI;
-
     QMediaPlayer *Sound;
     QAudioOutput *audioOutput;
 public:

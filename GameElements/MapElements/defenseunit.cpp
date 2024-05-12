@@ -9,7 +9,7 @@ DefenseUnit::DefenseUnit(QGraphicsScene *scene, int x, int y,  int level)
     switch (level)
     {
     case 1:
-        img = new QPixmap(":/Imgs/Resources/cannon.png");
+        img = new QPixmap(":/Imgs/Resources/TowerTeslaa.png");
         break;
     case 2:
         img = new QPixmap(":/Imgs/Resources/Tower1.png");

@@ -89,7 +89,7 @@ void GameScene::RenderingMap()
                 n->weight= 1;
                 n->type=0;}
             else if (value ==3){
-                n->weight=40;
+                n->weight=10;
                 n->type=3;}
             else if (value ==1){
                 n->weight=100;
@@ -155,7 +155,7 @@ void GameScene::RenderingMap()
     for (int i = 0; i < 9; ++i) {
         for (int j = 0; j < 16; ++j)
         {
-            qDebug()  << map[i][j]->weight;
+            //qDebug()  << map[i][j]->weight;
         }
     }
 
@@ -173,8 +173,8 @@ void GameScene::createBooster()
     double y = distribY(gen);
 
     Booster* boost = new Booster(x, y);
-    qDebug() << x;
-    qDebug() << y;
+    //qDebug() << x;
+    //qDebug() << y;
     addItem(boost);
 }
 void GameScene::BoostTimer()
@@ -234,6 +234,7 @@ void GameScene::start()
     connect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
     Wavetimer = new QTimer();
     connect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
+    connect(Wavetimer, SIGNAL(timeout()), this, SLOT(checkfences()));
     Wavetimer->start(1000);
     BoosterTimer = new QTimer();
     connect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
@@ -279,6 +280,7 @@ void GameScene::Gameover(bool state = 0)
     disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
     // Clean up any existing items
     clearEnemies();
+
     for (int i = items().size() - 1; i >= 0; --i) {
         if (Building *building = dynamic_cast<Building *>(items().at(i))) {
             delete building;
@@ -308,9 +310,7 @@ void GameScene::Gameover(bool state = 0)
     } else {// Display game over text
         Wavenum=0;
 
-        qDebug() << 1;
         gameOverText->setPlainText("GAME OVER!");
-        qDebug() << 1;
         Navigation = new QGraphicsTextItem();
         Navigation->setDefaultTextColor(Qt::black);
         Navigation->setFont(QFont("serif", 16));

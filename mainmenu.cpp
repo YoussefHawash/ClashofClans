@@ -1,7 +1,7 @@
 #include "mainmenu.h"
 
 MainMenu::MainMenu(QAudioOutput *audioOutput)
-    : fullscreen(0)
+    : mute(0)
     , volumelevel(100)
     , gamelevel(1)
     , Output(audioOutput)
@@ -96,9 +96,7 @@ void MainMenu::SetGamesContainer()
     QHBoxLayout *hLayout2 = new QHBoxLayout;
     QHBoxLayout *hLayout3 = new QHBoxLayout;
     QHBoxLayout *hLayout4 = new QHBoxLayout;
-    QPushButton *newgame_btn = new QPushButton("First Map");
-    QPushButton *randommap_btn = new QPushButton(QString("Second Map"));
-    QPushButton *storymode_btn = new QPushButton(QString("Third Map"));
+    QPushButton *newgame_btn = new QPushButton("New Game");
     QPushButton *mainmenu_btn = new QPushButton(QString("Return to Main Menu"));
 
     //Customizitation to all the layers
@@ -137,26 +135,6 @@ void MainMenu::SetGamesContainer()
     newgame_btn->setFixedSize(250, 50);
     connect(newgame_btn, &QPushButton::clicked, this, &MainMenu::Emit_NEWGAME);
 
-    //hlayout2
-
-    hLayout2->addStretch();
-    hLayout2->addWidget(randommap_btn);
-    hLayout2->addStretch();
-
-    //Settingsbtn
-
-    randommap_btn->setFixedSize(250, 50);
-
-    //hlayout3
-
-    hLayout3->addStretch();
-    hLayout3->addWidget(storymode_btn);
-    hLayout3->addStretch();
-
-    //storymode_btn
-
-    storymode_btn->setFixedSize(250, 50);
-
     //hlayout4
 
     hLayout4->addStretch();
@@ -179,7 +157,7 @@ void MainMenu::SetSettingsContainer()
     QHBoxLayout *hLayout3 = new QHBoxLayout;
     QHBoxLayout *hLayout4 = new QHBoxLayout;
     QLabel *settings = new QLabel("Settings");
-    QCheckBox *fullscreen_check = new QCheckBox("Full Screen");
+    QCheckBox *mute_check = new QCheckBox("Mute");
     QLabel *level_label = new QLabel("Level");
     QComboBox *levels = new QComboBox();
     volume_label = new QLabel("Volume: 100%");
@@ -213,10 +191,10 @@ void MainMenu::SetSettingsContainer()
 
     //hlayout1
 
-    hLayout1->addWidget(fullscreen_check);
+    hLayout1->addWidget(mute_check);
     //FullScreen Checkbox
 
-    connect(fullscreen_check, &QCheckBox::stateChanged, this, &MainMenu::checkBoxStateChanged);
+    connect(mute_check, &QCheckBox::stateChanged, this, &MainMenu::checkBoxStateChanged);
 
     //hlayout2
 
@@ -308,9 +286,9 @@ void MainMenu::ShowSettings()
 }
 
 //Getters
-bool MainMenu::IsFullscreen() const
+bool MainMenu::IsMute() const
 {
-    if (fullscreen) {
+    if (mute) {
         return 1;
     } else {
         return 0;
@@ -320,7 +298,12 @@ bool MainMenu::IsFullscreen() const
 //Slots
 void MainMenu::checkBoxStateChanged(bool state)
 {
-    fullscreen = state;
+    mute = state;
+    if(mute)
+        Output->setVolume(0);
+    else
+        Output->setVolume(double(volumelevel)/100);
+
 }
 void MainMenu::sliderValueChanged(int value)
 {

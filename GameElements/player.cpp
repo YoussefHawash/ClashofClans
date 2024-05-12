@@ -38,7 +38,7 @@ vector<Node> Player::Dijekstra(const Node &start, const Node &goal)
 
     // Define possible movement directions: down, up, right, left
     vector<pair<int, int>> directions
-        = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+        = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
     // Loop over the priority queue until it's empty
     while (!queue.empty()) {
@@ -83,7 +83,7 @@ vector<Node> Player::Dijekstra(const Node &start, const Node &goal)
     // Reverse the path to be from start to goal
     reverse(path.begin(), path.end());
     for (auto &itr : path) {
-        qDebug() << itr.x << " " << itr.y;
+        //qDebug() << itr.x << " " << itr.y;
     }
     return path;
 };

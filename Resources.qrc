@@ -21,11 +21,13 @@
         <file>Resources/Tower3.png</file>
         <file>Resources/Tower4.png</file>
         <file>Resources/file.png</file>
+        <file>Resources/TowerTeslaa.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Resources/backgroundmusic.mp3</file>
         <file>Resources/bom.mp3 (online-audio-converter.com).mp3</file>
         <file>Resources/Voicy_Barbarian death cry - Clash of Clans.mp3</file>
+        <file>Resources/laser.mp3</file>
     </qresource>
     <qresource prefix="/maps">
         <file>Resources/map1.txt</file>
