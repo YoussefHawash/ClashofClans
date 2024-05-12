@@ -32,6 +32,9 @@ class GameScene : public QGraphicsScene
 {
     Q_OBJECT
 private:
+    townworkers *townworker1;
+    townworkers *townworker2;
+    vector<Fence*> fences;
     // Next wave
     QGraphicsPixmapItem *EventWindow;
     QGraphicsTextItem *NextwaveText;
@@ -77,6 +80,7 @@ public:
     TownHall*gettownhall(){return townhall;};
 
 public slots:
+    void checkfences();
     void Gameover(bool);
     void EndWave();
     void createEnemy();

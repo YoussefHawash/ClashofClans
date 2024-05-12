@@ -114,7 +114,12 @@ void GameScene::RenderingMap()
                 map[i][j]->weight+=sqrt(pow(townx-i,2)+pow(towny-j,2));
             }
         }
-
+        townworker1= new townworkers;
+        townworker2= new townworkers;
+        townworker1->setPos(7*80,4*80);
+        townworker2->setPos(8*80,4*80);
+        addItem(townworker1);
+        addItem(townworker2);
 
         for (int i = 0; i < map.size(); ++i) {
             for (int j = 0; j < map[i].size(); ++j) {
@@ -138,6 +143,7 @@ void GameScene::RenderingMap()
                     }
                     Fence *fence = new Fence(this, j * xfactor, i * yfactor, Edges);
                     addItem(fence);
+                    fences.push_back(fence);
 
                 } else if (map[i][j]->type == 2) { // defence unit =2
                     Cannon = new DefenseUnit(this, j * xfactor, i * yfactor, gamelevel);
@@ -421,5 +427,17 @@ void GameScene::createEnemy()
         Enemy *enemy = new Enemy(0, RandPos,20,100,1000);
         addItem(enemy);
         connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
+    }
+}
+void GameScene::checkfences()
+{
+    if(!townworker1->directed&&!townworker1->directed){
+        for(int i =0; i<fences.size();i++){
+            if(fences[i]->gethealth()->gethealth() < 80){
+                qDebug() << "entered";
+                townworker1->direct( fences[i]->x(), fences[i]->y());
+                townworker2->direct( fences[i]->x(), fences[i]->y());
+                return;
+            }}
     }
 }

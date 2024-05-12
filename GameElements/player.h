@@ -4,6 +4,7 @@
 #include <QGraphicsPixmapItem>
 #include <QObject>
 #include <QTimer>
+#include "building.h"
 #include "health.h"
 #include "node.h"
 using namespace std;
@@ -21,6 +22,12 @@ protected:
     int vel;
     int dx;
     int dy;
+
+    Building *HittingItem;
+    vector<Node> path;
+    Node currentgoal;
+    int currentpath=1;
+    vector<vector<Node *> > *map;
 public:
     static QTimer *movetime;
     Player(int,int,int,int);

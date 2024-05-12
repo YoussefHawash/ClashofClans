@@ -2,8 +2,9 @@
 #include <vector>
 #include <queue>
 #include "gamescene.h"
-QTimer* Player::movetime = new QTimer;
+
 extern GameScene *gamescene;
+QTimer* Player::movetime = new QTimer;
 Player::Player(int x, int y, int hp, int s)
     : posx(x)
     , posy(y)

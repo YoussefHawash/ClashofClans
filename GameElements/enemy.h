@@ -15,15 +15,12 @@ class Enemy : public Player
 private:
     int damage;
     int hitting_speed;
-    Building *HittingItem;
-    vector<Node> path;
-    Node currentgoal;
-    int currentpath=1;
-     vector<vector<Node *> > *map;
+
 
 public:
-    Enemy(int, int, int, int, int);
     static QTimer *HitTimer;
+    Enemy(int, int, int, int, int);
+
     void setgoals();
 public slots:
     void check();
