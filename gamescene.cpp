@@ -117,7 +117,7 @@ void GameScene::RenderingMap()
         townworker1= new townworkers;
         townworker2= new townworkers;
         townworker1->setPos(7*80,4*80);
-        townworker2->setPos(8*80,4*80);
+        townworker2->setPos(7*80,4*80);
         addItem(townworker1);
         addItem(townworker2);
 
@@ -254,6 +254,7 @@ void GameScene::EndWave()
         TogglePause->hide();
         //Disconnect Timers
         QObject::disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
+            QObject::disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(checkfences()));
         QObject::disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
         QObject::disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
         //Displaying
@@ -276,15 +277,18 @@ void GameScene::Gameover(bool state = 0)
     WaveTime = 0;
     clickable = false;
     disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
+     disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(checkfences()));
     disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
     disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
     // Clean up any existing items
     clearEnemies();
-
+    delete townworker1;
+    delete townworker2;
     for (int i = items().size() - 1; i >= 0; --i) {
         if (Building *building = dynamic_cast<Building *>(items().at(i))) {
             delete building;
         }
+
     }
 
 
@@ -431,13 +435,13 @@ void GameScene::createEnemy()
 }
 void GameScene::checkfences()
 {
-    if(!townworker1->directed&&!townworker1->directed){
+
         for(int i =0; i<fences.size();i++){
             if(fences[i]->gethealth()->gethealth() < 80){
                 qDebug() << "entered";
-                townworker1->direct( fences[i]->x(), fences[i]->y());
-                townworker2->direct( fences[i]->x(), fences[i]->y());
+                townworker1->direct( fences[i]->y(), fences[i]->x());
+                townworker2->direct( fences[i]->y(), fences[i]->x());
                 return;
             }}
-    }
+
 }

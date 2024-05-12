@@ -13,13 +13,16 @@ townworkers::townworkers(int x, int y):Player(x,y,1000,20){
 
 void townworkers::direct(int a, int b)
 {
+    if(!directed){
+        show();
     path = Dijekstra(*(gamescene->map)[int((y() - 1) / 80)][int((x() - 1) / 80)],
                      *(gamescene->map)[int(a / 80)][int(b / 80)]);
     connect(movetime,SIGNAL(timeout()),this,SLOT(check()));
     disconnect(HealTimer,SIGNAL(timeout()),this,SLOT(Heal()));
     HealTimer->start(1000);
     directed =1;
-    setgoals();
+    setgoals();}
+
 }
 
 void townworkers::check()
@@ -45,18 +48,18 @@ void townworkers::check()
 
 void townworkers::Heal()
 {
-    if(f->gethealth()->gethealth() < 80){
+    if(f->isVisible() &&f->gethealth()->gethealth() < 80){
         f->gethealth()->increasehealth(5);
         return;
 
     }
-    if(f->gethealth()->gethealth() <= 80){
+    else {
+        hide ();
         disconnect(HealTimer,SIGNAL(timeout()),this,SLOT(Heal()));
+        currentpath=1;
+        path.clear();
         directed =0;
-        dx=0;
-        dy=0;
         return;
-
     }
 
 }
