@@ -5,7 +5,7 @@
 class TownHall : public Building
 {
 public:
-    TownHall(QGraphicsScene *, int, int, int, int);
+    TownHall(QGraphicsScene *, int, int);
 };
 
 #endif // TOWNHALL_H

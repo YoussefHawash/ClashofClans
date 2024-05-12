@@ -13,14 +13,12 @@ protected:
     health *h;
 
 public:
-    Building(QGraphicsScene *, int x, int y);
+    Building(QGraphicsScene *, int , int );
     void SetHealth(int);
-    void decreasehealth(int);
-    void increasehealth(int);
     void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *) override;
-    int gethealth();
-    int gettype();
+    health* gethealth();
+
 };
 
 #endif // BUILDING_H

@@ -24,7 +24,7 @@ void townworkers::check()
         {
             // detecting fence
             if (Fence *fence = dynamic_cast<Fence*>(colliding_items[i])) {
-                fence->increasehealth(20);
+                fence->gethealth()->increasehealth(20);
                 return;
 
             }

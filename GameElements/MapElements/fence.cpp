@@ -1,17 +1,17 @@
 #include "fence.h"
 
-Fence::Fence(QGraphicsScene *scene, int x, int y, int xfactor, int yfactor, std::vector<int> a)
+Fence::Fence(QGraphicsScene *scene, int x, int y,  std::vector<int> a)
     : Building(scene, x, y)
 {
     QPixmap pixmap1(":/Imgs/Resources/fence.png");
-    pixmap1 = pixmap1.scaled(xfactor / 4, yfactor / 4);
+    pixmap1 = pixmap1.scaled(80 / 4, 80 / 4);
     // Load the second image
 
     // Create a combined pixmap
     QPixmap combinedPixmap(80, 80);
     combinedPixmap.fill(Qt::transparent);
     //WhiteSpaces
-    float gap = (80 - (xfactor / 4)) / 2;
+    float gap = (80 - (80 / 4)) / 2;
     // Paint the first image onto the combined pixmap
     QPainter painter(&combinedPixmap);
     painter.drawPixmap(gap, gap, pixmap1);

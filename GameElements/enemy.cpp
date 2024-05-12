@@ -1,20 +1,20 @@
 #include "enemy.h"
 #include <QTimer>
-
+extern GameScene *gamescene;
 QTimer *Enemy::HitTimer= new QTimer;
 
 
-Enemy::Enemy(int x, int y, int x_tower, int y_tower, int d)
-    : Player(x, y, 600, 20)
-    , damage(d)
+Enemy::Enemy(int x, int y, int d, int s, int hitspeed)
+    : Player(x, y, 60, s)
+    , damage(d),hitting_speed(hitspeed)
 {
     QPixmap *img = new QPixmap(":/Imgs/Resources/icon.png");
     *img = img->scaled(50, 50);
     setPixmap(*img);
-    int slope_x = posx - x_tower;
-    int slope_y = posy - y_tower;
-    dx = speed * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
-    dy = speed * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
+    int slope_x = posx - gamescene->gettownhall()->x();
+    int slope_y = posy -  gamescene->gettownhall()->y();
+    dx = 20 * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
+    dy = 20 * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
     connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
 }
 
@@ -29,17 +29,17 @@ void Enemy::check()
         HitTimer = new QTimer;
         // detecting fence
         if (Fence *fence = dynamic_cast<Fence *>(colliding_items[i])) {
-            damging = fence;
+            HittingItem = fence;
             disconnect(movetime, SIGNAL(timeout()), this, SLOT(check()));
             connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
-            HitTimer->start(1000);
+            HitTimer->start(hitting_speed);
             return;
         }
         else if (TownHall *hall = dynamic_cast<TownHall *>(colliding_items[i])) {
-            damging = hall;
+            HittingItem = hall;
             disconnect(movetime, SIGNAL(timeout()), this, SLOT(check()));
             connect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
-            HitTimer->start(1000);
+            HitTimer->start(hitting_speed);
             return;
         }
     }
@@ -52,18 +52,15 @@ void Enemy::move() {
 
 void Enemy::hitbuilding()
 {
-    damging->decreasehealth(damage);
-    if (damging->gethealth() <= 0) {
-        if (typeid(*(damging)) == typeid(TownHall)){
+    HittingItem->gethealth()->decreasehealth(damage);
+    if (HittingItem->gethealth()->gethealth() <= 0) {
+        if (typeid(*(HittingItem)) == typeid(TownHall)){
             emit TownhallDestroyed(0);
         } else {
-            delete damging;
+            HittingItem->hide();
             disconnect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
             connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
         }
     }
 }
 
-void Enemy::deletedamaging(){
-    damging = nullptr;
-}

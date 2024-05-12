@@ -9,34 +9,10 @@ Player::Player(int x, int y, int hp, int s)
 {
     h = new health(posx, posy, pixmap().width(), hp);
     setPos(x,y);
-    startmove();
-}
-void Player::startmove()
-{
-
-    movetime->start(100);
+   movetime->start(s);
 }
 
-void Player::stopmove()
-{
-    movetime->stop();
-}
 health *Player::gethealth()
 {
     return h;
-}
-void Player::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    setOpacity(0.8);
-    if (h != nullptr)
-        h->show();
-    QGraphicsPixmapItem::hoverEnterEvent(event);
-}
-
-void Player::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-    setOpacity(1);
-    if (h != nullptr)
-        h->hide();
-    QGraphicsPixmapItem::hoverLeaveEvent(event);
 }

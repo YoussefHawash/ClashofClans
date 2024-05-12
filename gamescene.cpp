@@ -95,7 +95,7 @@ void GameScene::RenderingMap()
         for (int i = 0; i < map.size(); ++i) {
             for (int j = 0; j < map[i].size(); ++j) {
                 if (map[i][j] == 1) { // townall =1
-                    townhall = new TownHall(this, j * xfactor, i * yfactor, xfactor, yfactor);
+                    townhall = new TownHall(this, j * xfactor, i * yfactor );
                     addItem(townhall);
                 } else if (map[i][j] == 3) { // fence = 3
                     //Setting The fence to be rendered
@@ -112,11 +112,11 @@ void GameScene::RenderingMap()
                     if (map[i][j + 1] == 3) {
                         Edges.push_back(1);
                     }
-                    Fence *fence = new Fence(this, j * xfactor, i * yfactor, xfactor, yfactor, Edges);
+                    Fence *fence = new Fence(this, j * xfactor, i * yfactor, Edges);
                     addItem(fence);
 
                 } else if (map[i][j] == 2) { // defence unit =2
-                    Cannon = new DefenseUnit(this, j * xfactor, i * yfactor, xfactor, yfactor, gamelevel);
+                    Cannon = new DefenseUnit(this, j * xfactor, i * yfactor, gamelevel);
                     addItem(Cannon);
                 }
             }
@@ -371,22 +371,22 @@ void GameScene::createEnemy()
 
     if (Edge == 0) {
         RandPos = rand() % int(width());
-        Enemy *enemy = new Enemy(RandPos, 0, townhall->x(), townhall->y(), 20);
+        Enemy *enemy = new Enemy(RandPos, 0,20,100,1000);
         addItem(enemy);
         connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
     } else if (Edge == 1) {
         RandPos = rand() % int(height());
-        Enemy *enemy = new Enemy(width(), RandPos, townhall->x(), townhall->y(), 20);
+        Enemy *enemy = new Enemy(width(), RandPos,20,100,1000);
         addItem(enemy);
         connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
     } else if (Edge == 2) {
         RandPos = rand() % int(width());
-        Enemy *enemy = new Enemy(RandPos, height(), townhall->x(), townhall->y(), 20);
+        Enemy *enemy = new Enemy(RandPos, height(),20,100,1000);
         addItem(enemy);
         connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
     } else {
         RandPos = rand() % int(height());
-        Enemy *enemy = new Enemy(0, RandPos, townhall->x(), townhall->y(), 20);
+        Enemy *enemy = new Enemy(0, RandPos,20,100,1000);
         addItem(enemy);
         connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
     }

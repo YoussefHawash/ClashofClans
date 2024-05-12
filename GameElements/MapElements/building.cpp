@@ -14,15 +14,7 @@ void Building::SetHealth(int max)
     h->hide();
 }
 
-void Building::decreasehealth(int i)
-{
-    h->decreasehealth(i);
-}
 
-void Building::increasehealth(int i)
-{
-    h->increasehealth(i);
-}
 void Building::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     setOpacity(0.8);
@@ -39,9 +31,8 @@ void Building::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     QGraphicsPixmapItem::hoverLeaveEvent(event);
 }
 
-int Building::gethealth()
+health* Building::gethealth()
 {
-    if(h==nullptr)
-        return 0;
-    return h->gethealth();
+
+    return h;
 }

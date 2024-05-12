@@ -15,7 +15,7 @@ Bullet::Bullet(int xi_pos, int yi_pos, int xf_pos, int yf_pos,bool b)
     , yf(yf_pos)
     , boost(b)
 {
-    damagebullet=100;
+    damagebullet=10;
     Velocity=20;
     QMediaPlayer *sound = new QMediaPlayer;
     QAudioOutput *audioOutput = new QAudioOutput();

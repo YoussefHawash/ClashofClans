@@ -73,6 +73,7 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void keyPressEvent(QKeyEvent *event) override;
     void shoot(const QPointF &mousePos);
+    TownHall*gettownhall(){return townhall;};
 public slots:
     void Gameover(bool);
     void EndWave();

@@ -1,6 +1,6 @@
 #include "defenseunit.h"
 
-DefenseUnit::DefenseUnit(QGraphicsScene *scene, int x, int y, int xfactor, int yfactor, int level)
+DefenseUnit::DefenseUnit(QGraphicsScene *scene, int x, int y,  int level)
     : level(level)
     , Building(scene, x, y)
 {
@@ -28,6 +28,6 @@ DefenseUnit::DefenseUnit(QGraphicsScene *scene, int x, int y, int xfactor, int y
     }
 
 
-    *img = img->scaled(xfactor, yfactor);
+    *img = img->scaled(80, 80);
     setPixmap(*img);
 }
