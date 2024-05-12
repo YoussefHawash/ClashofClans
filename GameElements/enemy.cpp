@@ -82,7 +82,7 @@ void Enemy::hitbuilding()
         } else {
             HittingItem->hide();
             if(HittingItem->isVisible()){
-            gamescene->map[int(HittingItem->y()/80)][int(HittingItem->x()/80)]->setweight(-24);
+            gamescene->map[int(HittingItem->y()/80)][int(HittingItem->x()/80)]->setweight(-39);
             path = Dijekstra(*(gamescene->map)[int((y() - 1) / 80)][int((x() - 1) / 80)],
                              *(gamescene->map)[int(gamescene->gettownhall()->y() / 80)][int(gamescene->gettownhall()->x()  / 80)]);}
             disconnect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));

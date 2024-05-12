@@ -89,7 +89,7 @@ void GameScene::RenderingMap()
                 n->weight= 1;
                 n->type=0;}
             else if (value ==3){
-                n->weight=25;
+                n->weight=40;
                 n->type=3;}
             else if (value ==1){
                 n->weight=100;
