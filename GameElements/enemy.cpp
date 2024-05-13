@@ -9,9 +9,13 @@ Enemy::Enemy(int x, int y, int d, int s, int hitspeed)
     : Player(x, y, 60, 100)
     , damage(d),hitting_speed(hitspeed)
 {
-    QPixmap *img = new QPixmap(":/Imgs/Resources/icon.png");
-    *img = img->scaled(40, 40);
-    setPixmap(*img);
+    motion1 = new QPixmap(":/Imgs/Resources/motion1.png");
+    motion2 = new QPixmap(":/Imgs/Resources/motion2.png");
+    motion3 = new QPixmap(":/Imgs/Resources/motion3.png");
+    *motion1=motion1->scaled(60, 60);
+    *motion2=motion2->scaled(60, 60);
+    *motion3=motion3->scaled(60, 60);
+    setPixmap(*motion1);
     path = Dijekstra(*(gamescene->map)[int((y - 1) / 80)][int((x - 1) / 80)],
                      *(gamescene->map)[int(gamescene->gettownhall()->y() / 80)][int(gamescene->gettownhall()->x()  / 80)]);
 
@@ -44,11 +48,13 @@ void Enemy::check()
             return;
         }
         else if (townworkers *townwork = dynamic_cast<townworkers *>(colliding_items[i])) {
+
             townwork->dead=true;
             townwork->hide();
             return;
         }
     }
+    Animate();
     move();
 }
 void Enemy::setgoals()
@@ -99,3 +105,20 @@ void Enemy::hitbuilding()
     }
 }
 
+void Enemy::Animate()
+    {
+
+    if(phase==1)
+        {
+
+        setPixmap(*motion2); phase=2;
+        }
+    else if (phase==2)
+    {
+        phase=3;
+            setPixmap(*motion3);
+        }
+        else if (phase==3){
+            phase=1;
+            setPixmap(*motion1);}
+};

@@ -20,7 +20,7 @@ private:
 public:
     static QTimer *HitTimer;
     Enemy(int, int, int, int, int);
-
+    void Animate();
     void setgoals();
 public slots:
     void check();

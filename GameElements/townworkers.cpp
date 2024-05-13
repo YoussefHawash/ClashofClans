@@ -4,7 +4,7 @@ extern GameScene *gamescene;
 townworkers::townworkers(int x, int y):Player(x,y,1,200){
     setPos(x,y);
     QPixmap *img = new QPixmap(":/Imgs/Resources/Citizen worker.png");
-    *img = img->scaled(60, 60);
+    *img = img->scaled(40, 40);
     setPixmap(*img);
     Repairing=new QTimer();
     Repairing->start(1000);
@@ -38,6 +38,7 @@ void townworkers::Repair()
 {
     if(!CheckDirections())
     {
+
         Target->gethealth()->increasehealth(10);
     }
 
@@ -73,6 +74,7 @@ bool townworkers::CheckDirections()
 {
     if(dead)
     {
+
         return 1;
     }
     if(!Target->isVisible() )

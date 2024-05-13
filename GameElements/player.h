@@ -27,6 +27,11 @@ protected:
     Node currentgoal;
     int currentpath=1;
     vector<vector<Node *> > *map;
+    int phase=1;
+    QPixmap *motion1;
+    QPixmap *motion2;
+    QPixmap *motion3;
+    QPixmap *hit;
 
 public:
     static QTimer *movetime;

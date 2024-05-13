@@ -11,7 +11,7 @@ private:
     Building* Target;
      QTimer *Repairing;
 public:
-     bool dead;
+     bool dead=0;
     bool Avaliable=1;
     townworkers(int =0, int=0);
     void GoHome();
