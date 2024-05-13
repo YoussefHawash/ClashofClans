@@ -1,7 +1,7 @@
 #include "townworkers.h"
 #include "gamescene.h"
 extern GameScene *gamescene;
-townworkers::townworkers(int x, int y):Player(x,y,1,200){
+townworkers::townworkers(int x, int y):Player(x,y,1,100){
     setPos(x,y);
     QPixmap *img = new QPixmap(":/Imgs/Resources/Citizen worker.png");
     *img = img->scaled(40, 40);

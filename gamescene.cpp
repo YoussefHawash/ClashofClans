@@ -91,7 +91,6 @@ void GameScene::RenderingMap()
     //Rendering map
     QFile file(":/maps/Resources/map" + QString::number(gamelevel) + ".txt");
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Failed to open file for reading:" << file.errorString();
     }
     else {
         QTextStream in(&file);
@@ -120,7 +119,7 @@ void GameScene::RenderingMap()
             }
             else{
                 // Fence Chunck
-                node->weight=15;
+                node->weight=90;
                 node->type=3;
             }
 
@@ -254,6 +253,8 @@ void GameScene::Gameover(bool state = 0)
             delete building;
         }
     }
+    townworker1->hide();
+    townworker2->hide();
     GameOverText = new QGraphicsTextItem();
     Navigation = new QGraphicsTextItem();
     GameOverText->setFont(QFont("serif", 48));
@@ -287,6 +288,8 @@ void GameScene::MoveToNextLevel()
     GameOverText->hide();
     Navigation->hide();
     //Logic of Game End
+    delete townworker1;
+    delete townworker2;
     gamelevel++;
     if (gamelevel < 5) {
         CreationFrequency = 10000/(gamelevel+1);
@@ -303,7 +306,7 @@ void GameScene::MoveToNextLevel()
 void GameScene::clearEnemies()
 {
     for (int i = items().size() - 1; i >= 0; --i) {
-        if (Player *enemy = dynamic_cast<Player *>(items().at(i))) {
+        if (Enemy *enemy = dynamic_cast<Enemy *>(items().at(i))) {
             delete enemy;
         }
     }
@@ -377,7 +380,6 @@ void GameScene::checkfences()
     for(int i =0; i<int(fences.size());i++){
         if(fences[i]->isVisible()){
         if(!fences[i]->On_Repair&&fences[i]->gethealth()->gethealth() < 80 ){
-            // qDebug() << fences[i]->gethealth()->gethealth();
             if(townworker1->Avaliable && !townworker1->dead)
             {townworker1->show();
                 townworker1->SetTarget(fences[i]);

@@ -12,9 +12,9 @@ Enemy::Enemy(int x, int y, int d, int s, int hitspeed)
     motion1 = new QPixmap(":/Imgs/Resources/motion1.png");
     motion2 = new QPixmap(":/Imgs/Resources/motion2.png");
     motion3 = new QPixmap(":/Imgs/Resources/motion3.png");
-    *motion1=motion1->scaled(60, 60);
-    *motion2=motion2->scaled(60, 60);
-    *motion3=motion3->scaled(60, 60);
+    *motion1=motion1->scaled(40, 40);
+    *motion2=motion2->scaled(40, 40);
+    *motion3=motion3->scaled(40, 40);
     setPixmap(*motion1);
     path = Dijekstra(*(gamescene->map)[int((y - 1) / 80)][int((x - 1) / 80)],
                      *(gamescene->map)[int(gamescene->gettownhall()->y() / 80)][int(gamescene->gettownhall()->x()  / 80)]);
@@ -75,7 +75,7 @@ void Enemy::move() {
     setPos(x()-dx,y()-dy);
     QPointF desiredPosition(currentgoal.x+40, currentgoal.y+40);
     double distance = QLineF(pos(), desiredPosition).length();
-    double  tolerance =sqrt(pow(dx,2)+pow(dy,2));
+    double  tolerance =1*(sqrt(pow(dx,2)+pow(dy,2)));
     // Check if the distance is within the tolerance radius
     if (distance <= tolerance) {
     setgoals();
@@ -95,13 +95,13 @@ void Enemy::hitbuilding()
         } else {
             HittingItem->hide();
             HittingItem->gethealth()->hide();
-            if(HittingItem->isVisible()){
-            gamescene->map[int(HittingItem->y()/80)][int(HittingItem->x()/80)]->setweight(-14);
-            path = Dijekstra(*(gamescene->map)[int((y() - 1) / 80)][int((x() - 1) / 80)],
-                             *(gamescene->map)[int(gamescene->gettownhall()->y() / 80)][int(gamescene->gettownhall()->x()  / 80)]);}
+            gamescene->map[int(HittingItem->y()/80)][int(HittingItem->x()/80)]->makeitgrass(gamescene->map[int(HittingItem->y()/80)][int(HittingItem->x()/80)]->weight=1+sqrt(pow(int((gamescene->gettownhall()->y()/80)/80)-int(HittingItem->y()/80),2)+pow(int(gamescene->gettownhall()->x()/80)-int(HittingItem->x()/80),2)));
+            // path = Dijekstra(*(gamescene->map)[int((y() - 1) / 80)][int((x() - 1) / 80)],
+            //                  *(gamescene->map)[int(gamescene->gettownhall()->y() / 80)][int(gamescene->gettownhall()->x()  / 80)]);
+            }
             disconnect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
             connect(movetime, SIGNAL(timeout()), this, SLOT(check()));
-        }
+
     }
 }
 

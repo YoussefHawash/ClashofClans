@@ -83,7 +83,6 @@ vector<Node> Player::Dijekstra(const Node &start, const Node &goal)
     // Reverse the path to be from start to goal
     reverse(path.begin(), path.end());
     for (auto &itr : path) {
-        qDebug() << itr.x << " " << itr.y;
     }
     return path;
 };

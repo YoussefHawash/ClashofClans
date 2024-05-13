@@ -9,7 +9,7 @@ public:
     float weight;
     int type;
     Node(int a=0,int b=0,int c=0,int t=0);
-    void setweight(float s){weight+=s;};
+    void makeitgrass(float i){weight=i;};
 };
 
 #endif // NODE_H
