@@ -1,244 +1,221 @@
 #include "gamescene.h"
-
+#include "GameElements/bullet.h"
+#include "GameElements/enemy.h"
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+#include "booster.h"
+#include <random>
 GameScene::GameScene(int level, double w, double h)
     : Wavenum(1)
-    , gamelevel(level)
-    , clickable(true)
+    ,WaveTime(60)
+    ,CreationFrequency(10000/(level+1))
+    ,gamelevel(level)
+    ,clickable(true)
 {
+    Wavetimer = new QTimer();
+    BoosterCreationTimer = new QTimer();
     Enemy::HitTimer->start(1000);
-    QPixmap *bgPixmap = new QPixmap(":/Imgs/Resources/GrassBackgorund.jpg");
-    setBackgroundBrush(bgPixmap->scaled(w, h));
+    //Setting Up the Scene
+    QPixmap bgPixmap(":/Imgs/Resources/GrassBackgorund.jpg");
+    setBackgroundBrush(bgPixmap.scaled(w, h));
     setSceneRect(0, 0, w, h);
-    //BlackWindow In case
-    BoostInfo = new QGraphicsTextItem();
     WaveInfo = new QGraphicsTextItem();
     TimeInfo = new QGraphicsTextItem();
     TogglePause = new QGraphicsTextItem();
+    BoostInfo = new QGraphicsTextItem();
     EventWindow = new QGraphicsPixmapItem;
     NextwaveText = new QGraphicsTextItem;
     NextwaveTextNav = new QGraphicsTextItem;
-    QPixmap *pause = new QPixmap(":/Imgs/Resources/pause.png");
-    *pause = pause->scaled(100, 100);
-    EventWindow->setPixmap(*pause);
-    EventWindow->setPos(1180 / 2, 720 / 2);
-    EventWindow->setZValue(10);
-    addItem(EventWindow);
+    BoostInfo = new QGraphicsTextItem();
+    //BlackWindow In case
+    QPixmap pause(":/Imgs/Resources/pause.png");
+    EventWindow->setPixmap(pause.scaled(100,100));
+    EventWindow->setPos((width()-100) / 2, (height()-100) / 2);
+    EventWindow->setZValue(5);
     EventWindow->hide();
-
+    //Wave Info
     WaveInfo->setDefaultTextColor(Qt::black);
     WaveInfo->setFont(QFont("serif", 16));
     WaveInfo->setPos(0, 0);
-    addItem(WaveInfo);
-    // Wave label
+    // Wave Timer
     TimeInfo->setDefaultTextColor(Qt::black);
     TimeInfo->setFont(QFont("serif", 16));
+    TimeInfo->setPlainText(QString("Time Remaining : %1").arg(WaveTime));
     TimeInfo->setPos(0, 25);
-    addItem(TimeInfo);
-    //Pause Info
+    //Pause Nav
     TogglePause->setDefaultTextColor(Qt::black);
     TogglePause->setFont(QFont("serif", 16));
+    TogglePause->setPlainText("[Escape] To Pause");
     TogglePause->setPos(0, 48);
-    addItem(TogglePause);
+    //Booster Timer
+    BoostInfo->setDefaultTextColor(Qt::black);
+    BoostInfo->setFont(QFont("serif", 16));
+    BoosterIntervalTimer = new QTimer;
+    BoostInfo->setPos(0, 75);
+    BoostInfo->hide();
+    //Next Wave Info
+    NextwaveText->setDefaultTextColor(Qt::white);
+    NextwaveText->setFont(QFont("serif", 48));
 
-
-    CreationFrequency = 10000/(gamelevel+1);
-
-
+    NextwaveText->setZValue(10);
+    NextwaveText->setPos(width() / 2 - 180, height() / 2 - 48);
+    NextwaveTextNav->setPlainText("[Enter] Next Wave \n[Escape] Retrun To MainMenu");
     NextwaveTextNav->setDefaultTextColor(Qt::black);
     NextwaveTextNav->setFont(QFont("serif", 16));
     NextwaveTextNav->setPos(width() / 2 - 180, height() / 2 + 48);
+    NextwaveTextNav->hide();
+    NextwaveText->hide();
+    //Adding Items to Scene
+    addItem(NextwaveText);
     addItem(NextwaveTextNav);
-
-    // display map
+    addItem(TimeInfo);
+    addItem(WaveInfo);
+    addItem(TogglePause);
+    addItem(BoostInfo);
+    addItem(EventWindow);
+    // Rendering Map
     RenderingMap();
-    start();
-}
-void GameScene::MoveToNextLevel()
-{
-    // hiding all gameover elements
-    gameOverText->hide();
-    Navigation->hide();
-    gamelevel++;
-    Wavenum = 1;
-    CreationFrequency = 10000/(gamelevel+1);
-    if (gamelevel < 5) {
-        RenderingMap();
-        start();
-    } else
-        Gameover(1);
+    //Starting the Waves
+    StartWave();
 }
 void GameScene::RenderingMap()
 {
+    //Clearing the Map In Case
     map.clear();
+    //Sizing Set up
     map.resize(9);
-
     yfactor = height() / 9;
     xfactor = width() / 16;
+    //Reading The File
+    //Rendering map
     QFile file(":/maps/Resources/map" + QString::number(gamelevel) + ".txt");
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "Failed to open file for reading:" << file.errorString();
-    } else {
+    }
+    else {
         QTextStream in(&file);
-        int a(0), b(0);
-        int townx,towny;
-        while (!in.atEnd() && a != 9) {
+        int row(0), column(0);
+        while (!in.atEnd() && row != 9) {
             int value;
             in >> value;
-            Node *n=new Node(a,b,0,0);
-            if(value==0){
-                n->weight= 1;
-                n->type=0;}
-            else if (value ==3){
-                n->weight=10;
-                n->type=3;}
-            else if (value ==1){
-                n->weight=100;
-                n->type=1;
-                townx=a;
-                towny=b;}
-            else{
-                n->weight=1000;
-                n->type=2;}
-
-            map[a].push_back(n);
-            b++;
-            if (b == 16) {
-                b = 0;
-                a++;
-            }
-        }
-
-        for (int i = 0; i < 9; ++i) {
-            for (int j = 0; j < 16; ++j)
+            Node *node=new Node(row,column,0,0);
+            if(value==0)
             {
-                map[i][j]->weight+=sqrt(pow(townx-i,2)+pow(towny-j,2));
+                //Empty Chunck
+                node->weight= 1;
+                node->type=0;
             }
-        }
-        townworker1= new townworkers;
-        townworker2= new townworkers;
-        townworker1->setPos(7*80,4*80);
-        townworker2->setPos(7*80,4*80);
-        addItem(townworker1);
-        addItem(townworker2);
+            else if (value ==1)
+            {
+                // Towhall Chunck
+                node->type=1;
+                node->weight=100;
+            }
+            else if (value ==2)
+            {
+                // Defense Unit Chunck
+                node->weight=1;
+                node->type=2;
+            }
+            else{
+                // Fence Chunck
+                node->weight=15;
+                node->type=3;
+            }
 
-        for (int i = 0; i < map.size(); ++i) {
-            for (int j = 0; j < map[i].size(); ++j) {
-                if (map[i][j]->type == 1) { // townall =1
+            map[row].push_back(node);
+
+            if (column == 15)
+            {
+                column = 0;
+                row++;
+            }
+            else
+                column++;
+
+        }
+
+
+        //Adding Items
+        for (int i = 0; i < int(map.size()); ++i) {
+            for (int j = 0; j < int(map[i].size()); ++j) {
+                if (map[i][j]->type == 1)
+                {
+                    // TownHall
                     townhall = new TownHall(this, j * xfactor, i * yfactor );
                     addItem(townhall);
-                } else if (map[i][j]->type == 3) { // fence = 3
-                    //Setting The fence to be rendered
-                    vector<int> Edges;
+                }
+                else if (map[i][j]->type == 3) {
+                    //Fence
+                    //Setting The fence Walls to be rendered
+                    vector<int> *Edges = new vector<int>;
                     if (map[i - 1][j]->type == 3) {
-                        Edges.push_back(0);
+                        Edges->push_back(0);
                     }
                     if (map[i + 1][j]->type ==3) {
-                        Edges.push_back(2);
+                        Edges->push_back(2);
                     }
                     if (map[i][j - 1]->type ==3) {
-                        Edges.push_back(3);
+                        Edges->push_back(3);
                     }
                     if (map[i][j + 1]->type == 3) {
-                        Edges.push_back(1);
+                        Edges->push_back(1);
                     }
-                    Fence *fence = new Fence(this, j * xfactor, i * yfactor, Edges);
+                    Fence *fence = new Fence(this, j * xfactor, i * yfactor, *Edges);
+                    delete Edges;
                     addItem(fence);
                     fences.push_back(fence);
-
-                } else if (map[i][j]->type == 2) { // defence unit =2
+                }
+                else if (map[i][j]->type == 2)
+                {
+                    // Defense Unit
                     Cannon = new DefenseUnit(this, j * xfactor, i * yfactor, gamelevel);
                     addItem(Cannon);
                 }
             }
         }
-    }
-    for (int i = 0; i < 9; ++i) {
-        for (int j = 0; j < 16; ++j)
-        {
-            //qDebug()  << map[i][j]->weight;
+        //Dijekstra Set adding heiraricy
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 16; ++j)
+            {
+                map[i][j]->weight+=sqrt(pow(int(townhall->y()/xfactor)-i,2)+pow(int(townhall->x()/xfactor)-j,2));
+            }
         }
-    }
+        //Adding Civilians
+        townworker1= new townworkers;
+        townworker2= new townworkers;
+        townworker1->setPos(7*80,4*80);
+        townworker2->setPos(7*80,4*80);
 
-
-}
-
-void GameScene::createBooster()
-{
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<double> distribX(0.0, width());
-    std::uniform_real_distribution<double> distribY(0.0, height());
-
-    double x = distribX(gen);
-    double y = distribY(gen);
-
-    Booster* boost = new Booster(x, y);
-    //qDebug() << x;
-    //qDebug() << y;
-    addItem(boost);
-}
-void GameScene::BoostTimer()
-{
-    // Wave label
-
-    if(BoostTime>0)
-    {
-        BoostInfo->setPlainText("Time Remaining : " + QString::number(BoostTime));
-        BoostTime--;
-    }else if(BoostTime==0)
-    {
-        BoostInfo->hide();
-        QObject::disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
-    }
-
-
-
-}
-void GameScene::ActivateBooster()
-{
-
-    if(BoostTime==0)
-    {
-    BoostTime=10;
-    QObject::connect(Wavetimer, SIGNAL(timeout()), this, SLOT(BoostTimer()));
-    BoostInfo = new QGraphicsTextItem();
-    BoostInfo->setDefaultTextColor(Qt::black);
-    BoostInfo->setFont(QFont("serif", 16));
-    BoostInfo->setPlainText("Time Remaining : " + QString::number(BoostTime));
-    BoostInfo->setPos(0, 75);
-    addItem(BoostInfo);
+        addItem(townworker1);
+        addItem(townworker2);
+        townworker1->hide();
+        townworker2->hide();
     }
 }
-
-void GameScene::start()
+void GameScene::StartWave()
 {
-    Player::movetime->start();
+    WaveTime = 60;
     clickable = true;
-    if (Wavenum > 1) {
+    if (NextwaveText->isVisible()) {
         NextwaveText->hide();
         NextwaveTextNav->hide();
     }
-    //setting time
-    WaveTime = 60;
-    //Wave Time Label
-    TogglePause->setPlainText("[Escape] To Pause");
-    TimeInfo->setPlainText("Time Remaining : " + QString::number(WaveTime));
-    WaveInfo->setPlainText("Wave " + QString::number(Wavenum));
-
+    //Update wave label
+    WaveInfo->setPlainText(QString("Wave # %1").arg(Wavenum));
+    //Show HUD
     WaveInfo->show();
     TimeInfo->show();
     TogglePause->show();
-
-    EnemyCreation->start(CreationFrequency);
-
+    //Setting Timers
+    connect(BoosterCreationTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
     connect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
-    Wavetimer = new QTimer();
     connect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
     connect(Wavetimer, SIGNAL(timeout()), this, SLOT(checkfences()));
+    EnemyCreation->start(CreationFrequency);
     Wavetimer->start(1000);
-    BoosterTimer = new QTimer();
-    connect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
-    BoosterTimer->start(20000);
+    BoosterCreationTimer->start(20000);
 }
 void GameScene::EndWave()
 {
@@ -253,89 +230,171 @@ void GameScene::EndWave()
         TimeInfo->hide();
         TogglePause->hide();
         //Disconnect Timers
-        QObject::disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
-            QObject::disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(checkfences()));
-        QObject::disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
-        QObject::disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
+        disconnectTimers();
         //Displaying
-
-        NextwaveText->setDefaultTextColor(Qt::white);
-        NextwaveText->setFont(QFont("serif", 48));
-        NextwaveText->setPlainText("Wave "+ QString::number(Wavenum)+ " Ended");
-        NextwaveText->setPos(width() / 2 - 180, height() / 2 - 48);
-        addItem(NextwaveText);
-        NextwaveTextNav->setPlainText("[Enter] Next Wave \n[Escape] MainMenu");
+        NextwaveText->setPlainText(QString(QString("Wave %1 Ended").arg(Wavenum)));
+        NextwaveText->show();
         NextwaveTextNav->show();
         CreationFrequency = (CreationFrequency * 4) / (5);
     } else {
         WaveTime--;
-        TimeInfo->setPlainText("Time Remaining : " + QString::number(WaveTime));
+        TimeInfo->setPlainText(QString("Time Remaining : %1").arg(WaveTime));
     }
 }
 void GameScene::Gameover(bool state = 0)
 {
     WaveTime = 0;
     clickable = false;
-    disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
-     disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(checkfences()));
-    disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
-    disconnect(BoosterTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
+    disconnectTimers();
     // Clean up any existing items
     clearEnemies();
-    delete townworker1;
-    delete townworker2;
+
     for (int i = items().size() - 1; i >= 0; --i) {
         if (Building *building = dynamic_cast<Building *>(items().at(i))) {
             delete building;
         }
-
     }
-
-
-    gameOverText = new QGraphicsTextItem();
-    gameOverText->setDefaultTextColor(Qt::red);
-    gameOverText->setFont(QFont("serif", 48));
-    gameOverText->setPos(width() / 2 - 180, height() / 2 - 48);
-
+    GameOverText = new QGraphicsTextItem();
+    Navigation = new QGraphicsTextItem();
+    GameOverText->setFont(QFont("serif", 48));
+    GameOverText->setPos(width() / 2 - 180, height() / 2 - 48);
+    Navigation->setFont(QFont("serif", 16));
+    Navigation->setPos(width() / 2 - 180, height() / 2 + 48);
     if (state) {
         // Display game over text
-        gameOverText->setDefaultTextColor(Qt::green);
-        gameOverText->setPlainText("Victory!");
+        GameOverText->setDefaultTextColor(Qt::green);
+        GameOverText->setPlainText(QString("Level %1 Victory!").arg(gamelevel));
         if (gamelevel < 5) {
-            Navigation = new QGraphicsTextItem();
-            Navigation->setDefaultTextColor(Qt::black);
-            Navigation->setFont(QFont("serif", 16));
-            Navigation->setPlainText("[Escape] MainMenu /n[Enter] Next level");
-
-            Navigation->setPos(width() / 2 - 180, height() / 2 + 48);
+            Navigation->setPlainText("[Enter] Next level \n[Escape] Retrun To MainMenu");
             Navigation->show();
-            addItem(Navigation);
         }
-    } else {// Display game over text
+    } else {
+        // Display game over text
         Wavenum=0;
-
-        gameOverText->setPlainText("GAME OVER!");
-        Navigation = new QGraphicsTextItem();
-        Navigation->setDefaultTextColor(Qt::black);
-        Navigation->setFont(QFont("serif", 16));
+        GameOverText->setDefaultTextColor(Qt::red);
+        GameOverText->setPlainText("GAME OVER!");
         Navigation->setPlainText("[Escape] MainMenu");
-
-        Navigation->setPos(width() / 2 - 180, height() / 2 + 48);
         Navigation->show();
-        addItem(Navigation);
     }
-    addItem(gameOverText);
+    addItem(Navigation);
+    addItem(GameOverText);
 
 }
+void GameScene::MoveToNextLevel()
+{
+    // hiding all gameover elements
+    fences.clear();
+    GameOverText->hide();
+    Navigation->hide();
+    //Logic of Game End
+    gamelevel++;
+    if (gamelevel < 5) {
+        CreationFrequency = 10000/(gamelevel+1);
+        Wavenum = 1;
+        RenderingMap();
+        StartWave();
+    }
+    else
+        return Gameover(1);
 
+
+}
+// Staginng Func
 void GameScene::clearEnemies()
 {
     for (int i = items().size() - 1; i >= 0; --i) {
-        if (Enemy *enemy = dynamic_cast<Enemy *>(items().at(i))) {
+        if (Player *enemy = dynamic_cast<Player *>(items().at(i))) {
             delete enemy;
         }
     }
 }
+//Timer Realated
+
+void GameScene::createEnemy()
+{
+    int RandPos;
+    srand(time(0));
+    // random generator of the enemies
+    int Edge = rand() % 4;
+    Enemy *enemy;
+    RandPos = rand() % int(width());
+
+
+    if (Edge == 0) {
+        RandPos = rand() % int(width());
+        enemy = new Enemy(RandPos, 0,20,100,1000);
+    } else if (Edge == 1) {
+        RandPos = rand() % int(height());
+        enemy = new Enemy(width(), RandPos,20,100,1000);
+    } else if (Edge == 2) {
+        RandPos = rand() % int(width());
+        enemy = new Enemy(RandPos, height(),20,100,1000);
+    } else {
+        RandPos = rand() % int(height());
+        enemy = new Enemy(0, RandPos,20,100,1000);
+    }
+    addItem(enemy);
+    connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
+}
+void GameScene::disconnectTimers(){
+    disconnect(BoosterIntervalTimer, SIGNAL(timeout()), this, SLOT(EndWave()));
+    disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(EndWave()));
+    disconnect(Wavetimer, SIGNAL(timeout()), this, SLOT(checkfences()));
+    disconnect(EnemyCreation, SIGNAL(timeout()), this, SLOT(createEnemy()));
+    disconnect(BoosterCreationTimer, SIGNAL(timeout()), this, SLOT(createBooster()));
+};
+void GameScene::createBooster()
+{
+    // Randomizing Boost Location
+    random_device rnd;
+    mt19937 gen(rnd());
+    uniform_real_distribution<double> distribX(0.0, width());
+    uniform_real_distribution<double> distribY(0.0, height());
+    Booster* boost = new Booster( distribX(gen), distribY(gen));
+    addItem(boost);
+
+}
+void GameScene::BoosterCountDown()
+{
+    if(BoosterActivated){
+        // Boost Timing
+        if(BoostTime>0)
+        {
+            BoostInfo->setPlainText(QString("Boost Time Remaining : %1").arg(--BoostTime));
+        }
+        else
+        {
+            BoosterActivated=false;
+            BoostInfo->hide();
+            disconnect(BoosterIntervalTimer, SIGNAL(timeout()), this, SLOT(BoosterCountDown()));
+        }
+    }
+
+
+}
+void GameScene::checkfences()
+{
+    for(int i =0; i<int(fences.size());i++){
+        if(fences[i]->isVisible()){
+        if(!fences[i]->On_Repair&&fences[i]->gethealth()->gethealth() < 80 ){
+            // qDebug() << fences[i]->gethealth()->gethealth();
+            if(townworker1->Avaliable && !townworker1->dead)
+            {townworker1->show();
+                townworker1->SetTarget(fences[i]);
+            }
+
+            else if(townworker2->Avaliable && !townworker2->dead)
+            {townworker2->show();
+                townworker2->SetTarget(fences[i]);
+            }
+
+        }}
+
+        }
+
+}
+
+//Input Related Func
 void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (clickable && event->button() == Qt::LeftButton) {
@@ -347,21 +406,13 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void GameScene::shoot(const QPointF &mousePos)
 {
-
-
     if (clickable) {
-        if(BoostTime!=0)
-        {
-            boost=1;
-        }
-        else{boost=0;}
-
-        Bullet *a = new Bullet(Cannon->x() + (xfactor / 2),
-                               Cannon->y() + (yfactor / 2),
-                               mousePos.x(),
-                               mousePos.y(),boost);
-        addItem(a);
-        QObject::connect(a, SIGNAL(BoosterActivate()), this, SLOT(ActivateBooster()));
+        Bullet *bullet = new Bullet(Cannon->x() + (xfactor / 2),
+                                    Cannon->y() + (yfactor / 2),
+                                    mousePos.x(),
+                                    mousePos.y(),BoosterActivated);
+        addItem(bullet);
+        connect(bullet, SIGNAL(BoostHit()), this, SLOT(BoosterActivate()));
     }
 
 }
@@ -373,7 +424,7 @@ void GameScene::keyPressEvent(QKeyEvent *event)
     } else if (WaveTime == 0 && (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)) {
         if (Wavenum < 3){
             Wavenum++;
-            start();}
+            StartWave();}
         else
             MoveToNextLevel();
 
@@ -388,60 +439,38 @@ void GameScene::TogglePauseFunc()
         TogglePause->setPlainText("[Escape] To Resume");
         EventWindow->show();
         clickable = false;
+        Player::movetime->stop();
         EnemyCreation->stop();
         Wavetimer->stop();
-        BoosterTimer->stop();
-        Player::movetime->stop();
+        BoosterCreationTimer->stop();
         Enemy::HitTimer->stop();
+        BoosterIntervalTimer->stop();
     } else {
         TogglePause->setPlainText("[Escape] To Pause");
         EventWindow->hide();
         clickable = true;
         EnemyCreation->start();
         Wavetimer->start();
-        BoosterTimer->start();
         Player::movetime->start();
+        BoosterCreationTimer->start();
+        BoosterIntervalTimer->start();
         Enemy::HitTimer->start();
     }
 }
-void GameScene::createEnemy()
-{
-    int RandPos;
-    srand(time(0));
-    // random generator of the enemies
-    int Edge = rand() % 4;
-
-    if (Edge == 0) {
-        RandPos = rand() % int(width());
-        Enemy *enemy = new Enemy(RandPos, 0,20,100,1000);
-        addItem(enemy);
-        connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
-    } else if (Edge == 1) {
-        RandPos = rand() % int(height());
-        Enemy *enemy = new Enemy(width(), RandPos,20,100,1000);
-        addItem(enemy);
-        connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
-    } else if (Edge == 2) {
-        RandPos = rand() % int(width());
-        Enemy *enemy = new Enemy(RandPos, height(),20,100,1000);
-        addItem(enemy);
-        connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
-    } else {
-        RandPos = rand() % int(height());
-        Enemy *enemy = new Enemy(0, RandPos,20,100,1000);
-        addItem(enemy);
-        connect(enemy, &Enemy::TownhallDestroyed, this, &GameScene::Gameover);
+void GameScene::BoosterActivate() {
+    BoostTime=10;
+    BoostInfo->setPlainText(QString("Boost Time Remaining : %1").arg(BoostTime));
+    if(!BoosterActivated)
+    {
+        BoostInfo->show();
+        BoosterIntervalTimer->start(1000);
+        connect(BoosterIntervalTimer, SIGNAL(timeout()), this, SLOT(BoosterCountDown()));
+        BoosterActivated = true;
     }
-}
-void GameScene::checkfences()
-{
 
-        for(int i =0; i<fences.size();i++){
-            if(fences[i]->gethealth()->gethealth() < 80){
-                qDebug() << "entered";
-                townworker1->direct( fences[i]->y(), fences[i]->x());
-                townworker2->direct( fences[i]->y(), fences[i]->x());
-                return;
-            }}
+};
 
-}
+//Getters
+TownHall *GameScene::gettownhall() {
+    return townhall;
+};

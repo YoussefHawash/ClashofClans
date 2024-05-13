@@ -7,8 +7,6 @@
         <file>Resources/GrassChunk.jpg</file>
         <file>Resources/GrassBackgorund.jpg</file>
         <file>Resources/fence.png</file>
-        <file>Resources/grasscannon.jpg</file>
-        <file>Resources/grasstownhall.jpg</file>
         <file>Resources/cannon.png</file>
         <file>Resources/townhall.png</file>
         <file>Resources/wall.png</file>
@@ -22,10 +20,12 @@
         <file>Resources/Tower4.png</file>
         <file>Resources/file.png</file>
         <file>Resources/TowerTeslaa.png</file>
+        <file>Resources/motion1.png</file>
+        <file>Resources/motion2.png</file>
+        <file>Resources/motion3.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Resources/backgroundmusic.mp3</file>
-        <file>Resources/bom.mp3 (online-audio-converter.com).mp3</file>
         <file>Resources/Voicy_Barbarian death cry - Clash of Clans.mp3</file>
         <file>Resources/laser.mp3</file>
     </qresource>
@@ -35,8 +35,5 @@
         <file>Resources/map3.txt</file>
         <file>Resources/map4.txt</file>
         <file>Resources/map5.txt</file>
-    </qresource>
-    <qresource prefix="/">
-        <file>Resources/bullet.png</file>
     </qresource>
 </RCC>

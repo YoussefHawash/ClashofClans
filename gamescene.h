@@ -1,7 +1,7 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 #pragma once
-#include <random>
+
 #include <QAudioOutput>
 #include <QDebug>
 #include <QEventLoop>
@@ -19,42 +19,36 @@
 #include "GameElements/MapElements/defenseunit.h"
 #include "GameElements/MapElements/fence.h"
 #include "GameElements/MapElements/townhall.h"
-#include "GameElements/bullet.h"
-#include "GameElements/enemy.h"
 #include "GameElements/townworkers.h"
-#include <cstdlib>
-#include <ctime>
-#include <vector>
-#include "booster.h"
 #include "node.h"
 using namespace std;
 class GameScene : public QGraphicsScene
 {
     Q_OBJECT
 private:
-    townworkers *townworker1;
-    townworkers *townworker2;
-    vector<Fence*> fences;
-    // Next wave
-    QGraphicsPixmapItem *EventWindow;
-    QGraphicsTextItem *NextwaveText;
-    QGraphicsTextItem *NextwaveTextNav;
+
+
     //HUD
     QGraphicsTextItem *TimeInfo;
     QGraphicsTextItem *WaveInfo;
     QGraphicsTextItem *TogglePause;
     QGraphicsTextItem *BoostInfo;
     QGraphicsTextItem *Navigation;
-    QGraphicsTextItem *gameOverText;
+    QGraphicsTextItem *GameOverText;
+    // Next wave ( HUD )
+    QGraphicsPixmapItem *EventWindow;
+    QGraphicsTextItem *NextwaveText;
+    QGraphicsTextItem *NextwaveTextNav;
     //All timers
     QTimer *EnemyCreation = new QTimer();
     QTimer *Wavetimer;
-    QTimer* BoosterTimer;
-    //Townhall_Object
+    QTimer* BoosterCreationTimer;
+    QTimer *BoosterIntervalTimer;
+    //Map_Objects
     TownHall *townhall;
     DefenseUnit *Cannon;
-    //Map
-
+    townworkers *townworker1;
+    townworkers *townworker2;
     // x and y factors
     int yfactor, xfactor;
     //Variables
@@ -62,32 +56,35 @@ private:
     int WaveTime;
     int CreationFrequency;
     int gamelevel;
-    int BoostTime=0;
-    bool boost;
+    int BoostTime=10;
+    bool BoosterActivated=false;
     // Ability to click on the scene
     bool clickable;
 
 public:
-     vector<vector<Node *> > map;
+     vector<Fence*> fences;
     GameScene(int, double, double);
-    void MoveToNextLevel();
+    void disconnectTimers();
     void RenderingMap();
-    void start();
+    void StartWave();
+    void MoveToNextLevel();
     void clearEnemies();
+    void shoot(const QPointF &mousePos);
+    //Handling Inputs
     void mousePressEvent(QGraphicsSceneMouseEvent *) override;
     void keyPressEvent(QKeyEvent *event) override;
-    void shoot(const QPointF &mousePos);
-    TownHall*gettownhall(){return townhall;};
-
+    //Map & Map Objects
+    vector<vector<Node *> > map;
+    TownHall *gettownhall();
 public slots:
-    void checkfences();
+    void BoosterActivate();
     void Gameover(bool);
     void EndWave();
     void createEnemy();
     void TogglePauseFunc();
     void createBooster();
-    void BoostTimer();
-    void ActivateBooster();
+    void BoosterCountDown();
+    void checkfences();
 signals:
     void ReturnMainMenu();
 };

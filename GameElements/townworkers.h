@@ -1,7 +1,6 @@
 #ifndef TOWNWORKERS_H
 #define TOWNWORKERS_H
 #include "./MapElements/fence.h"
-#include "./MapElements/townhall.h"
 #include "MapElements/fence.h"
 #include "player.h"
 
@@ -9,18 +8,20 @@ class townworkers: public Player
 {
     Q_OBJECT
 private:
-    Fence* f;
-    int homex,homey;
-    static QTimer *HealTimer;
+    Building* Target;
+     QTimer *Repairing;
 public:
-    bool directed=0;
+     bool dead;
+    bool Avaliable=1;
     townworkers(int =0, int=0);
-    void setgoals();
-    void direct(int,int);
+    void GoHome();
+    bool CheckDirections();
     void move();
 public slots:
+    void SetTarget(Fence *);
+
     void check();
-    void Heal();
+    void Repair();
 
 
 

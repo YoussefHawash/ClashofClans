@@ -6,14 +6,12 @@ QTimer *Enemy::HitTimer= new QTimer;
 
 
 Enemy::Enemy(int x, int y, int d, int s, int hitspeed)
-    : Player(x, y, 60, 200)
+    : Player(x, y, 60, 100)
     , damage(d),hitting_speed(hitspeed)
 {
-
     QPixmap *img = new QPixmap(":/Imgs/Resources/icon.png");
     *img = img->scaled(40, 40);
     setPixmap(*img);
-
     path = Dijekstra(*(gamescene->map)[int((y - 1) / 80)][int((x - 1) / 80)],
                      *(gamescene->map)[int(gamescene->gettownhall()->y() / 80)][int(gamescene->gettownhall()->x()  / 80)]);
 
@@ -46,6 +44,7 @@ void Enemy::check()
             return;
         }
         else if (townworkers *townwork = dynamic_cast<townworkers *>(colliding_items[i])) {
+            townwork->dead=true;
             townwork->hide();
             return;
         }
@@ -56,23 +55,26 @@ void Enemy::setgoals()
 {
 
     if(currentpath<path.size()){
-    //qDebug() << "True";
-    currentgoal.x=(path[currentpath].y*80)+30;
-    currentgoal.y=(path[currentpath].x*80)+30;
-    int slope_x = x() -  currentgoal.x;
-    int slope_y = y() -  currentgoal.y;
-    dx = 20 * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
-    dy = 20 * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
+    currentgoal.x=(path[currentpath].y*80);
+    currentgoal.y=(path[currentpath].x*80);
+    int slope_x = x() -  (currentgoal.x+40);
+    int slope_y = y() -  (currentgoal.y+40);
+    dx = 10 * ((slope_x / sqrt(pow(slope_y, 2) + pow(slope_x, 2))));
+    dy = 10 * ((slope_y / sqrt(pow(slope_x, 2) + pow(slope_y, 2))));
     currentpath++;}
 };
 void Enemy::move() {
-    setPos(x() - dx, y() - dy);
-    //qDebug() << "Current "<<currentgoal.x<< currentgoal.y;
-    //qDebug() <<dx<<dy;
-    if ((x()>currentgoal.x&& x()<(currentgoal.x+80))||(y()>currentgoal.y && y()<(currentgoal.y+80)))
-    {
-          setgoals();
-      }
+
+
+    setPos(x()-dx,y()-dy);
+    QPointF desiredPosition(currentgoal.x+40, currentgoal.y+40);
+    double distance = QLineF(pos(), desiredPosition).length();
+    double  tolerance =sqrt(pow(dx,2)+pow(dy,2));
+    // Check if the distance is within the tolerance radius
+    if (distance <= tolerance) {
+    setgoals();
+
+    }
 
 
 
@@ -86,8 +88,9 @@ void Enemy::hitbuilding()
             emit TownhallDestroyed(0);
         } else {
             HittingItem->hide();
+            HittingItem->gethealth()->hide();
             if(HittingItem->isVisible()){
-            gamescene->map[int(HittingItem->y()/80)][int(HittingItem->x()/80)]->setweight(-9);
+            gamescene->map[int(HittingItem->y()/80)][int(HittingItem->x()/80)]->setweight(-14);
             path = Dijekstra(*(gamescene->map)[int((y() - 1) / 80)][int((x() - 1) / 80)],
                              *(gamescene->map)[int(gamescene->gettownhall()->y() / 80)][int(gamescene->gettownhall()->x()  / 80)]);}
             disconnect(HitTimer, SIGNAL(timeout()), this, SLOT(hitbuilding()));
@@ -95,5 +98,4 @@ void Enemy::hitbuilding()
         }
     }
 }
-
 

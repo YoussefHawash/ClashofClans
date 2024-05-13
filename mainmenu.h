@@ -36,12 +36,11 @@ public:
     void ShowSettings();
     //Getters
     bool IsMute() const;
-    ~MainMenu();
 signals:
     void newgame(int);
     void exit();
 private slots:
-    void Emit_NEWGAME() { newgame(gamelevel); };
+    void Emit_NEWGAME();
     void checkBoxStateChanged(bool);
     void sliderValueChanged(int);
     void comboBoxActivated(int);

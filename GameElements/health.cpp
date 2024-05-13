@@ -47,13 +47,16 @@ void health::updateHealthBar()
     // S cale to fit the width of the background
     float barWidth = (float(currentHealth) / maxHealth) * originalwidth;
     setRect(x, y, barWidth, 3);
-    if (float(currentHealth / maxHealth) < 1 && float(currentHealth / maxHealth) > 0.5) {
+    if (float(currentHealth / maxHealth) < 1 && float(currentHealth / maxHealth) >= 0.5) {
         QBrush yellow(Qt::yellow);
         setBrush(yellow);
-    } else {
+    } else if ( float(currentHealth / maxHealth) < 0.5){
         QBrush red(Qt::red);
         setBrush(red);
     }
+    else
+    {        QBrush green(Qt::green);
+        setBrush(green); }
 }
 
 int health::gethealth()

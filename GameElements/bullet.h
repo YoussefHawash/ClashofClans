@@ -24,7 +24,7 @@ public:
 private slots:
     void Move();
 signals:
-    void BoosterActivate();
+    void BoostHit();
 };
 
 #endif // BULLET_H

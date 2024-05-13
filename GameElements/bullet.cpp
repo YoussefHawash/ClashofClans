@@ -23,7 +23,6 @@ Bullet::Bullet(int xi_pos, int yi_pos, int xf_pos, int yf_pos,bool b)
     sound->setAudioOutput(audioOutput);
     audioOutput->setVolume(0.5);
     sound->play();
-    qDebug()<<boost;
     if(boost)
     {
     img = new QPixmap(":/Imgs/Resources/file.png");
@@ -87,11 +86,12 @@ void Bullet::CheckCollide()
         }else if(typeid(*(colliding_items[i])) == typeid(Booster))
         {
             Booster* boost = dynamic_cast<Booster*> (colliding_items[i]);
-            emit BoosterActivate();
+            emit BoostHit();
             delete boost;
             delete this;
             return;
 
         }
+
     }
 }

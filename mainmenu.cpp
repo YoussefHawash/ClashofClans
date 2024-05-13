@@ -39,6 +39,7 @@ void MainMenu::SetMainMenuContainer()
     mainwindow->setStyleSheet("#mainwindow{background: rgba(34,32,40,0.72);border-radius: 20px;}");
 
     //Main Vertical Layout
+
     layout->setContentsMargins(50, 0, 50, 0);
     layout->addWidget(welcome, 0, Qt::AlignHCenter);
     layout->addLayout(hLayout1);
@@ -89,6 +90,7 @@ void MainMenu::SetMainMenuContainer()
 void MainMenu::SetGamesContainer()
 {
     //Adding All Elements
+
     gameswindow = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(gameswindow);
     QLabel *Games = new QLabel("Games");
@@ -192,7 +194,7 @@ void MainMenu::SetSettingsContainer()
     //hlayout1
 
     hLayout1->addWidget(mute_check);
-    //FullScreen Checkbox
+    //Mute Checkbox
 
     connect(mute_check, &QCheckBox::stateChanged, this, &MainMenu::checkBoxStateChanged);
 
@@ -308,14 +310,13 @@ void MainMenu::checkBoxStateChanged(bool state)
 void MainMenu::sliderValueChanged(int value)
 {
     volume_label->setText(QString("Volume: %1%").arg(value));
-    Output->setVolume(double(value) / 100);
+    if(!mute)
+     Output->setVolume(double(value) / 100);
     volumelevel = value;
 }
 void MainMenu::comboBoxActivated(int index)
 {
     gamelevel = index + 1;
 }
-MainMenu::~MainMenu()
-{
-    delete this;
-}
+
+void MainMenu::Emit_NEWGAME() { emit newgame(gamelevel); };

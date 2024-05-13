@@ -22,25 +22,25 @@ protected:
     int vel;
     int dx;
     int dy;
-
     Building *HittingItem;
     vector<Node> path;
     Node currentgoal;
     int currentpath=1;
     vector<vector<Node *> > *map;
+
 public:
     static QTimer *movetime;
     Player(int,int,int,int);
     health *gethealth();
     struct CostComparator
     {
-        bool operator()(const std::pair<float, Node> &a, const std::pair<float, Node> &b) const
+        bool operator()(const pair<float, Node> &a, const pair<float, Node> &b) const
         {
             return a.first > b.first;
         }
     };
 
-    std::vector<Node> Dijekstra(const Node &start, const Node &goal);
+    vector<Node> Dijekstra(const Node &start, const Node &goal);
 };
 
 #endif // PLAYER_H

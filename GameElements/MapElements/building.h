@@ -13,6 +13,7 @@ protected:
     health *h;
 
 public:
+    bool On_Repair=false;
     Building(QGraphicsScene *, int , int );
     void SetHealth(int);
     void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;
