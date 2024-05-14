@@ -8,10 +8,10 @@
 #include <random>
 GameScene::GameScene(int level, double w, double h)
     : Wavenum(1)
-    ,WaveTime(60)
-    ,CreationFrequency(10000/(level+1))
-    ,gamelevel(level)
-    ,clickable(true)
+    , WaveTime(60)
+    , CreationFrequency(10000 / (level + 1))
+    , gamelevel(level)
+    , clickable(true)
 {
     Wavetimer = new QTimer();
     BoosterCreationTimer = new QTimer();
